@@ -1,0 +1,9 @@
+{
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/326c5cb1-e907-4a5d-bea1-eca6d562ce19/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/pwaauthtest",
+    "appService.deploySubpath": ""
+}
