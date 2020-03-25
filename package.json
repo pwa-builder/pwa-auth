@@ -1,8 +1,7 @@
 {
-  "name": "pwaauth",
+  "name": "@pwabuilder/pwaauth",
   "version": "1.0.0",
   "description": "Web component for signing in with popular providers like Google and Microsoft. Built with ♥ by PWABuilder team.",
-  "main": "index.js",
   "dependencies": {
     "lit-element": "^2.2.1",
     "msal": "^1.2.1"
@@ -12,11 +11,15 @@
     "@types/gapi.auth2": "0.0.51",
     "concurrently": "^5.1.0",
     "es-dev-server": "^1.40.0",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.2",
+    "express": "~4.16.1",
+    "cookie-parser": "~1.4.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"tsc --watch\" \"es-dev-server --app-index wwwroot/index.html --node-resolve --watch --open\""
+    "dev": "concurrently \"tsc --watch\" \"npx es-dev-server --node-resolve --open public/\"",
+    "build": "tsc",
+    "start": "node ./bin/www"
   },
   "author": "PWABuilder Team",
   "license": "ISC"
