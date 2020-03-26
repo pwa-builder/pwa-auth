@@ -45,7 +45,9 @@ export class MicrosoftAuth {
     private signInSucceeded(loginResponse: Msal.AuthResponse) {
         const loginResult = this.getLoginResult(loginResponse);
 
-        // Try to the user's photo.
+        // Fetch the user's photo. 
+        // MS provider supports this for work and edu accounts, but not for personal accounts.
+        // Finally clause: regardless of whether we can get the user's photo, we consider it a successful signin.
         this.getUserPhoto()
             .then(photoUrl => loginResult.imageUrl = photoUrl)
             .catch(error => console.log("Unable to fetch user profile image", error))
@@ -88,21 +90,23 @@ export class MicrosoftAuth {
             headers: new Headers({
                 "Authorization": `Bearer ${accessToken}`
             })
-        });
+        }).then(res => {
+            // If we got a 404, punt.
+            if (res.status == 404) {
+                return Promise.reject(`Graph API returned 404 for ${relativeUrl}`);
+            }
+            return res;
+        })
     }
-    
-    // private graphAPICallback(data) {
-    //     console.log("graph api callback: ", data);
-    // }
 
     private getLoginResult(loginResponse: any | null): LoginResult {
         return {
             name: loginResponse?.account?.name || "",
             email: loginResponse?.account?.userName || "",
-            info: loginResponse,
             provider: "Microsoft", 
             error: null,
-            imageUrl: null
+            imageUrl: null,
+            info: loginResponse,
         };
     }
 }
