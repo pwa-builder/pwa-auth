@@ -13,12 +13,12 @@ export class PwaAuth extends LitElement {
     @property({ type: String }) microsoftButtonText = "Sign in with Microsoft";
     @property({ type: String }) googleButtonText = "Sign in with Google";
     @property({ type: String }) facebookButtonText = "Sign in with Facebook"
-    @property({ type: String }) msClientId: string | undefined | null;
-    @property({ type: String }) googleClientId: string | undefined | null;
-    @property({type: String}) facebookAppId: string | undefined | null;
-    @property({type: String}) autoSignIn: "none" | "user-choice" | "first-available" = "none";
-    @property({type: String}) menuOpened = false;
-    @property({type: String}) menuPlacement: "start" | "end" = "start";
+    @property({ type: String }) microsoftKey: string | undefined | null;
+    @property({ type: String }) googleKey: string | undefined | null;
+    @property({ type: String }) facebookKey: string | undefined | null;
+    @property({ type: String }) autoSignIn: "none" | "user-choice" | "first-available" = "none";
+    @property({ type: String }) menuOpened = false;
+    @property({ type: String }) menuPlacement: "start" | "end" = "start";
 
     disabled = false;
 
@@ -160,6 +160,7 @@ export class PwaAuth extends LitElement {
             padding: 8px 24px 8px 24px;
             cursor: pointer;
             width: 100%;
+            text-align: left;
         }
 
             .dropdown .menu button:hover {
@@ -172,6 +173,7 @@ export class PwaAuth extends LitElement {
 
         .dropdown .menu button svg {
             vertical-align: middle;
+            margin-right: 10px;
         }
     `;
 
@@ -191,17 +193,17 @@ export class PwaAuth extends LitElement {
                 </button>
                 <div class="menu ${this.menuOpened ? "open" : ""} ${this.menuPlacement === "end" ? "align-end" : ""}">
                     <button class="microsoft-menu-btn" ?disabled=${this.disabled} @click="${this.signInMs}">
-                        <svg x="0px" y="0px" width="20px" height="20px" viewBox="0 0 439 439" style="enable-background:new 0 0 439 439;"><rect x="17" y="17" fill="#F35325" width="194" height="194"/><rect x="228" y="17" fill="#81BC06" width="194" height="194"/><rect x="17" y="228" fill="#05A6F0" width="194" height="194"/><rect x="228" y="228" fill="#FFBA08" width="194" height="194"/></svg>
+                        <svg x="0px" y="0px" width="20px" height="20px" viewBox="0 0 439 439"><rect x="17" y="17" fill="#F35325" width="194" height="194"/><rect x="228" y="17" fill="#81BC06" width="194" height="194"/><rect x="17" y="228" fill="#05A6F0" width="194" height="194"/><rect x="228" y="228" fill="#FFBA08" width="194" height="194"/></svg>
                         <span>${this.microsoftButtonText}</span>
                     </button>
 
                     <button class="google-menu-btn" ?disabled=${this.disabled} @click="${this.signInGoogle}">
-                        <svg x="0px" y="0px" width="20" height="20" viewBox="0 0 533.5 544.3" style="enable-background:new 0 0 533.5 544.3;"><g><path fill="#4285F4" d="M533.5,278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1,33.8-25.7,63.7-54.4,82.7v68h87.7 C503.9,431.2,533.5,361.2,533.5,278.4z"/><path fill="#34A853" d="M272.1,544.3c73.4,0,135.3-24.1,180.4-65.7l-87.7-68c-24.4,16.6-55.9,26-92.6,26c-71,0-131.2-47.9-152.8-112.3 H28.9v70.1C75.1,486.3,169.2,544.3,272.1,544.3z"/><path fill="#FBBC04" d="M119.3,324.3c-11.4-33.8-11.4-70.4,0-104.2V150H28.9c-38.6,76.9-38.6,167.5,0,244.4L119.3,324.3z"/><path fill="#EA4335" d="M272.1,107.7c38.8-0.6,76.3,14,104.4,40.8l0,0l77.7-77.7C405,24.6,339.7-0.8,272.1,0C169.2,0,75.1,58,28.9,150 l90.4,70.1C140.8,155.6,201.1,107.7,272.1,107.7z"/></g></svg>                        
+                        <svg x="0px" y="0px" width="20" height="20" viewBox="0 0 533.5 544.3"><g><path fill="#4285F4" d="M533.5,278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1,33.8-25.7,63.7-54.4,82.7v68h87.7 C503.9,431.2,533.5,361.2,533.5,278.4z"/><path fill="#34A853" d="M272.1,544.3c73.4,0,135.3-24.1,180.4-65.7l-87.7-68c-24.4,16.6-55.9,26-92.6,26c-71,0-131.2-47.9-152.8-112.3 H28.9v70.1C75.1,486.3,169.2,544.3,272.1,544.3z"/><path fill="#FBBC04" d="M119.3,324.3c-11.4-33.8-11.4-70.4,0-104.2V150H28.9c-38.6,76.9-38.6,167.5,0,244.4L119.3,324.3z"/><path fill="#EA4335" d="M272.1,107.7c38.8-0.6,76.3,14,104.4,40.8l0,0l77.7-77.7C405,24.6,339.7-0.8,272.1,0C169.2,0,75.1,58,28.9,150 l90.4,70.1C140.8,155.6,201.1,107.7,272.1,107.7z"/></g></svg>                        
                         <span>${this.googleButtonText}</span>
                     </button>
 
                     <button class="facebook-menu-btn" @click="${this.signInFacebook}">
-                        <svg x="0px" y="0px" width="20" height="20" viewBox="0 0 500 500" style="enable-background:new 0 0 455.73 455.73;"><path style="fill:#3A559F;" d="M0,0v455.73h242.704V279.691h-59.33v-71.864h59.33v-60.353c0-43.893,35.582-79.475,79.475-79.475 h62.025v64.622h-44.382c-13.947,0-25.254,11.307-25.254,25.254v49.953h68.521l-9.47,71.864h-59.051V455.73H455.73V0H0z"/></svg>
+                        <svg x="0px" y="0px" width="20" height="20" viewBox="0 0 500 500"><path style="fill:#3A559F;" d="M0,0v455.73h242.704V279.691h-59.33v-71.864h59.33v-60.353c0-43.893,35.582-79.475,79.475-79.475 h62.025v64.622h-44.382c-13.947,0-25.254,11.307-25.254,25.254v49.953h68.521l-9.47,71.864h-59.051V455.73H455.73V0H0z"/></svg>
                         <span>${this.facebookButtonText}</span>
                     </button>
                 </div>
@@ -215,7 +217,7 @@ export class PwaAuth extends LitElement {
             const dropdown = this.shadowRoot?.querySelector(".dropdown");
             const dropdownContainsFocus = dropdown?.matches(":focus-within");
             if (!dropdownContainsFocus) {
-                //this.menuOpened = false;
+                this.menuOpened = false;
             }
         }
     }
@@ -275,9 +277,9 @@ export class PwaAuth extends LitElement {
     }
 
     private signInMs() {
-        if (this.msClientId && !this.disabled) {
+        if (this.microsoftKey && !this.disabled) {
             import("./microsoft-provider")
-                .then(module => new module.MicrosoftAuth(this.msClientId!).signIn())
+                .then(module => new module.MicrosoftAuth(this.microsoftKey!).signIn())
                 .then(result => this.loginCompleted(result))
                 .catch(error => this.loginCompleted({ 
                     error: error,
@@ -289,10 +291,10 @@ export class PwaAuth extends LitElement {
 
     private signInGoogle(e: UIEvent) {
         const googleBtn = e.target;
-        if (this.googleClientId && googleBtn && !this.disabled) {
+        if (this.googleKey && googleBtn && !this.disabled) {
             this.disabled = true;
             import("./google-provider")
-                .then(module => new module.GoogleProvider(this.googleClientId!, googleBtn as HTMLElement).signIn())
+                .then(module => new module.GoogleProvider(this.googleKey!, googleBtn as HTMLElement).signIn())
                 .then(result => this.loginCompleted(result))
                 .catch(error => this.loginCompleted({
                     error: error,
@@ -303,10 +305,10 @@ export class PwaAuth extends LitElement {
     }
 
     private signInFacebook() {
-        if (this.facebookAppId && !this.disabled) {
+        if (this.facebookKey && !this.disabled) {
             this.disabled = true;
             import("./facebook-provider")
-                .then(module => new module.FacebookProvider(this.facebookAppId!).signIn())
+                .then(module => new module.FacebookProvider(this.facebookKey!).signIn())
                 .then(result => this.loginCompleted(result))
                 .catch(error => this.loginCompleted({
                     error: error,

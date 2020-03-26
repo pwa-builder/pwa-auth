@@ -6,9 +6,9 @@ export declare class PwaAuth extends LitElement {
     microsoftButtonText: string;
     googleButtonText: string;
     facebookButtonText: string;
-    msClientId: string | undefined | null;
-    googleClientId: string | undefined | null;
-    facebookAppId: string | undefined | null;
+    microsoftKey: string | undefined | null;
+    googleKey: string | undefined | null;
+    facebookKey: string | undefined | null;
     autoSignIn: "none" | "user-choice" | "first-available";
     menuOpened: boolean;
     menuPlacement: "start" | "end";
