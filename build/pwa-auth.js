@@ -11,39 +11,58 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     constructor() {
         super(...arguments);
         this.appearance = "button";
-        this.microsoftButtonText = "Log in with Microsoft";
-        this.googleButtonText = "Log in with Microsoft";
-        this.facebookButtonText = "Log in with Facebook";
-        this.autoLogin = "none";
+        this.signInButtonText = "Sign in";
+        this.microsoftButtonText = "Sign in with Microsoft";
+        this.googleButtonText = "Sign in with Google";
+        this.facebookButtonText = "Sign in with Facebook";
+        this.autoSignIn = "none";
+        this.menuOpened = false;
+        this.menuPlacement = "start";
         this.disabled = false;
     }
     firstUpdated(changedProperties) {
         super.firstUpdated(changedProperties);
-        // Are we configured to automatically login?
-        // If so, try to login with whatever the user has previously logged in with.
-        if (this.autoLogin !== "none") {
-            this.tryUseStoredCredential();
-        }
-        if (this.msClientId) {
-            this.shadowRoot
-                ?.querySelector("button.microsoft")
-                ?.addEventListener("click", () => this.signInMs());
-        }
-        if (this.googleClientId) {
-            this.shadowRoot
-                ?.querySelector("button.google")
-                ?.addEventListener("click", () => this.signInGoogle());
-        }
-        if (this.facebookAppId) {
-            this.shadowRoot
-                ?.querySelector("button.facebook")
-                ?.addEventListener("click", () => this.signInFacebook());
-        }
+        // // Close the popup if we click elsewhere. 
+        // // TODO: is there a better way to do this?
+        // window.addEventListener("click", (e: UIEvent) => {
+        //     const isSignInBtn = !!e.target && !!e.target["matches"] && (e.target as HTMLElement).matches("pwa-auth");
+        //     if (!isSignInBtn && this.menuOpened) {
+        //         this.toggleMenu();
+        //     }
+        // })
     }
     render() {
+        if (this.appearance === "list") {
+            return this.renderProviderButtons();
+        }
+        return this.renderLoginButton();
+    }
+    renderLoginButton() {
+        return html `
+            <div class="dropdown" @focusout="${this.dropdownFocusOut}">
+                <button class="signin-btn" @click="${this.signInClicked}">
+                    ${this.signInButtonText}
+                </button>
+                <div class="menu ${this.menuOpened ? "open" : ""} ${this.menuPlacement === "end" ? "align-end" : ""}">
+                    ${this.renderProviderButtons()}
+                </div>
+            </div>
+        `;
+    }
+    dropdownFocusOut(e) {
+        // See if we need to close the menu.
+        if (this.menuOpened) {
+            const dropdown = this.shadowRoot?.querySelector(".dropdown");
+            const dropdownContainsFocus = !!e.relatedTarget && dropdown?.matches(":focus-within");
+            if (!dropdownContainsFocus) {
+                this.menuOpened = false;
+            }
+        }
+    }
+    renderProviderButtons() {
         return html `
             <div class="provider">
-                <button class="microsoft" ?disabled=${this.disabled} style>
+                <button class="microsoft" ?disabled=${this.disabled} @click="${this.signInMs}">
                     <span>
                         <svg viewBox="0 0 500 500" style="width: 25px; height: 25px;"><g id="XMLID_1_"><polygon id="XMLID_3_" fill="white" points="67.5,118.8 216.7,98.5 216.7,242.3 67.6,243.2  "/><polygon id="XMLID_4_" fill="white" points="234.7,95.8 432.4,66.9 432.4,240.5 234.7,242.1  "/><polygon id="XMLID_5_" fill="white" points="216.6,258.9 216.7,402.9 67.6,382.4 67.6,258  "/><polygon id="XMLID_6_" fill="white" points="432.5,260.3 432.5,433.1 234.7,405.1 234.4,259.9  "/></g></svg>
                         ${this.microsoftButtonText}
@@ -51,7 +70,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
                 </button>
             </div>
             <div class="provider">
-                <button class="google" ?disabled=${this.disabled}>
+                <button class="google" ?disabled=${this.disabled} @click="${this.signInGoogle}">
                     <span>
                         <svg width="25" height="25" class="mk ml u"><g fill="none" fill-rule="evenodd"><path d="M20.66 12.7c0-.61-.05-1.19-.15-1.74H12.5v3.28h4.58a3.91 3.91 0 0 1-1.7 2.57v2.13h2.74a8.27 8.27 0 0 0 2.54-6.24z" fill="#4285F4"></path><path d="M12.5 21a8.1 8.1 0 0 0 5.63-2.06l-2.75-2.13a5.1 5.1 0 0 1-2.88.8 5.06 5.06 0 0 1-4.76-3.5H4.9v2.2A8.5 8.5 0 0 0 12.5 21z" fill="#34A853"></path><path d="M7.74 14.12a5.11 5.11 0 0 1 0-3.23v-2.2H4.9A8.49 8.49 0 0 0 4 12.5c0 1.37.33 2.67.9 3.82l2.84-2.2z" fill="#FBBC05"></path><path d="M12.5 7.38a4.6 4.6 0 0 1 3.25 1.27l2.44-2.44A8.17 8.17 0 0 0 12.5 4a8.5 8.5 0 0 0-7.6 4.68l2.84 2.2a5.06 5.06 0 0 1 4.76-3.5z" fill="#EA4335"></path></g></svg>
                         ${this.googleButtonText}
@@ -59,7 +78,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
                 </button>
             </div>
             <div class="provider">
-                <button class="facebook">
+                <button class="facebook" @click="${this.signInFacebook}">
                     <span>
                         <svg width="25" height="25" fill="#3B5998" class="mk ml u"><path fill="white" d="M20.3 4H4.7a.7.7 0 0 0-.7.7v15.6c0 .38.32.7.7.7h8.33v-6.38h-2.12v-2.65h2.12V9.84c0-2.2 1.4-3.27 3.35-3.27.94 0 1.75.07 1.98.1v2.3H17c-1.06 0-1.31.5-1.31 1.24v1.76h2.65l-.53 2.65H15.7l.04 6.38h4.56a.7.7 0 0 0 .71-.7V4.7a.7.7 0 0 0-.7-.7" fill-rule="evenodd"></path></svg>
                         ${this.facebookButtonText}
@@ -75,6 +94,22 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
                 </button>
             </div>
         `;
+    }
+    async signInClicked() {
+        // Do we have auto-sign in? If so, go ahead and sign in with whatever stored credential we have.
+        if (this.autoSignIn === "none") {
+            this.toggleMenu();
+        }
+        else {
+            const signedInCreds = await this.tryAutoSignIn();
+            if (!signedInCreds) {
+                // There was no stored credential to sign in with. Just show the menu.
+                this.toggleMenu();
+            }
+        }
+    }
+    toggleMenu() {
+        this.menuOpened = !this.menuOpened;
     }
     signInMs() {
         if (this.msClientId && !this.disabled) {
@@ -133,20 +168,20 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             navigator.credentials.store(cred);
         }
     }
-    async tryUseStoredCredential() {
+    async tryAutoSignIn() {
         // Use the new Credential Management API to login the user automatically.
         // https://developers.google.com/web/fundamentals/security/credential-management/
         // Bail if we don't support Credential Management
         if (!window["FederatedCredential"]) {
-            return;
+            return null;
         }
         let credential = null;
-        if (this.autoLogin === "user-choice") {
+        if (this.autoSignIn === "user-choice") {
             // Let the user choose. What this means:
             // The browser brings up the native "choose your sign in" dialog.
             credential = await this.getStoredCredential("required", Object.values(PwaAuth_1.providerUrls));
         }
-        else if (this.autoLogin === "first-available") {
+        else if (this.autoSignIn === "first-available") {
             // Go through the available providers and find one that the user has logged in with.
             for (let providerName in PwaAuth_1.providerUrls) {
                 const providerUrl = PwaAuth_1.providerUrls[providerName];
@@ -160,6 +195,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             const loginResult = this.credentialToLoginResult(credential);
             this.loginCompleted(loginResult);
         }
+        return credential;
     }
     getStoredCredential(mediation, providerUrls) {
         const credOptions = {
@@ -192,6 +228,10 @@ PwaAuth.providerUrls = {
 };
 PwaAuth.styles = css `
 
+        button {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
         .provider {
             width: 200px;
             margin-bottom: 10px;
@@ -214,6 +254,67 @@ PwaAuth.styles = css `
             vertical-align: middle;
             margin-right: 10px;
             margin-left: 5px;
+        }
+
+        .signin-btn {
+            background-color: rgb(225, 230, 234);
+            border: 1px solid rgb(220, 224, 229);
+            color: rgb(33, 37, 41);
+            border-radius: 4px;
+            padding: 12px;
+            transition: all 0.15s ease-in-out;
+            outline: none;
+            cursor: pointer;
+        }
+
+            .signin-btn:hover {
+                background-color: rgb(220, 224, 228);
+                border-color: rgb(212, 218, 223);
+            }
+
+            .signin-btn:focus {
+                background-color: rgb(219, 225, 230);
+                border-color: rgb(212, 218, 224);
+                box-shadow: rgba(216, 217, 219, 0.1) 0 0 0 3.2px;
+            }
+
+            .signin-btn:active {
+                background-color: rgb(210, 214, 218);
+                border-color: rgb(202, 208, 213);
+            }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown .menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            float: left;
+            min-width: 10rem;
+            padding: .5rem 0;
+            margin: .125rem 0 0;
+            font-size: 1rem;
+            background-color: white;
+            background-clip: padding-box;
+            border: 1px solid rgba(0,0,0,.15);
+            border-radius: .25rem;
+        }
+
+        .dropdown .menu.open {
+            display: block;
+            transform: translate3d(0px, 38px, 0px);
+            top: 0;
+            left: 0;
+        }
+
+        .dropdown .menu.open.align-end {
+            left: auto;
+            right: 0;
         }
 
         button.google {
@@ -253,6 +354,9 @@ __decorate([
 ], PwaAuth.prototype, "appearance", void 0);
 __decorate([
     property({ type: String })
+], PwaAuth.prototype, "signInButtonText", void 0);
+__decorate([
+    property({ type: String })
 ], PwaAuth.prototype, "microsoftButtonText", void 0);
 __decorate([
     property({ type: String })
@@ -271,7 +375,13 @@ __decorate([
 ], PwaAuth.prototype, "facebookAppId", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "autoLogin", void 0);
+], PwaAuth.prototype, "autoSignIn", void 0);
+__decorate([
+    property({ type: String })
+], PwaAuth.prototype, "menuOpened", void 0);
+__decorate([
+    property({ type: String })
+], PwaAuth.prototype, "menuPlacement", void 0);
 PwaAuth = PwaAuth_1 = __decorate([
     customElement('pwa-auth')
 ], PwaAuth);

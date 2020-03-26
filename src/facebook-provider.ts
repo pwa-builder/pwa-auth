@@ -77,7 +77,10 @@ export class FacebookProvider {
             };
             FB.api("/me", requestArgs, res => this.userDetailsFetched(res));
         } else {
-            this.reject?.("Facebook sign-in resulted in a non-connected state: " + statusResponse.status);
+            this.reject?.({
+                message: "Facebook sign in failed and may have been cancelled by the user.",
+                status: statusResponse.status
+            });
         }
     }
 
