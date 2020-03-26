@@ -36,18 +36,14 @@ export class MicrosoftAuth {
     }
     signInSucceeded(loginResponse) {
         const loginResult = this.getLoginResult(loginResponse);
-        this.resolve?.(loginResult);
+        // Try to the user's photo.
+        this.getUserPhoto()
+            .then(photoUrl => loginResult.imageUrl = photoUrl)
+            .catch(error => console.log("Unable to fetch user profile image", error))
+            .finally(() => this.resolve?.(loginResult));
     }
     signInFailed(error) {
         this.reject?.(error);
-    }
-    requiresInteraction(errorCode) {
-        if (!errorCode || !errorCode.length) {
-            return false;
-        }
-        return errorCode === "consent_required" ||
-            errorCode === "interaction_required" ||
-            errorCode === "login_required";
     }
     redirectCallback(error, response) {
         if (error) {
@@ -61,6 +57,27 @@ export class MicrosoftAuth {
             console.log("Unexpected redirect: no error, but no login response", error, response);
         }
     }
+    getUserPhoto() {
+        if (!this.app) {
+            return Promise.reject("No app context");
+        }
+        return this.app.acquireTokenSilent(this.requestObj)
+            .then(tokenResponse => this.callGraphApi("/photo/$value", tokenResponse.accessToken))
+            .then(result => result.blob())
+            .then(blob => URL.createObjectURL(blob));
+    }
+    callGraphApi(relativeUrl, accessToken) {
+        const url = `${this.graphConfig.graphMeEndpoint}${relativeUrl}`;
+        return fetch(url, {
+            method: "GET",
+            headers: new Headers({
+                "Authorization": `Bearer ${accessToken}`
+            })
+        });
+    }
+    // private graphAPICallback(data) {
+    //     console.log("graph api callback: ", data);
+    // }
     getLoginResult(loginResponse) {
         return {
             name: loginResponse?.account?.name || "",

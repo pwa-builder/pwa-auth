@@ -44,20 +44,16 @@ export class MicrosoftAuth {
 
     private signInSucceeded(loginResponse: Msal.AuthResponse) {
         const loginResult = this.getLoginResult(loginResponse);
-        this.resolve?.(loginResult);
+
+        // Try to the user's photo.
+        this.getUserPhoto()
+            .then(photoUrl => loginResult.imageUrl = photoUrl)
+            .catch(error => console.log("Unable to fetch user profile image", error))
+            .finally(() => this.resolve?.(loginResult));
     }
 
     private signInFailed(error: any) {
         this.reject?.(error);
-    }
-
-    private requiresInteraction(errorCode: string | any[]) {
-        if (!errorCode || !errorCode.length) {
-            return false;
-        }
-        return errorCode === "consent_required" ||
-            errorCode === "interaction_required" ||
-            errorCode === "login_required";
     }
 
     private redirectCallback(
@@ -73,6 +69,31 @@ export class MicrosoftAuth {
             console.log("Unexpected redirect: no error, but no login response", error, response);
         }
     }
+
+    private getUserPhoto(): Promise<string | null> {
+        if (!this.app) {
+            return Promise.reject("No app context");
+        }
+
+        return this.app.acquireTokenSilent(this.requestObj)
+            .then(tokenResponse => this.callGraphApi("/photo/$value", tokenResponse.accessToken))
+            .then(result => result.blob())
+            .then(blob => URL.createObjectURL(blob));
+    }
+
+    private callGraphApi(relativeUrl: string, accessToken: string): Promise<Response> {
+        const url = `${this.graphConfig.graphMeEndpoint}${relativeUrl}`;
+        return fetch(url, {
+            method: "GET",
+            headers: new Headers({
+                "Authorization": `Bearer ${accessToken}`
+            })
+        });
+    }
+    
+    // private graphAPICallback(data) {
+    //     console.log("graph api callback: ", data);
+    // }
 
     private getLoginResult(loginResponse: any | null): LoginResult {
         return {
