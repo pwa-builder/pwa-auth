@@ -175,11 +175,21 @@ export class PwaAuth extends LitElement {
             vertical-align: middle;
             margin-right: 10px;
         }
+
+        .provider-error {
+            background-color: rgb(220, 53, 69);
+            color: white;
+            padding: 20px;
+        }
     `;
 
     render() {
+        if (!this.hasAnyKey) {
+            return this.renderNoKeysError();
+        }
+
         if (this.appearance === "list") {
-            return this.renderProviderButtons();
+            return this.renderListButtons();
         } 
 
         return this.renderLoginButton();
@@ -211,18 +221,7 @@ export class PwaAuth extends LitElement {
         `;
     }
 
-    private dropdownFocusOut(e: FocusEvent) {
-        // Close the dropdown if the focus is no longer within it.
-        if (this.menuOpened) {
-            const dropdown = this.shadowRoot?.querySelector(".dropdown");
-            const dropdownContainsFocus = dropdown?.matches(":focus-within");
-            if (!dropdownContainsFocus) {
-                this.menuOpened = false;
-            }
-        }
-    }
-
-    private renderProviderButtons(): TemplateResult {
+    private renderListButtons(): TemplateResult {
         return html`
             <div class="provider">
                 <button class="microsoft-list-btn" ?disabled=${this.disabled} @click="${this.signInMs}">
@@ -257,6 +256,25 @@ export class PwaAuth extends LitElement {
                 </button>
             </div>
         `;
+    }
+
+    private renderNoKeysError(): TemplateResult {
+        return html`<div class="provider-error"><strong>❌ No available sign-ins</strong><br><em>To enable sign-in, pass a Microsoft key, Google key, or Facebook key to the &lt;pwa-auth&gt; component.</em><br><pre>&lt;pwa-auth microsoftkey="..."&gt;&lt;/pwa-auth&gt;</pre></div>`;
+    }
+
+    private dropdownFocusOut(e: FocusEvent) {
+        // Close the dropdown if the focus is no longer within it.
+        if (this.menuOpened) {
+            const dropdown = this.shadowRoot?.querySelector(".dropdown");
+            const dropdownContainsFocus = dropdown?.matches(":focus-within");
+            if (!dropdownContainsFocus) {
+                this.menuOpened = false;
+            }
+        }
+    }
+
+    private get hasAnyKey(): boolean {
+        return !!this.microsoftKey || !!this.googleKey || !!this.facebookKey;
     }
 
     private async signInClicked() {

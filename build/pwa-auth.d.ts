@@ -17,8 +17,10 @@ export declare class PwaAuth extends LitElement {
     static styles: import("lit-element").CSSResult;
     render(): TemplateResult;
     private renderLoginButton;
+    private renderListButtons;
+    private renderNoKeysError;
     private dropdownFocusOut;
-    private renderProviderButtons;
+    private get hasAnyKey();
     private signInClicked;
     private toggleMenu;
     private signInMs;

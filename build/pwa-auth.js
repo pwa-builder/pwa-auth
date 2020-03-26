@@ -21,8 +21,11 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.disabled = false;
     }
     render() {
+        if (!this.hasAnyKey) {
+            return this.renderNoKeysError();
+        }
         if (this.appearance === "list") {
-            return this.renderProviderButtons();
+            return this.renderListButtons();
         }
         return this.renderLoginButton();
     }
@@ -51,17 +54,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             </div>
         `;
     }
-    dropdownFocusOut(e) {
-        // Close the dropdown if the focus is no longer within it.
-        if (this.menuOpened) {
-            const dropdown = this.shadowRoot?.querySelector(".dropdown");
-            const dropdownContainsFocus = dropdown?.matches(":focus-within");
-            if (!dropdownContainsFocus) {
-                this.menuOpened = false;
-            }
-        }
-    }
-    renderProviderButtons() {
+    renderListButtons() {
         return html `
             <div class="provider">
                 <button class="microsoft-list-btn" ?disabled=${this.disabled} @click="${this.signInMs}">
@@ -96,6 +89,22 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
                 </button>
             </div>
         `;
+    }
+    renderNoKeysError() {
+        return html `<div class="provider-error"><strong>❌ No available sign-ins</strong><br><em>To enable sign-in, pass a Microsoft key, Google key, or Facebook key to the &lt;pwa-auth&gt; component.</em><br><pre>&lt;pwa-auth microsoftkey="..."&gt;&lt;/pwa-auth&gt;</pre></div>`;
+    }
+    dropdownFocusOut(e) {
+        // Close the dropdown if the focus is no longer within it.
+        if (this.menuOpened) {
+            const dropdown = this.shadowRoot?.querySelector(".dropdown");
+            const dropdownContainsFocus = dropdown?.matches(":focus-within");
+            if (!dropdownContainsFocus) {
+                this.menuOpened = false;
+            }
+        }
+    }
+    get hasAnyKey() {
+        return !!this.microsoftKey || !!this.googleKey || !!this.facebookKey;
     }
     async signInClicked() {
         // Do we have auto-sign in? If so, go ahead and sign in with whatever stored credential we have.
@@ -379,6 +388,12 @@ PwaAuth.styles = css `
         .dropdown .menu button svg {
             vertical-align: middle;
             margin-right: 10px;
+        }
+
+        .provider-error {
+            background-color: rgb(220, 53, 69);
+            color: white;
+            padding: 20px;
         }
     `;
 __decorate([
