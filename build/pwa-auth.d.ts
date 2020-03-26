@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult, PropertyValues } from 'lit-element';
+import { LitElement, TemplateResult } from 'lit-element';
 declare type AuthProvider = "Microsoft" | "Google" | "Facebook";
 export declare class PwaAuth extends LitElement {
     appearance: "button" | "list";
@@ -15,7 +15,6 @@ export declare class PwaAuth extends LitElement {
     disabled: boolean;
     static readonly providerUrls: Record<AuthProvider, string>;
     static styles: import("lit-element").CSSResult;
-    firstUpdated(changedProperties: PropertyValues): void;
     render(): TemplateResult;
     private renderLoginButton;
     private dropdownFocusOut;

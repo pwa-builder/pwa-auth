@@ -12,6 +12,7 @@ export declare class MicrosoftAuth {
     private signInSucceeded;
     private signInFailed;
     private redirectCallback;
+    private getAccessToken;
     private getUserPhoto;
     private callGraphApi;
     private getLoginResult;

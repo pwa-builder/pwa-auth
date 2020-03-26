@@ -8,7 +8,6 @@ export class GoogleProvider {
     static readonly apiUrl = "https://apis.google.com/js/api:client.js";
 
     constructor(private clientId: string, private signInButton: HTMLElement) {
-        
     }
 
     signIn(): Promise<LoginResult> {
@@ -89,9 +88,9 @@ export class GoogleProvider {
             email: profile.getEmail(),
             name: profile.getName(),
             imageUrl: profile.getImageUrl(),
-            info: user,
             provider: "Google",
-            error: null
+            error: null,
+            info: user
         };
     }
 }

@@ -7,7 +7,6 @@ export class TwitterProvider {
     private reject: ((error: any) => void) | null = null;
 
     private static readonly requestTokenApiUrl = "https://api.twitter.com/oauth/request_token";
-    private static readonly callbackUrlZanz = "https://d6e9c486.ngrok.io/public#twitter-callback";
 
     constructor(private accessToken: string) {
         

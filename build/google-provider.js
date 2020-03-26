@@ -73,9 +73,9 @@ export class GoogleProvider {
             email: profile.getEmail(),
             name: profile.getName(),
             imageUrl: profile.getImageUrl(),
-            info: user,
             provider: "Google",
-            error: null
+            error: null,
+            info: user
         };
     }
 }

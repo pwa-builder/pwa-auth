@@ -5,14 +5,16 @@
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 
-<body class="container">
+<body class="container p-2">
     <div class="jumbotron">
         <h1 class="display-4">pwa-auth sample</h1>
-        <p class="lead">This sample shows how to use the &lt;pwa-auth&gt; component</p>
+        <p class="lead">This sample shows &lt;pwa-auth&gt; component in action</p>
         <hr class="my-4">
         <span>Click</span>
 
-        <pwa-auth appearance="button" msclientid="266d4854-0bf8-4540-9fa9-d8409274f8f6"
+        <pwa-auth 
+            appearance="button" 
+            msclientid="266d4854-0bf8-4540-9fa9-d8409274f8f6"
             googleclientid="535371030919-i0fns6kc49ovit7cob0k7cbpste49ksk.apps.googleusercontent.com"
             facebookappid="498544657719315">
         </pwa-auth>
@@ -66,7 +68,6 @@
         <script>
             const authComponent = document.querySelector("pwa-auth");
             authComponent.addEventListener("login-completed", e => {
-                console.log("zanz completed", e.detail);
                 const detailsElement = document.querySelector("#signInDetails");
                 const successElement = document.querySelector("#signInSuccess");
                 const failureElement = document.querySelector("#signInFailure")
@@ -87,15 +88,9 @@
         </script>
 
         <!-- Use Bootstrap for styling in this sample -->
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-            crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"crossorigin="anonymous"></script>
 </body>
 
 </html>

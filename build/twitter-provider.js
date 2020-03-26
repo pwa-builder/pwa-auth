@@ -27,5 +27,4 @@ export class TwitterProvider {
     }
 }
 TwitterProvider.requestTokenApiUrl = "https://api.twitter.com/oauth/request_token";
-TwitterProvider.callbackUrlZanz = "https://d6e9c486.ngrok.io/public#twitter-callback";
 //# sourceMappingURL=twitter-provider.js.map

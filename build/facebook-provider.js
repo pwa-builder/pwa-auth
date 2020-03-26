@@ -62,7 +62,7 @@ export class FacebookProvider {
         if (statusResponse.status === "connected") {
             // If we're already connected, signal it.
             const requestArgs = {
-                fields: "name, email, picture"
+                fields: "name, email, picture.width(1440).height(1440)"
             };
             FB.api("/me", requestArgs, res => this.userDetailsFetched(res));
         }
@@ -86,9 +86,9 @@ export class FacebookProvider {
             email: userDetails.email,
             name: userDetails.name,
             imageUrl: userDetails.picture?.data?.url,
-            info: userDetails,
             error: null,
-            provider: "Facebook"
+            provider: "Facebook",
+            info: userDetails
         };
         this.resolve?.(loginResult);
     }

@@ -47,11 +47,12 @@ export class MicrosoftAuth {
 
         // Fetch the user's photo. 
         // MS provider supports this for work and edu accounts, but not for personal accounts.
-        // Finally clause: regardless of whether we can get the user's photo, we consider it a successful signin.
-        this.getUserPhoto()
+        this.getAccessToken(loginResponse)
+            .then(accessToken => loginResult.info ? (loginResult.info["accessToken"] = accessToken) : accessToken)
+            .then(accessToken => this.getUserPhoto(accessToken))
             .then(photoUrl => loginResult.imageUrl = photoUrl)
             .catch(error => console.log("Unable to fetch user profile image. Note that Microsoft Graph cannot fetch profile pictures for personal accounts; only work and education accounts are supported. Error details: ", error))
-            .finally(() => this.resolve?.(loginResult));
+            .finally(() => this.resolve?.(loginResult)); // Finally clause: regardless of whether we can get the user's photo, we consider it a successful signin.
     }
 
     private signInFailed(error: any) {
@@ -62,23 +63,24 @@ export class MicrosoftAuth {
         error: Msal.AuthError | null, 
         response: Msal.AuthResponse | undefined) {
 
-        if (error) {
-            this.signInFailed(error);
-            console.error("Msal redirect callback failure", error);
-        } else if (response) {
+        if (response) {
             this.signInSucceeded(response);
         } else {
-            console.log("Unexpected redirect: no error, but no login response", error, response);
+            this.signInFailed(error || "Unexpected redirect: no error and no login response");
         }
     }
 
-    private getUserPhoto(): Promise<string | null> {
+    private getAccessToken(loginResponse: Msal.AuthResponse): Promise<string> {
         if (!this.app) {
             return Promise.reject("No app context");
         }
 
         return this.app.acquireTokenSilent(this.requestObj)
-            .then(tokenResponse => this.callGraphApi("/photo/$value", tokenResponse.accessToken))
+            .then(tokenResponse => tokenResponse.accessToken);
+    }
+
+    private getUserPhoto(accessToken: string): Promise<string> {
+        return this.callGraphApi("/photo/$value", accessToken)
             .then(result => result.blob())
             .then(blob => URL.createObjectURL(blob));
     }
