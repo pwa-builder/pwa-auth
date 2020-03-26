@@ -50,7 +50,7 @@ export class MicrosoftAuth {
         // Finally clause: regardless of whether we can get the user's photo, we consider it a successful signin.
         this.getUserPhoto()
             .then(photoUrl => loginResult.imageUrl = photoUrl)
-            .catch(error => console.log("Unable to fetch user profile image", error))
+            .catch(error => console.log("Unable to fetch user profile image. Note that Microsoft Graph cannot fetch profile pictures for personal accounts; only work and education accounts are supported. Error details: ", error))
             .finally(() => this.resolve?.(loginResult));
     }
 
