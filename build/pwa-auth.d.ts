@@ -9,7 +9,7 @@ export declare class PwaAuth extends LitElement {
     microsoftKey: string | undefined | null;
     googleKey: string | undefined | null;
     facebookKey: string | undefined | null;
-    autoSignIn: "none" | "user-choice" | "first-available";
+    credentialMode: "none" | "first" | "prompt";
     menuOpened: boolean;
     menuPlacement: "start" | "end";
     disabled: boolean;
@@ -26,11 +26,16 @@ export declare class PwaAuth extends LitElement {
     private signInMs;
     private signInGoogle;
     private signInFacebook;
-    private loginCompleted;
+    private signInWithProvider;
+    private signInCompleted;
+    private startMicrosoftSignInFlow;
+    private startGoogleSignInFlow;
+    private startFacebookSignInFlow;
     private tryStoreCredential;
     private tryAutoSignIn;
+    private tryLoginWithStoredCredential;
     private getStoredCredential;
-    private credentialToLoginResult;
+    private credentialToSignInResult;
     private getProviderNameFromUrl;
 }
 export {};

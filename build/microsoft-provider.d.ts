@@ -1,4 +1,4 @@
-import { LoginResult } from "./login-result";
+import { SignInResult } from "./signin-result";
 export declare class MicrosoftAuth {
     private clientId;
     private readonly requestObj;
@@ -7,7 +7,7 @@ export declare class MicrosoftAuth {
     private reject;
     private app;
     constructor(clientId: string);
-    signIn(): Promise<LoginResult>;
+    signIn(): Promise<SignInResult>;
     private signInWithMsal;
     private signInSucceeded;
     private signInFailed;
@@ -15,5 +15,6 @@ export declare class MicrosoftAuth {
     private getAccessToken;
     private getUserPhoto;
     private callGraphApi;
+    private getImageUrlFromBlob;
     private getLoginResult;
 }

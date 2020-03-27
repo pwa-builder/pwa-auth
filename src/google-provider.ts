@@ -1,8 +1,8 @@
-import { LoginResult } from "./login-result";
+import { SignInResult } from "./signin-result";
 
 export class GoogleProvider {
 
-    private resolve: ((result: LoginResult) => void) | null = null;
+    private resolve: ((result: SignInResult) => void) | null = null;
     private reject: ((error: any) => void) | null = null;
 
     static readonly apiUrl = "https://apis.google.com/js/api:client.js";
@@ -10,11 +10,11 @@ export class GoogleProvider {
     constructor(private clientId: string, private signInButton: HTMLElement) {
     }
 
-    signIn(): Promise<LoginResult> {
+    signIn(): Promise<SignInResult> {
         this.resolve = null;
         this.reject = null;
 
-        return new Promise<LoginResult>((resolve, reject) => {
+        return new Promise<SignInResult>((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
             this.appendGoogleScript();
@@ -82,7 +82,7 @@ export class GoogleProvider {
         this.reject?.(error);
     }
 
-    private getLoginResult(user: gapi.auth2.GoogleUser): LoginResult {
+    private getLoginResult(user: gapi.auth2.GoogleUser): SignInResult {
         const profile = user.getBasicProfile();
         return {
             email: profile.getEmail(),

@@ -1,11 +1,11 @@
-import { LoginResult } from "./login-result";
+import { SignInResult } from "./signin-result";
 export declare class FacebookProvider {
     private appId;
     private resolve;
     private reject;
     static readonly apiUrl = "https://connect.facebook.net/en_US/sdk.js";
     constructor(appId: string);
-    signIn(): Promise<LoginResult>;
+    signIn(): Promise<SignInResult>;
     private appendFacebookScript;
     private scriptLoadSucceded;
     private scriptLoadFailed;

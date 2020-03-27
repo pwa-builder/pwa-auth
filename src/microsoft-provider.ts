@@ -1,22 +1,22 @@
 import * as Msal from "msal";
-import { LoginResult } from "./login-result";
+import { SignInResult } from "./signin-result";
 
 export class MicrosoftAuth {
 
     private readonly requestObj = { scopes: ["user.read"] };
     private readonly graphConfig = { graphMeEndpoint: "https://graph.microsoft.com/v1.0/me" };
-    private resolve: ((result: LoginResult) => void) | null = null;
+    private resolve: ((result: SignInResult) => void) | null = null;
     private reject: ((error: any) => void) | null = null;
     private app: Msal.UserAgentApplication | null = null;
     
     constructor (private clientId: string) {
     }
 
-    signIn(): Promise<LoginResult> {
+    signIn(): Promise<SignInResult> {
         this.resolve = null;
         this.reject = null;
 
-        return new Promise<LoginResult>((resolve, reject) => {
+        return new Promise<SignInResult>((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
             this.signInWithMsal();
@@ -82,7 +82,7 @@ export class MicrosoftAuth {
     private getUserPhoto(accessToken: string): Promise<string> {
         return this.callGraphApi("/photo/$value", accessToken)
             .then(result => result.blob())
-            .then(blob => URL.createObjectURL(blob));
+            .then(blob => this.getImageUrlFromBlob(blob))
     }
 
     private callGraphApi(relativeUrl: string, accessToken: string): Promise<Response> {
@@ -101,7 +101,22 @@ export class MicrosoftAuth {
         })
     }
 
-    private getLoginResult(loginResponse: any | null): LoginResult {
+    private getImageUrlFromBlob(blob: Blob): Promise<string> {
+        // COMMENTED OUT: 
+        // This works initially, creating a blob:// url. 
+        // However, storing this credential for use in a later page load results in a broken image because the blob no longer exists in memory.
+        // return URL.createObjectURL(blob)); 
+
+        // Use a FileReader to read the image as a base 64 URL string
+        return new Promise<string>((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.addEventListener("error", error => reject(error));
+            fileReader.addEventListener("loadend", () => resolve(fileReader.result as string));
+            fileReader.readAsDataURL(blob);
+        });
+    }
+
+    private getLoginResult(loginResponse: any | null): SignInResult {
         return {
             name: loginResponse?.account?.name || "",
             email: loginResponse?.account?.userName || "",

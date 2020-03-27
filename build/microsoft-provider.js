@@ -66,7 +66,7 @@ export class MicrosoftAuth {
     getUserPhoto(accessToken) {
         return this.callGraphApi("/photo/$value", accessToken)
             .then(result => result.blob())
-            .then(blob => URL.createObjectURL(blob));
+            .then(blob => this.getImageUrlFromBlob(blob));
     }
     callGraphApi(relativeUrl, accessToken) {
         const url = `${this.graphConfig.graphMeEndpoint}${relativeUrl}`;
@@ -81,6 +81,19 @@ export class MicrosoftAuth {
                 return Promise.reject(`Graph API returned 404 for ${relativeUrl}`);
             }
             return res;
+        });
+    }
+    getImageUrlFromBlob(blob) {
+        // COMMENTED OUT: 
+        // This works initially, creating a blob:// url. 
+        // However, storing this credential for use in a later page load results in a broken image because the blob no longer exists in memory.
+        // return URL.createObjectURL(blob)); 
+        // Use a FileReader to read the image as a base 64 URL string
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.addEventListener("error", error => reject(error));
+            fileReader.addEventListener("loadend", () => resolve(fileReader.result));
+            fileReader.readAsDataURL(blob);
         });
     }
     getLoginResult(loginResponse) {

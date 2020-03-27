@@ -1,10 +1,10 @@
-import { LoginResult } from "./login-result";
+import { SignInResult } from "./signin-result";
 export declare class TwitterProvider {
     private accessToken;
     private resolve;
     private reject;
     private static readonly requestTokenApiUrl;
     constructor(accessToken: string);
-    signIn(): Promise<LoginResult>;
+    signIn(): Promise<SignInResult>;
     acquireRequestToken(): void;
 }

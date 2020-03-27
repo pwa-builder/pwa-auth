@@ -1,9 +1,9 @@
-import { LoginResult } from "./login-result";
+import { SignInResult } from "./signin-result";
 //import * as TwitterLite from "twitter-lite";
 
 export class TwitterProvider {
 
-    private resolve: ((result: LoginResult) => void) | null = null;
+    private resolve: ((result: SignInResult) => void) | null = null;
     private reject: ((error: any) => void) | null = null;
 
     private static readonly requestTokenApiUrl = "https://api.twitter.com/oauth/request_token";
@@ -12,11 +12,11 @@ export class TwitterProvider {
         
     }
 
-    signIn(): Promise<LoginResult> {
+    signIn(): Promise<SignInResult> {
         this.resolve = null;
         this.reject = null;
 
-        return new Promise<LoginResult>((resolve, reject) => {
+        return new Promise<SignInResult>((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
             this.acquireRequestToken();

@@ -13,6 +13,7 @@
 
         <pwa-auth 
             appearance="button" 
+            credentialmode="prompt"
             microsoftkey="266d4854-0bf8-4540-9fa9-d8409274f8f6"
             googlekey="535371030919-i0fns6kc49ovit7cob0k7cbpste49ksk.apps.googleusercontent.com"
             facebookkey="498544657719315">
@@ -66,7 +67,7 @@
         <!-- Show the sign-in results in the UI -->
         <script>
             const authComponent = document.querySelector("pwa-auth");
-            authComponent.addEventListener("login-completed", e => {
+            authComponent.addEventListener("signin-completed", e => {
                 const detailsElement = document.querySelector("#signInDetails");
                 const successElement = document.querySelector("#signInSuccess");
                 const failureElement = document.querySelector("#signInFailure")

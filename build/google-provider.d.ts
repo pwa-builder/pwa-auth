@@ -1,4 +1,4 @@
-import { LoginResult } from "./login-result";
+import { SignInResult } from "./signin-result";
 export declare class GoogleProvider {
     private clientId;
     private signInButton;
@@ -6,7 +6,7 @@ export declare class GoogleProvider {
     private reject;
     static readonly apiUrl = "https://apis.google.com/js/api:client.js";
     constructor(clientId: string, signInButton: HTMLElement);
-    signIn(): Promise<LoginResult>;
+    signIn(): Promise<SignInResult>;
     private appendGoogleScript;
     private scriptLoadSucceded;
     private scriptLoadFailed;

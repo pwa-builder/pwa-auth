@@ -15,7 +15,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.microsoftButtonText = "Sign in with Microsoft";
         this.googleButtonText = "Sign in with Google";
         this.facebookButtonText = "Sign in with Facebook";
-        this.autoSignIn = "none";
+        this.credentialMode = "prompt";
         this.menuOpened = false;
         this.menuPlacement = "start";
         this.disabled = false;
@@ -42,12 +42,12 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
                     </button>
 
                     <button class="google-menu-btn" ?disabled=${this.disabled} @click="${this.signInGoogle}">
-                        <svg x="0px" y="0px" width="20" height="20" viewBox="0 0 533.5 544.3"><g><path fill="#4285F4" d="M533.5,278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1,33.8-25.7,63.7-54.4,82.7v68h87.7 C503.9,431.2,533.5,361.2,533.5,278.4z"/><path fill="#34A853" d="M272.1,544.3c73.4,0,135.3-24.1,180.4-65.7l-87.7-68c-24.4,16.6-55.9,26-92.6,26c-71,0-131.2-47.9-152.8-112.3 H28.9v70.1C75.1,486.3,169.2,544.3,272.1,544.3z"/><path fill="#FBBC04" d="M119.3,324.3c-11.4-33.8-11.4-70.4,0-104.2V150H28.9c-38.6,76.9-38.6,167.5,0,244.4L119.3,324.3z"/><path fill="#EA4335" d="M272.1,107.7c38.8-0.6,76.3,14,104.4,40.8l0,0l77.7-77.7C405,24.6,339.7-0.8,272.1,0C169.2,0,75.1,58,28.9,150 l90.4,70.1C140.8,155.6,201.1,107.7,272.1,107.7z"/></g></svg>                        
+                        <svg x="0px" y="0px" width="20px" height="20px" viewBox="0 0 533.5 544.3"><g><path fill="#4285F4" d="M533.5,278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1,33.8-25.7,63.7-54.4,82.7v68h87.7 C503.9,431.2,533.5,361.2,533.5,278.4z"/><path fill="#34A853" d="M272.1,544.3c73.4,0,135.3-24.1,180.4-65.7l-87.7-68c-24.4,16.6-55.9,26-92.6,26c-71,0-131.2-47.9-152.8-112.3 H28.9v70.1C75.1,486.3,169.2,544.3,272.1,544.3z"/><path fill="#FBBC04" d="M119.3,324.3c-11.4-33.8-11.4-70.4,0-104.2V150H28.9c-38.6,76.9-38.6,167.5,0,244.4L119.3,324.3z"/><path fill="#EA4335" d="M272.1,107.7c38.8-0.6,76.3,14,104.4,40.8l0,0l77.7-77.7C405,24.6,339.7-0.8,272.1,0C169.2,0,75.1,58,28.9,150 l90.4,70.1C140.8,155.6,201.1,107.7,272.1,107.7z"/></g></svg>                        
                         <span>${this.googleButtonText}</span>
                     </button>
 
                     <button class="facebook-menu-btn" @click="${this.signInFacebook}">
-                        <svg x="0px" y="0px" width="20" height="20" viewBox="0 0 500 500"><path style="fill:#3A559F;" d="M0,0v455.73h242.704V279.691h-59.33v-71.864h59.33v-60.353c0-43.893,35.582-79.475,79.475-79.475 h62.025v64.622h-44.382c-13.947,0-25.254,11.307-25.254,25.254v49.953h68.521l-9.47,71.864h-59.051V455.73H455.73V0H0z"/></svg>
+                        <svg x="0px" y="0px" width="20px" height="20px" viewBox="0 0 500 500"><path style="fill:#3A559F;" d="M0,0v455.73h242.704V279.691h-59.33v-71.864h59.33v-60.353c0-43.893,35.582-79.475,79.475-79.475 h62.025v64.622h-44.382c-13.947,0-25.254,11.307-25.254,25.254v49.953h68.521l-9.47,71.864h-59.051V455.73H455.73V0H0z"/></svg>
                         <span>${this.facebookButtonText}</span>
                     </button>
                 </div>
@@ -73,7 +73,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
                 </button>
             </div>
             <div class="provider">
-                <button class="facebook-list-btn" @click="${this.signInFacebook}">
+                <button class="facebook-list-btn" ?disabled=${this.disabled} @click="${this.signInFacebook}">
                     <span>
                         <svg width="25px" height="25px" fill="#3B5998" class="mk ml u"><path fill="white" d="M20.3 4H4.7a.7.7 0 0 0-.7.7v15.6c0 .38.32.7.7.7h8.33v-6.38h-2.12v-2.65h2.12V9.84c0-2.2 1.4-3.27 3.35-3.27.94 0 1.75.07 1.98.1v2.3H17c-1.06 0-1.31.5-1.31 1.24v1.76h2.65l-.53 2.65H15.7l.04 6.38h4.56a.7.7 0 0 0 .71-.7V4.7a.7.7 0 0 0-.7-.7" fill-rule="evenodd"></path></svg>
                         ${this.facebookButtonText}
@@ -107,8 +107,9 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         return !!this.microsoftKey || !!this.googleKey || !!this.facebookKey;
     }
     async signInClicked() {
-        // Do we have auto-sign in? If so, go ahead and sign in with whatever stored credential we have.
-        if (this.autoSignIn === "none") {
+        // Are we configured to use browser credentials (the new CredentialStore API)?
+        // If so, go ahead and sign in with whatever stored credential we have.
+        if (this.credentialMode === "none") {
             this.toggleMenu();
         }
         else {
@@ -123,59 +124,77 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.menuOpened = !this.menuOpened;
     }
     signInMs() {
-        if (this.microsoftKey && !this.disabled) {
-            import("./microsoft-provider")
-                .then(module => new module.MicrosoftAuth(this.microsoftKey).signIn())
-                .then(result => this.loginCompleted(result))
-                .catch(error => this.loginCompleted({
-                error: error,
-                provider: "Microsoft"
-            }))
-                .finally(() => this.disabled = false);
-        }
+        this.signInWithProvider(this.microsoftKey, "Microsoft", key => this.startMicrosoftSignInFlow(key))
+            .then(result => this.signInCompleted(result));
     }
     signInGoogle(e) {
         const googleBtn = e.target;
-        if (this.googleKey && googleBtn && !this.disabled) {
-            this.disabled = true;
-            import("./google-provider")
-                .then(module => new module.GoogleProvider(this.googleKey, googleBtn).signIn())
-                .then(result => this.loginCompleted(result))
-                .catch(error => this.loginCompleted({
-                error: error,
-                provider: "Google"
-            }))
-                .finally(() => this.disabled = false);
+        if (googleBtn) {
+            this.signInWithProvider(this.googleKey, "Google", key => this.startGoogleSignInFlow(key, googleBtn))
+                .then(result => this.signInCompleted(result));
         }
     }
     signInFacebook() {
-        if (this.facebookKey && !this.disabled) {
-            this.disabled = true;
-            import("./facebook-provider")
-                .then(module => new module.FacebookProvider(this.facebookKey).signIn())
-                .then(result => this.loginCompleted(result))
-                .catch(error => this.loginCompleted({
-                error: error,
-                provider: "Facebook"
-            }))
-                .finally(() => this.disabled = false);
+        this.signInWithProvider(this.facebookKey, "Facebook", key => this.startFacebookSignInFlow(key))
+            .then(result => this.signInCompleted(result));
+    }
+    signInWithProvider(key, provider, providerSignIn) {
+        if (!key) {
+            return Promise.reject("No key specified");
         }
+        if (this.disabled) {
+            return Promise.reject("Sign-in already in progress, rejecting new sign-in attempt");
+        }
+        this.disabled = true;
+        this.menuOpened = false;
+        return this.tryLoginWithStoredCredential(PwaAuth_1.providerUrls[provider])
+            .then(storedCredSignInResult => {
+            // Did we sign in with a stored credential? Good, we're done.
+            if (storedCredSignInResult) {
+                return storedCredSignInResult;
+            }
+            // Couldn't sign in with stored credential. 
+            // Kick off the provider-specified OAuth flow.
+            return providerSignIn(key)
+                .catch(error => {
+                // If the provider sends back an error, consider that a SignInResult
+                const providerError = {
+                    error: error,
+                    provider: provider
+                };
+                return providerError;
+            });
+        })
+            .finally(() => this.disabled = false);
     }
-    loginCompleted(login) {
-        this.dispatchEvent(new CustomEvent("login-completed", { detail: login }));
-        this.tryStoreCredential(login);
+    signInCompleted(signIn) {
+        this.dispatchEvent(new CustomEvent("signin-completed", { detail: signIn }));
+        this.tryStoreCredential(signIn);
+        return signIn;
     }
-    tryStoreCredential(login) {
+    startMicrosoftSignInFlow(key) {
+        return import("./microsoft-provider")
+            .then(module => new module.MicrosoftAuth(key).signIn());
+    }
+    startGoogleSignInFlow(key, googleSignInBtn) {
+        return import("./google-provider")
+            .then(module => new module.GoogleProvider(key, googleSignInBtn).signIn());
+    }
+    startFacebookSignInFlow(key) {
+        return import("./facebook-provider")
+            .then(module => new module.FacebookProvider(key).signIn());
+    }
+    tryStoreCredential(signIn) {
         // Use the new Credential Management API to store the credential, allowing for automatic sign-in next time the user visits the page.
         // https://developers.google.com/web/fundamentals/security/credential-management/
         const federatedCredentialCtor = window["FederatedCredential"];
-        if (login.email && federatedCredentialCtor) {
+        if (signIn.email && federatedCredentialCtor) {
             try {
                 const cred = new federatedCredentialCtor({
-                    id: login.email,
-                    provider: PwaAuth_1.providerUrls[login.provider],
-                    name: login.name || "",
-                    iconURL: login.imageUrl || ""
+                    id: signIn.email,
+                    provider: PwaAuth_1.providerUrls[signIn.provider],
+                    name: signIn.name || "",
+                    iconURL: signIn.imageUrl || ""
                 });
                 navigator.credentials.store(cred);
             }
@@ -192,12 +211,12 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             return null;
         }
         let credential = null;
-        if (this.autoSignIn === "user-choice") {
-            // Let the user choose. What this means:
+        if (this.credentialMode === "prompt") {
+            // Let the user choose.
             // The browser brings up the native "choose your sign in" dialog.
             credential = await this.getStoredCredential("required", Object.values(PwaAuth_1.providerUrls));
         }
-        else if (this.autoSignIn === "first-available") {
+        else if (this.credentialMode === "first") {
             // Go through the available providers and find one that the user has logged in with.
             for (let providerName in PwaAuth_1.providerUrls) {
                 const providerUrl = PwaAuth_1.providerUrls[providerName];
@@ -208,12 +227,21 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             }
         }
         if (credential) {
-            const loginResult = this.credentialToLoginResult(credential);
-            this.loginCompleted(loginResult);
+            const loginResult = this.credentialToSignInResult(credential);
+            this.signInCompleted(loginResult);
         }
         return credential;
     }
+    tryLoginWithStoredCredential(providerUrl) {
+        return this.getStoredCredential("silent", [providerUrl])
+            .catch(error => console.warn("Error attempting to sign-in with stored credential", error))
+            .then(credential => credential ? this.credentialToSignInResult(credential) : null);
+    }
     getStoredCredential(mediation, providerUrls) {
+        // Bail if we don't support Credential Management
+        if (!window["FederatedCredential"]) {
+            return Promise.resolve(null);
+        }
         const credOptions = {
             mediation: mediation,
             federated: {
@@ -222,7 +250,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         };
         return navigator.credentials.get(credOptions);
     }
-    credentialToLoginResult(cred) {
+    credentialToSignInResult(cred) {
         return {
             name: cred.name,
             email: cred.id,
@@ -422,7 +450,7 @@ __decorate([
 ], PwaAuth.prototype, "facebookKey", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "autoSignIn", void 0);
+], PwaAuth.prototype, "credentialMode", void 0);
 __decorate([
     property({ type: String })
 ], PwaAuth.prototype, "menuOpened", void 0);

@@ -1,4 +1,4 @@
-export interface LoginResult {
+export interface SignInResult {
     /**
      * The user's email.
      */
