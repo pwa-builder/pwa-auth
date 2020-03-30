@@ -9,7 +9,7 @@ export declare class PwaAuth extends LitElement {
     microsoftKey: string | undefined | null;
     googleKey: string | undefined | null;
     facebookKey: string | undefined | null;
-    credentialMode: "none" | "first" | "prompt";
+    credentialMode: "none" | "silent" | "prompt";
     menuOpened: boolean;
     menuPlacement: "start" | "end";
     disabled: boolean;

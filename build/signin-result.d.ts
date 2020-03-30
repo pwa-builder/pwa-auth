@@ -14,7 +14,7 @@ export interface SignInResult {
     /**
      * Additional details about the sign-in. Provider-specific.
      */
-    info?: Object | null;
+    providerData?: Object | null;
     /**
      * The error that occurred during sign in process.
      */

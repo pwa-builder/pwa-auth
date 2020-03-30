@@ -1,7 +1,6 @@
 import { LitElement, html, css, customElement, property, TemplateResult, PropertyValues } from 'lit-element';
 import { SignInResult } from './signin-result';
 import { FederatedCredential } from './federated-credential';
-import { TwitterProvider } from './twitter-provider';
 
 type AuthProvider = "Microsoft" | "Google" | "Facebook";
 
@@ -17,7 +16,7 @@ export class PwaAuth extends LitElement {
     @property({ type: String }) microsoftKey: string | undefined | null;
     @property({ type: String }) googleKey: string | undefined | null;
     @property({ type: String }) facebookKey: string | undefined | null;
-    @property({ type: String }) credentialMode: "none" | "first" | "prompt" = "prompt";
+    @property({ type: String }) credentialMode: "none" | "silent" | "prompt" = "silent";
     @property({ type: String }) menuOpened = false;
     @property({ type: String }) menuPlacement: "start" | "end" = "start";
 
@@ -213,7 +212,7 @@ export class PwaAuth extends LitElement {
                         <span>${this.googleButtonText}</span>
                     </button>
 
-                    <button class="facebook-menu-btn" @click="${this.signInFacebook}">
+                    <button class="facebook-menu-btn" ?disabled=${this.disabled} @click="${this.signInFacebook}">
                         <svg x="0px" y="0px" width="20px" height="20px" viewBox="0 0 500 500"><path style="fill:#3A559F;" d="M0,0v455.73h242.704V279.691h-59.33v-71.864h59.33v-60.353c0-43.893,35.582-79.475,79.475-79.475 h62.025v64.622h-44.382c-13.947,0-25.254,11.307-25.254,25.254v49.953h68.521l-9.47,71.864h-59.051V455.73H455.73V0H0z"/></svg>
                         <span>${this.facebookButtonText}</span>
                     </button>
@@ -400,7 +399,7 @@ export class PwaAuth extends LitElement {
             // Let the user choose.
             // The browser brings up the native "choose your sign in" dialog.
             credential = await this.getStoredCredential("required", Object.values(PwaAuth.providerUrls));
-        } else if (this.credentialMode === "first") {
+        } else if (this.credentialMode === "silent") {
             // Go through the available providers and find one that the user has logged in with.
             for (let providerName in PwaAuth.providerUrls) {
                 const providerUrl = PwaAuth.providerUrls[providerName];
@@ -445,7 +444,7 @@ export class PwaAuth extends LitElement {
         return {
             name: cred.name,
             email: cred.id,
-            info: null,
+            providerData: null,
             imageUrl: cred.iconURL, 
             error: null,
             provider: this.getProviderNameFromUrl(cred.provider!) as AuthProvider

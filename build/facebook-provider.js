@@ -88,7 +88,7 @@ export class FacebookProvider {
             imageUrl: userDetails.picture?.data?.url,
             error: null,
             provider: "Facebook",
-            info: userDetails
+            providerData: userDetails
         };
         this.resolve?.(loginResult);
     }

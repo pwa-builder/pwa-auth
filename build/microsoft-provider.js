@@ -39,7 +39,7 @@ export class MicrosoftAuth {
         // Fetch the user's photo. 
         // MS provider supports this for work and edu accounts, but not for personal accounts.
         this.getAccessToken(loginResponse)
-            .then(accessToken => loginResult.info ? (loginResult.info["accessToken"] = accessToken) : accessToken)
+            .then(accessToken => loginResult.providerData ? (loginResult.providerData["accessToken"] = accessToken) : accessToken)
             .then(accessToken => this.getUserPhoto(accessToken))
             .then(photoUrl => loginResult.imageUrl = photoUrl)
             .catch(error => console.log("Unable to fetch user profile image. Note that Microsoft Graph cannot fetch profile pictures for personal accounts; only work and education accounts are supported. Error details: ", error))
@@ -103,7 +103,7 @@ export class MicrosoftAuth {
             provider: "Microsoft",
             error: null,
             imageUrl: null,
-            info: loginResponse,
+            providerData: loginResponse,
         };
     }
 }

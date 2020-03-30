@@ -75,7 +75,7 @@ export class GoogleProvider {
             imageUrl: profile.getImageUrl(),
             provider: "Google",
             error: null,
-            info: user
+            providerData: user
         };
     }
 }
