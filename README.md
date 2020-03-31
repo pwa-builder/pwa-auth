@@ -45,7 +45,7 @@ pwa-auth can appear as a single dropdown button:
 ```
 <img loading="lazy" src="/assets/install-btn-dropdown.png">
 
-Or it can displayed as a list of provider buttons:
+Or it can be displayed as a list of provider buttons:
 ```html
 <pwa-auth appearance="list"></pwa-auth>
 ```
@@ -152,4 +152,4 @@ Each key lets your users sign-in with the corresponding service (e.g. a Microsof
 To create a key, see:
 - [Creating a Microsoft key](/creating-microsoft-key.md)
 - [Creating a Google key](/creating-google-key.md)
-- [Creating a Facebook key](https://ZANZ)
+- [Creating a Facebook key](/creating-facebook-key.md)

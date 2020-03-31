@@ -1,6 +1,6 @@
 # Creating a Google key
 
-To let you users sign-in with their Google account, you'll need to create a Google key. This walk-through shows how to do that. You may also refer to Google's documentation: [Configure a project for Google Sign-In with Google Developer Console](https://developers.google.com/identity/sign-in/web/sign-in#before_you_begin).
+To let your users sign-in with their Google account, you'll need to create a Google key. This walk-through shows how to do that. You may also refer to Google's documentation: [Configure a project for Google Sign-In with Google Developer Console](https://developers.google.com/identity/sign-in/web/sign-in#before_you_begin).
 
 In short, we'll use Google Developer Console to create a Project, and within that project, create a credential (a key). 
 
@@ -40,7 +40,7 @@ This will open up additional configuration options: `Name`, `Authorized JavaScri
 
 Click `Create` to finalize your credential.
 
-## Step 5
+## Step 5: Copy your key
 
 After creating your credential, you'll see you new dialog containing your credential ID and secret:
 
@@ -56,9 +56,11 @@ You're done - you now have a working Google key, allowing users to sign-in with 
 
 ## Additional notes about the Google sign-in provider
 
-### Google Auth library (GApi)
+### Google Platform library (GApi)
 
-pwa-auth uses the Google Platform library with auth2 to sign-in with Google. To keep pwa-auth lightweight, Gapi is lazy loaded only when a user taps `Sign in with Google`. Otherwise, no JS loading or parsing overhead is incurred.
+pwa-auth uses the Google Platform library (GApi) with `auth2` to sign-in with Google.
+
+ To keep pwa-auth lightweight, GApi is lazy loaded when a user taps `Sign in with Google`. If a user doesn't try to sign-in with Google, no JS loading or parsing overhead is incurred.
 
 ### Raw `providerData` with Google Sign-In
 

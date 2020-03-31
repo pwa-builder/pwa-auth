@@ -1,6 +1,6 @@
 # Creating a Microsoft key
 
-To let you users sign-in with their Microsoft account, you'll need to create a Microsoft key. This walk-through shows how to do that. You may also refer to Microsoft's documentation: [Adding sign in with Microsoft](https://developer.microsoft.com/en-us/identity/add-sign-in-with-microsoft).
+To let your users sign-in with their Microsoft account, you'll need to create a Microsoft key. This walk-through shows how to do that. You may also refer to Microsoft's documentation: [Adding sign in with Microsoft](https://developer.microsoft.com/en-us/identity/add-sign-in-with-microsoft).
 
 In short, we want to create an App Registration in Azure Active Directory, which will give us the key.
 
