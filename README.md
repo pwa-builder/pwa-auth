@@ -1,11 +1,13 @@
 # pwa-auth
-Web component that gives you easy login/register using 3rd party logins like Microsoft, Google, and Facebook. Built with ❤ by the <a href="https://pwabuilder.com">PWABuilder</a> team.
+Web component that lets your users sign-in/sign-up using their Microsoft, Google, or Facebook account. Your app receives their email address, name, and profile picture. Built with ❤ by the <a href="https://pwabuilder.com">PWABuilder</a> team.
 
-😎 Bonus:  It's super lightweight, pulling in the authentication libraries <em>only</em> when the user tries to login with one.
+😎 Bonus:  It's super lightweight, pulling in the authentication libraries <em>only</em> when the user tries to sign-in with one.
 
-😎😎 Double bonus: It uses the new [Credential Manager APIs](https://developers.google.com/web/fundamentals/security/credential-management/retrieve-credentials) to speed through sign-ins without bulky pop-ups or redirects.
+😎😎 Double bonus: It uses the new [Credential Management APIs](https://developers.google.com/web/fundamentals/security/credential-management/retrieve-credentials) to speed through sign-ins without bulky pop-ups or redirects.
 
-### Using this component
+## Using this component
+
+### Install
 1. Add this script tag to your `<head>`
 
 ```javascript
@@ -25,9 +27,17 @@ Web component that gives you easy login/register using 3rd party logins like Mic
 </pwa-auth>
 ```
 
-You'll need to provide at least one key. Each key you specify allows the user to sign-in with that service. To create a key for each service, see [creating keys](https://ZANZ).
+You'll need to provide at least one key. Each key you specify allows the user to sign-in with that service. To create a key for each service, see [creating keys](#creating-keys).
 
-### What does it look like?
+### NPM
+
+You can also use this component via NPM:
+1. `npm install @pwabuilder/pwaauth`
+2. `import @pwabuilder/pwaauth`
+
+Then you can use the `<pwa-auth>` delement anywhere in your template, JSX, HTML, etc.
+
+## What does it look like?
 
 pwa-auth can appear as a single dropdown button:
 ```html
@@ -43,9 +53,9 @@ Or it can displayed as a list of provider buttons:
 
 All the buttons are stylable and customizable. See [styling](https://ZANZ) for details.
 
-### What happens when a user signs in?
+## What happens when a user signs in?
 
-You'll get an `signin-completed` event containing their <strong>email</strong>, <strong>name</strong>, and <strong>image URL</strong>, as well as additional raw data from the provider (e.g. authentication token):
+You'll get a `signin-completed` event containing the user's <strong>email</strong>, <strong>name</strong>, and <strong>image URL</strong>, as well as additional raw data from the provider (e.g. authentication token):
 
 ```javascript
 const pwaAuth = document.querySelector("pwa-auth");
@@ -70,10 +80,10 @@ pwaAuth.addEventListener("signin-completed", ev => {
     if (signIn.error) {
         console.error("There was an error during sign-in", signIn.error);
     }
-}
+});
 ```
 
-### What does the user see?
+## What does the user see?
 
 The <em>first time</eM> a user signs in, he'll see the familiar OAuth flow asking the user to sign-in. For example, signing in with Google looks like this:
 
@@ -85,12 +95,12 @@ When the user signs in the first time, the browser asks to save your credentials
 
 <img loading="lazy" src="/assets/save-cred.png"/>
 
-If the user saves his credentials, it will be stored using the new [Credential Manager API](https://developers.google.com/web/fundamentals/security/credential-management/retrieve-credentials), enabling fast successive sign-ins.
+If the user saves his credentials, it will be stored using the new [Credential Management API](https://developers.google.com/web/fundamentals/security/credential-management/retrieve-credentials), enabling fast successive sign-ins.
 
-### Successive sign-ins
-##### (Or, [Credential Manager](https://developers.google.com/web/fundamentals/security/credential-management/retrieve-credentials) FTW)
+## Successive sign-ins
+#### (Or, [Credential Management](https://developers.google.com/web/fundamentals/security/credential-management/retrieve-credentials) FTW)
 
-If a user has signed-in previously, future sign-ins will be instantaneous. 😎 The next time the user taps `Sign In`, he'll have a streamlined experience without needing any OAuth prompts or popups:
+If a user has signed-in previously, future sign-ins will be instantaneous. 😎 The next time the user taps `Sign In`, he'll have a streamlined experience without needing any OAuth prompts or pop-ups:
 
 ```html
 <!-- When tapping sign-in, use the saved credential to sign in silently -->
@@ -118,9 +128,9 @@ Finally, you can disable credential management entirely:
 <pwa-auth credentialmode="none"></pwa-auth>
 ```
 
-When `credentialmode` is set to `none` and the user taps `Sign In`, pwa-auth behaves as if the user is signing in for the first time: launching the OAuth popup window to authorize.
+When `credentialmode="none"` and the user taps `Sign In`, pwa-auth behaves as if the user is signing in for the first time: launching the OAuth popup window to authorize.
 
-With regards to browser support, pwa-auth credential management is a <em>progressive</em> enhancement: on browsers that don't support Credential Manager, pwa-auth will fallback to `credentialmode="none"` behavior.
+With regards to browser support, pwa-auth credential management is a <em>progressive</em> enhancement: on browsers that don't support Credential Management, pwa-auth will fallback to `credentialmode="none"` behavior.
 
 ### Creating keys
 
@@ -138,5 +148,5 @@ Each key lets your users sign-in with the corresponding service (e.g. a Microsof
 
 To create a key, see:
 - [Creating a Microsoft key](/creating-microsoft-key.md)
-- [Creating a Google key](https://ZANZ)
+- [Creating a Google key](/creating-google-key.md)
 - [Creating a Facebook key](https://ZANZ)

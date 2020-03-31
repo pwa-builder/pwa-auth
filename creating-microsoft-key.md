@@ -1,6 +1,6 @@
 # Creating a Microsoft key
 
-To let you users sign-in with their Microsoft accounts, you'll need to create a Microsoft key. This walk-through shows how to do that. You may also refer to Microsoft's documentation: [Adding sign in with Microsoft](https://developer.microsoft.com/en-us/identity/add-sign-in-with-microsoft).
+To let you users sign-in with their Microsoft account, you'll need to create a Microsoft key. This walk-through shows how to do that. You may also refer to Microsoft's documentation: [Adding sign in with Microsoft](https://developer.microsoft.com/en-us/identity/add-sign-in-with-microsoft).
 
 In short, we want to create an App Registration in Azure Active Directory, which will give us the key.
 
@@ -55,7 +55,7 @@ To keep pwa-auth lightweight, msal.js is loaded dynamically only when the user c
 
 ### Access Tokens
 
-After sign-in, pwa-auth acquires an access token and requests the user's profile picture in a separate call. 
+During sign-in, pwa-auth acquires an access token and requests the user's profile picture.
 
 This access token will be returned to you during the `signin-completed` event:
 
