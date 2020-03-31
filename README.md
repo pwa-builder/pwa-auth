@@ -35,7 +35,7 @@ You can also use this component via NPM:
 1. `npm install @pwabuilder/pwaauth`
 2. `import @pwabuilder/pwaauth`
 
-Then you can use the `<pwa-auth>` delement anywhere in your template, JSX, HTML, etc.
+Then you can use the `<pwa-auth>` element anywhere in your template, JSX, HTML, etc.
 
 ## What does it look like?
 
@@ -61,12 +61,15 @@ You'll get a `signin-completed` event containing the user's <strong>email</stron
 const pwaAuth = document.querySelector("pwa-auth");
 pwaAuth.addEventListener("signin-completed", ev => {
     const signIn = ev.detail;
-    console.log("Email: ", signIn.email);
-    console.log("Name: ", signIn.name);
-    console.log("Picture: ", signIn.imageUrl);
-    console.log("Provider (MS, Google, FB): ", signIn.provider);
-    console.log("Raw data from provider: ", signIn.providerData);
-    console.log("Error: ", signIn.error); // will be null if sign-in succeeds
+    if (signIn.error) {
+        console.error("Sign in failed", signIn.error);
+    } else {
+        console.log("Email: ", signIn.email);
+        console.log("Name: ", signIn.name);
+        console.log("Picture: ", signIn.imageUrl);
+        console.log("Provider (MS, Google, FB): ", signIn.provider);
+        console.log("Raw data from provider: ", signIn.providerData);
+    }
 });
 ```
 
@@ -91,7 +94,7 @@ The <em>first time</eM> a user signs in, he'll see the familiar OAuth flow askin
 
 Once your user signs in or cancels, `signin-completed` event will fire.
 
-When the user signs in the first time, the browser asks to save your credentials:
+When the user signs in successfully the first time, the browser asks to save your credentials:
 
 <img loading="lazy" src="/assets/save-cred.png"/>
 

@@ -1,4 +1,4 @@
-# Creating a Microsoft key
+# Creating a Google key
 
 To let you users sign-in with their Google account, you'll need to create a Google key. This walk-through shows how to do that. You may also refer to Google's documentation: [Configure a project for Google Sign-In with Google Developer Console](https://developers.google.com/identity/sign-in/web/sign-in#before_you_begin).
 
@@ -56,13 +56,19 @@ You're done - you now have a working Google key, allowing users to sign-in with 
 
 ## Additional notes about the Google sign-in provider
 
-When a users signs-in withe their Google account, pwa-auth will dispatch the `signin-completed` event. This event will contain the standard information -- `email`, `name`, `imageUrl` -- as well as additional Google-specific information contained in `providerData`:
+### Google Auth library (GApi)
+
+pwa-auth uses the Google Platform library with auth2 to sign-in with Google. To keep pwa-auth lightweight, Gapi is lazy loaded only when a user taps `Sign in with Google`. Otherwise, no JS loading or parsing overhead is incurred.
+
+### Raw `providerData` with Google Sign-In
+
+When a user signs-in with their Google account, pwa-auth will dispatch the `signin-completed` event. This event will contain the standard information -- `email`, `name`, `imageUrl` -- as well as additional Google-specific information contained in `providerData`:
 
 ```javascript
 const pwaAuth = document.querySelector("pwa-auth");
 pwaAuth.addEventListener("signin-completed", ev => {
-    if (!ev.error) {
-        const signIn = ev.detail;
+    const signIn = ev.detail;
+    if (!signIn.error) {
         console.log("Signed in with", signIn.email, signIn.name, signIn.imageUrl);
 
         // Access the raw Google sign-in data:

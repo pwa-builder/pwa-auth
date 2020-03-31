@@ -26,13 +26,15 @@ In the Azure Active Directory pane on the left, choose `App registrations`, then
 
 Azure will ask you for `app name`, `supported Microsoft account types`, and `redirect URI`. 
 
-- `Name`: This is the name your users will see when prompted to sign-in with their Microsoft account, e.g. "Sign in My Awesome PWA? It will receive your email address." 
+- `Name`: This is the name your users will see when prompted to sign-in with their Microsoft account, e.g. "Sign in My Awesome PWA" 
 - `Supported account types`: What types of Microsoft accounts can sign in? Here you can limit the kinds of Microsoft accounts that will be able to sign-in, whether MS accounts tied to your corporation/organization, any business or educational Microsoft account, or any Microsoft account. For broadest support, use the last option.
 - `Redirect URI`: Where the Microsoft authentication flow will return the authentication response. You should choose `Web` for the type and your app URL for the URL. You may add multiple URLs (including localhost for testing) after registration.
 
+Click `Register` to finalize your app registration.
+
 <img loading="lazy" src="/assets/azure-app-config.png" />
 
-## Step 5
+## Step 5: Copy your key
 
 Your key is generated, listed as "Application (client) ID":
 
@@ -51,7 +53,7 @@ You're done - you now have a working Microsoft key, allowing users to sign-in wi
 ### Microsoft Authentication Library (MSAL)
 pwa-auth uses <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-overview">Microsoft Authentication Library (msal.js)</a> to sign-in and get authentication tokens.
 
-To keep pwa-auth lightweight, msal.js is loaded dynamically only when the user clicks "Sign in with Microsoft". Thus, no loading or parsing overhead is incurred if the user doesn't try to sign-in with his Microsoft account.
+To keep pwa-auth lightweight, msal.js is lazy-loaded when the user clicks "Sign in with Microsoft". Thus, no JS loading or parsing overhead is incurred if the user doesn't try to sign-in with his Microsoft account.
 
 ### Access Tokens
 
@@ -72,6 +74,110 @@ pwaAuth.addEventListener("signin-completed", e => {
 ```
 
 This access token can then be used to interact with the Microsoft Graph, for example, access the user's profile information, interact with the user's OneDrive, Outlook calendar and inbox, interact with the user's Microsoft Teams account, and so on. See details over at <a href="https://developer.microsoft.com/en-us/graph/graph-explorer#">Microsoft Graph Explorer</a>.
+
+### Raw `providerData` with Microsoft Sign-In
+When a user signs-in with their Microsoft account, pwa-auth will fire the `signin-completed` event with the usual data -- `email`, `name`, `imageUrl` -- as well as Microsoft-specific sign-in data via `providerData`. The `providerData` will look something like this:
+
+```json
+{
+    "uniqueId": "abc123",
+    "tenantId": "abc123",
+    "tokenType": "id_token",
+    "idToken": {
+        "rawIdToken": "abc123abc123",
+        "claims": {
+            "aud": "abc123",
+            "iss": "https://login.microsoftonline.com/abc123/v2.0",
+            "iat": 1585679012,
+            "nbf": 1585679012,
+            "exp": 1585682912,
+            "aio": "abc123=",
+            "name": "John Doe",
+            "nonce": "abc-123",
+            "oid": "abc-123",
+            "preferred_username": "johndoe@outlook.com",
+            "rh": "I",
+            "sub": "abc123",
+            "tid": "abc123",
+            "uti": "d_abc-123",
+            "ver": "2.0"
+        },
+        "issuer": "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47/v2.0",
+        "objectId": "d39b1172-cce3-475f-a2c5-b19d5f2604ed",
+        "subject": "G6P62csn01gy318jlRl66xb3T0qyoa3ZyeB9F8ursvI",
+        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+        "version": "2.0",
+        "preferredName": "juhimang@microsoft.com",
+        "name": "Judah Himango",
+        "nonce": "77bf5dbb-a9be-4fb0-aeda-34033f3741e8",
+        "expiration": 1585682912
+    },
+    "idTokenClaims": {
+        "aud": "abc123",
+        "iss": "https://login.microsoftonline.com/abc123/v2.0",
+        "iat": 1585679012,
+        "nbf": 1585679012,
+        "exp": 1585682912,
+        "aio": "abc123=",
+        "name": "John Doe",
+        "nonce": "abc123",
+        "oid": "abc123",
+        "preferred_username": "johndoe@outlook.com",
+        "rh": "I",
+        "sub": "abc123",
+        "tid": "abc123",
+        "uti": "d_abc-123",
+        "ver": "2.0"
+    },
+    "accessToken": "abc123abc123",
+    "scopes": [],
+    "expiresOn": "2020-03-31T19:28:32.000Z",
+    "account": {
+        "accountIdentifier": "abc-123",
+        "homeAccountIdentifier": "abc123",
+        "userName": "johndoe@outlook.com",
+        "name": "John Doe",
+        "idToken": {
+            "aud": "abc123",
+            "iss": "https://login.microsoftonline.com/abc123/v2.0",
+            "iat": 1585679012,
+            "nbf": 1585679012,
+            "exp": 1585682912,
+            "aio": "abc123=",
+            "name": "John Doe",
+            "nonce": "abc123",
+            "oid": "abc123",
+            "preferred_username": "johndoe@outlook.com",
+            "rh": "I",
+            "sub": "abc123",
+            "tid": "abc123",
+            "uti": "d_abc-123",
+            "ver": "2.0"
+        },
+        "idTokenClaims": {
+            "aud": "abc123",
+            "iss": "https://login.microsoftonline.com/abc123/v2.0",
+            "iat": 1585679012,
+            "nbf": 1585679012,
+            "exp": 1585682912,
+            "aio": "abc123=",
+            "name": "John Doe",
+            "nonce": "abc123",
+            "oid": "abc123",
+            "preferred_username": "johndoe@outlook.com",
+            "rh": "I",
+            "sub": "abc123",
+            "tid": "abc123",
+            "uti": "d_abc123",
+            "ver": "2.0"
+        },
+        "environment": "https://login.microsoftonline.com/abc123/v2.0"
+    },
+    "accountState": "abc123",
+    "fromCache": false
+}
+```
+
 
 ### Photo URL is supported for work and school accounts only
 
