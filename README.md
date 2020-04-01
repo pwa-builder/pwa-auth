@@ -39,6 +39,9 @@ Then you can use the `<pwa-auth>` element anywhere in your template, JSX, HTML, 
 
 ## What does it look like?
 
+pwa-auth can be displayed in different ways:
+
+### `Sign In` dropdown button
 pwa-auth can appear as a single dropdown button:
 ```html
 <pwa-auth appearance="button"></pwa-auth>
@@ -62,7 +65,7 @@ const pwaAuth = document.querySelector("pwa-auth");
 myOwnSignInBtn.addEventHandler("click", () => pwaAuth.signIn("Microsoft"));
 ```
 
-All the buttons are stylable and customizable. See [styling](#styling) for details.
+All UI in pwa-auth is stylable using CSS. See [styling](#styling) for details. Additionally, all text in pwa-auth is customizable, see [pwa-auth properties](#/properties).
 
 ## What happens when a user signs in?
 
@@ -174,8 +177,8 @@ You can customize the appearance and behavior of pwa-auth component.
 ### Properties
 | Property             | Attribute            | Description                                                                     | Type      | Default |
 | - | - | - | - | - |
-| `appearance` | `appearance` | Whether to render a single `Sign In` dropdown button or a list of sign-in provider buttons. See [what does it look like?](#what-does-it-look-like) for details. <br><br>`button`: <img loading="lazy" src="/assets/install-btn.png" /><br><br>`list`: <img loading="lazy" src="/assets/list.png" /> | `'button'|'list'` | `'button'` |
-| `credentialMode` | `credentialmode` | How to sign-in users who had previously signed-in. See [successive sign-ins](#successive-sign-ins) for details. <br><br>`silent`: <img loading="lazy" src="/assets/first-cred.png" /><br><br>`prompt`: <img loading="lazy" src="/assets/signin-prompt.png" /><br><br>`none`: <img loading="lazy" src="/assets/oauth.png"> | `'silent'|'prompt'|'none'` | `'silent'` |
+| `appearance` | `appearance` | Whether to render a single `Sign In` dropdown button or a list of sign-in provider buttons. See [what does it look like?](#what-does-it-look-like) for details. <br><br>`button`: <img loading="lazy" style="vertical-align: top" src="/assets/install-btn.png" /><br><br>`list`: <img loading="lazy" style="vertical-align: top" src="/assets/list.png" /> | `string`: should be `button`, `list`, or `none`. | `'button'` |
+| `credentialMode` | `credentialmode` | How to sign-in users who had previously signed-in. See [successive sign-ins](#successive-sign-ins) for details. <br><br>`silent`: <img loading="lazy" style="vertical-align: top" src="/assets/first-cred.png" /><br><br>`prompt`: <img loading="lazy" style="vertical-align: top" src="/assets/signin-prompt.png" /><br><br>`none`: <img loading="lazy" style="vertical-align: top" src="/assets/oauth.png"> | `string`. Must be `silent`, `prompt`, or `none`` | `'silent'` |
 | `microsoftKey` | `microsoftkey`  | The `Application (client) ID` of the Microsoft App you created. See [creating a Microsoft key](/creating-microsoft-key.md). header | `string|null`  | `null` |
 | `googleKey` | `googlekey`  | The `Client ID` of the Google credential you created. See [creating a Google key](/creating-google-key.md) | `string|null` | `null` |
 | `facebookKey` | `facebookkey`  | The `App ID` of the Facebook App you created. See [creating a Facebook key](/creating-facebook-key.md) | `string|null`  | `null` |
@@ -184,7 +187,7 @@ You can customize the appearance and behavior of pwa-auth component.
 | `googleButtonText` | `googlebuttontext` | The label for the `Sign in with Google` button | `string`  | "Sign in with Google" |
 | `facebookButtonText` | `facebookbuttontext` | The label for the `Sign in with Facebook` button | `string`  | Sign in with Facebook |
 | `menuOpened` | `menuopened`   | Whether the dropdown menu of the `Sign In` button is opened | `boolean`  | `false` |
-| `menuPlacement` | `menuplacement` | The placement of the dropdown menu of the `Sign In` button. <br><br>`start`: <img loading="lazy" src="/assets/menu-start.png"> <br><br>`end`: <img loading="lazy" src="/assets/menu-end.png"> | `'start'|'end'`  | `'start'` |
+| `menuPlacement` | `menuplacement` | The placement of the dropdown menu of the `Sign In` button. <br><br>`start`: <img loading="lazy" style="vertical-align: top" src="/assets/menu-start.png"> <br><br>`end`: <img loading="lazy" style="vertical-align: top" src="/assets/menu-end.png"> | `'start'|'end'`  | `'start'` |
 | `disabled` | `disabled` | Whether the Sign In button(s) are disabled. They will be disabled while a sign-in is in-progress. | `boolean`  | `false` |
 
 ### Events
