@@ -27,7 +27,7 @@ Web component that lets your users sign-in/sign-up using their Microsoft, Google
 </pwa-auth>
 ```
 
-You'll need to provide at least one key. Each key you specify allows the user to sign-in with that service. To create a key for each service, see [creating keys](#creating-keys).
+3. Create one or more keys to let your users sign-in with Microsoft, Google, or Facebook. You'll need to provide at least one key. To create a key for each service, see [creating keys](#creating-keys).
 
 ### NPM
 

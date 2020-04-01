@@ -340,6 +340,7 @@ export class PwaAuth extends LitElement {
         this.menuOpened = false;
         return this.tryLoginWithStoredCredential(PwaAuth.providerUrls[provider])
             .then(storedCredSignInResult => {
+                console.log("zanz", storedCredSignInResult, PwaAuth.providerUrls[provider]);
                 // Did we sign in with a stored credential? Good, we're done.
                 if (storedCredSignInResult) {
                     return storedCredSignInResult;
