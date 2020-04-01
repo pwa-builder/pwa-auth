@@ -41,21 +41,21 @@ Then you can use the `<pwa-auth>` element anywhere in your template, JSX, HTML, 
 
 pwa-auth can be displayed in different ways:
 
-### `appearance="button"`
+### Sign In button (default)
 pwa-auth can appear as a single dropdown button:
 ```html
 <pwa-auth appearance="button"></pwa-auth>
 ```
 <img loading="lazy" src="/assets/install-btn-dropdown.png">
 
-### `appearance="list"`
+### List of sign-in provider buttons
 Or it can be displayed as a list of provider buttons:
 ```html
 <pwa-auth appearance="list"></pwa-auth>
 ```
 <img loading="lazy" src="/assets/list.png">
 
-### `appearance="none"`
+### Headless
 Finally, pwa-auth can be totally headless -- no UI -- letting you create your own sign-in buttons and drive the functionality using the [signIn(...) method](/#methods).
 ```html
 <!-- No UI at all -->

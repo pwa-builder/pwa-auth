@@ -16,7 +16,7 @@ export class PwaAuth extends LitElement {
     @property({ type: String }) googleKey: string | undefined | null;
     @property({ type: String }) facebookKey: string | undefined | null;
     @property({ type: String }) credentialMode: "none" | "silent" | "prompt" = "silent";
-    @property({ type: String }) menuOpened = false;
+    @property({ type: Boolean }) menuOpened = false;
     @property({ type: String }) menuPlacement: "start" | "end" = "start";
     @property({ type: Boolean }) disabled = false;
 

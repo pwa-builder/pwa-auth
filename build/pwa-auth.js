@@ -469,7 +469,7 @@ __decorate([
     property({ type: String })
 ], PwaAuth.prototype, "credentialMode", void 0);
 __decorate([
-    property({ type: String })
+    property({ type: Boolean })
 ], PwaAuth.prototype, "menuOpened", void 0);
 __decorate([
     property({ type: String })
