@@ -41,19 +41,21 @@ Then you can use the `<pwa-auth>` element anywhere in your template, JSX, HTML, 
 
 pwa-auth can be displayed in different ways:
 
-### `Sign In` dropdown button
+### `appearance="button"`
 pwa-auth can appear as a single dropdown button:
 ```html
 <pwa-auth appearance="button"></pwa-auth>
 ```
 <img loading="lazy" src="/assets/install-btn-dropdown.png">
 
+### `appearance="list"`
 Or it can be displayed as a list of provider buttons:
 ```html
 <pwa-auth appearance="list"></pwa-auth>
 ```
 <img loading="lazy" src="/assets/list.png">
 
+### `appearance="none"`
 Finally, pwa-auth can be totally headless -- no UI -- letting you create your own sign-in buttons and drive the functionality using the [signIn(...) method](/#methods).
 ```html
 <!-- No UI at all -->
@@ -65,7 +67,7 @@ const pwaAuth = document.querySelector("pwa-auth");
 myOwnSignInBtn.addEventHandler("click", () => pwaAuth.signIn("Microsoft"));
 ```
 
-All UI in pwa-auth is stylable using CSS. See [styling](#styling) for details. Additionally, all text in pwa-auth is customizable, see [pwa-auth properties](#/properties).
+All UI in pwa-auth is stylable using CSS. See [styling](#styling) for details. Additionally, all text in pwa-auth is customizable, see [pwa-auth properties](#properties).
 
 ## What happens when a user signs in?
 
@@ -182,10 +184,10 @@ You can customize the appearance and behavior of pwa-auth component.
 | `microsoftKey` | `microsoftkey`  | The `Application (client) ID` of the Microsoft App you created. See [creating a Microsoft key](/creating-microsoft-key.md). header | `string \| null` | `null` |
 | `googleKey` | `googlekey`  | The `Client ID` of the Google credential you created. See [creating a Google key](/creating-google-key.md) | `string \| null` | `null` |
 | `facebookKey` | `facebookkey`  | The `App ID` of the Facebook App you created. See [creating a Facebook key](/creating-facebook-key.md) | `string \| null`  | `null` |
-| `signInButtonText` | `signinbuttontext` | The text of the `Sign In` button, displayed when `appearance="button"` | `string` | "Sign in" |
-| `microsoftButtonText` | `microsoftbuttontext` | The label for the `Sign in with Microsoft` button | `string`  | "Sign in with Microsoft" |
-| `googleButtonText` | `googlebuttontext` | The label for the `Sign in with Google` button | `string`  | "Sign in with Google" |
-| `facebookButtonText` | `facebookbuttontext` | The label for the `Sign in with Facebook` button | `string`  | Sign in with Facebook |
+| `signInButtonText` | `signinbuttontext` | The text of the `Sign In` button, displayed when `appearance="button"` | `string` | 'Sign in' |
+| `microsoftButtonText` | `microsoftbuttontext` | The label for the `Sign in with Microsoft` button | `string`  | 'Sign in with Microsoft' |
+| `googleButtonText` | `googlebuttontext` | The label for the `Sign in with Google` button | `string`  | 'Sign in with Google' |
+| `facebookButtonText` | `facebookbuttontext` | The label for the `Sign in with Facebook` button | `string`  | 'Sign in with Facebook' |
 | `menuOpened` | `menuopened`   | Whether the dropdown menu of the `Sign In` button is opened | `boolean`  | `false` |
 | `menuPlacement` | `menuplacement` | The placement of the dropdown menu of the `Sign In` button. <br><br>`start`: <img loading="lazy" style="vertical-align: top" src="/assets/menu-start.png"> <br><br>`end`: <img loading="lazy" style="vertical-align: top" src="/assets/menu-end.png"> | `'start' \| 'end'`  | `'start'` |
 | `disabled` | `disabled` | Whether the Sign In button(s) are disabled. They will be disabled while a sign-in is in-progress. | `boolean`  | `false` |
@@ -198,7 +200,7 @@ You can customize the appearance and behavior of pwa-auth component.
 ### Methods
 | Name | Arguments | Description |
 | - | - | - |
-| `signIn(provider: string)` | `provider`: `'Microsoft'\|'Google'\|'Facebook'` | Kicks off the sign-in process. If the user hasn't previously authenticated, he'll be prompted to sign-in via OAuth flow. If the user saved a previous credential, it will be used to sign-in quickly without the need for OAuth flow. |
+| `signIn(provider: string)` | `provider`: `'Microsoft' \| 'Google' \| 'Facebook'` | Kicks off the sign-in process. If the user hasn't previously authenticated, he'll be prompted to sign-in via OAuth flow. If the user saved a previous credential, it will be used to sign-in quickly without the need for OAuth flow. |
 
 ## Styling
 
