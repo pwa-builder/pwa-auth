@@ -51,11 +51,22 @@ Or it can be displayed as a list of provider buttons:
 ```
 <img loading="lazy" src="/assets/list.png">
 
-All the buttons are stylable and customizable. See [styling](https://ZANZ) for details.
+Finally, pwa-auth can be totally headless -- no UI -- letting you create your own sign-in buttons and drive the functionality using the [signIn(...) method](/#methods).
+```html
+<!-- No UI at all -->
+<pwa-auth appearance="none"></pwa-auth>
+```
+```javascript
+// Use your own UI buttons to invoke pwa-auth sign-in
+const pwaAuth = document.querySelector("pwa-auth");
+myOwnSignInBtn.addEventHandler("click", () => pwaAuth.signIn("Microsoft"));
+```
+
+All the buttons are stylable and customizable. See [styling](#styling) for details.
 
 ## What happens when a user signs in?
 
-You'll get a `signin-completed` event containing the user's <strong>email</strong>, <strong>name</strong>, and <strong>image URL</strong>, as well as additional raw data from the provider (e.g. authentication token):
+You'll get a `signin-completed` event containing the user's `email`, `name`, and `imageUrl`, as well as additional raw data from the provider (e.g. authentication token):
 
 ```javascript
 const pwaAuth = document.querySelector("pwa-auth");
@@ -92,7 +103,7 @@ The <em>first time</eM> a user signs in, he'll see the familiar OAuth flow askin
 
 <img loading="lazy" src="/assets/oauth.png?v=1">
 
-Once your user signs in or cancels, `signin-completed` event will fire.
+Once your user signs-in or cancels, `signin-completed` event will fire.
 
 When the user signs in successfully the first time, the browser asks to save your credentials:
 
@@ -113,13 +124,15 @@ If a user has signed-in previously, future sign-ins will be instantaneous. 😎 
 
 In the above screenshot, the user tapped Sign In, and was automatically signed-in using the first saved credential; no OAuth dialogs, pop-ups, or redirects needed! 😎 The browser typically displays a "Signing in as..." info bar during this process.
 
-Alternately, you can have the browser <em>prompt</em> the user to confirm his sign-in:
+As an alternative, you can have the browser <em>prompt</em> the user to confirm his sign-in:
 
 ```html
 <!-- When tapping sign in, prompt the user to confirm -->
 <pwa-auth credentialmode="prompt"></pwa-auth>
 ```
 <img loading="lazy" src="/assets/signin-prompt.png" />
+
+In the above image, the user tapped the gray `Sign In` button, and then was prompted by the browser to sign in using his stored credential.
 
 If the user had previously signed-in with multiple accounts (e.g. once with Google, once with Microsoft), he'll be given a choice of which provider to sign-in with:
 
@@ -153,3 +166,62 @@ To create a key, see:
 - [Creating a Microsoft key](/creating-microsoft-key.md)
 - [Creating a Google key](/creating-google-key.md)
 - [Creating a Facebook key](/creating-facebook-key.md)
+
+## API
+
+You can customize the appearance and behavior of pwa-auth component.
+
+### Properties
+| Property             | Attribute            | Description                                                                     | Type      | Default |
+| - | - | - | - | - |
+| `appearance` | `appearance` | Whether to render a single `Sign In` dropdown button or a list of sign-in provider buttons. See [what does it look like?](#what-does-it-look-like) for details. <br><br>`button`: <img loading="lazy" src="/assets/install-btn.png" /><br><br>`list`: <img loading="lazy" src="/assets/list.png" /> | `'button'|'list'` | `'button'` |
+| `credentialMode` | `credentialmode` | How to sign-in users who had previously signed-in. See [successive sign-ins](#successive-sign-ins) for details. <br><br>`silent`: <img loading="lazy" src="/assets/first-cred.png" /><br><br>`prompt`: <img loading="lazy" src="/assets/signin-prompt.png" /><br><br>`none`: <img loading="lazy" src="/assets/oauth.png"> | `'silent'|'prompt'|'none'` | `'silent'` |
+| `microsoftKey` | `microsoftkey`  | The `Application (client) ID` of the Microsoft App you created. See [creating a Microsoft key](/creating-microsoft-key.md). header | `string|null`  | `null` |
+| `googleKey` | `googlekey`  | The `Client ID` of the Google credential you created. See [creating a Google key](/creating-google-key.md) | `string|null` | `null` |
+| `facebookKey` | `facebookkey`  | The `App ID` of the Facebook App you created. See [creating a Facebook key](/creating-facebook-key.md) | `string|null`  | `null` |
+| `signInButtonText` | `signinbuttontext` | The text of the `Sign In` button, displayed when `appearance="button"`                                                            | `string` | "Sign in" |
+| `microsoftButtonText` | `microsoftbuttontext` | The label for the `Sign in with Microsoft` button | `string`  | "Sign in with Microsoft" |
+| `googleButtonText` | `googlebuttontext` | The label for the `Sign in with Google` button | `string`  | "Sign in with Google" |
+| `facebookButtonText` | `facebookbuttontext` | The label for the `Sign in with Facebook` button | `string`  | Sign in with Facebook |
+| `menuOpened` | `menuopened`   | Whether the dropdown menu of the `Sign In` button is opened | `boolean`  | `false` |
+| `menuPlacement` | `menuplacement` | The placement of the dropdown menu of the `Sign In` button. <br><br>`start`: <img loading="lazy" src="/assets/menu-start.png"> <br><br>`end`: <img loading="lazy" src="/assets/menu-end.png"> | `'start'|'end'`  | `'start'` |
+| `disabled` | `disabled` | Whether the Sign In button(s) are disabled. They will be disabled while a sign-in is in-progress. | `boolean`  | `false` |
+
+### Events
+| Name | Type | Event Data | Description | 
+| - | - | - | - | 
+| `signin-completed` | `CustomEvent` | `e.detail` will contain the details of the sign-in event.<br><ul><li>`e.detail.email`: The email address of the signed-in user.</li><li>`e.detail.name`: The name of the signed-in user.</li><li>`e.detail.imageUrl`: URL of the user's profile picture. May be null in some scenarios.</li><li>`e.detail.provider`: The name of the provider the user signed-in with.</li><li>`e.detail.error`: The error that occurred during sign-in. Will be null if sign-in was successful.</li><li>`e.detail.providerData`: The raw sign-in data received from an OAuth flow sign-in. Maybe be null during successive sign-ins.</li></ul> | Fired when a sign-in completes successfully or unsuccessfully. If the sign-in failed, `e.detail.error` will be non-null. <br><br>[View code sample](#what-happens-when-a-user-signs-in).
+
+### Methods
+| Name | Arguments | Description |
+| - | - | - |
+| `signIn(provider: string)` | `provider`: `'Microsoft'|'Google'|'Facebook'` | Kicks off the sign-in process. If the user hasn't previously authenticated, he'll be prompted to sign-in via OAuth flow. If the user saved a previous credential, it will be used to sign-in quickly without the need for OAuth flow. |
+
+## Styling
+
+### Shadow parts
+
+You can style the different parts of pwa-auth using [CSS ::part selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/::part). Below are the list of parts available for styling:
+
+| Part Name | Description |
+| - | - |
+| `signInButton` | The sign-in button displayed when `appearance="button"`. |
+| `microsoftButton` | The `Sign in with Microsoft` button. |
+| `microsoftIcon` | The icon for the `Sign in with Microsoft` button. |
+| `googleButton` | The `Sign in with Google` button. |
+| `googleIcon` | The icon for the `Sign in with Google` button. |
+| `facebookButton` | The `Sign in with Facebook` button. |
+| `facebookIcon` | The icon for the `Sign in with Facebook` button. |
+| `dropdownMenu` | The dropdown menu of the `Sign In` button displayed when `appearance="button"` |
+
+### Styling samples
+
+Jazz up the Sign In button:
+```css
+pwa-auth::part(signInButton) {
+    background-color: green;
+    color: white;
+    transform: rotate3d(0, 0, 1, 25deg);
+}
+```
+<img loading="lazy" src="/assets/signin-part.png">

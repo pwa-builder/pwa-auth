@@ -1,7 +1,7 @@
 export class GoogleProvider {
-    constructor(clientId, signInButton) {
+    constructor(clientId, shadowRoot) {
         this.clientId = clientId;
-        this.signInButton = signInButton;
+        this.shadowRoot = shadowRoot;
         this.resolve = null;
         this.reject = null;
     }
@@ -29,8 +29,7 @@ export class GoogleProvider {
         }
     }
     scriptLoadSucceded() {
-        const gapiLoad = window.gapi?.load;
-        if (!gapi.load) {
+        if (!gapi?.load) {
             this.reject?.("Google Platform library loaded, but couldn't find window.gapi.load");
         }
         else {
@@ -56,9 +55,22 @@ export class GoogleProvider {
             this.signInSucceeded(user);
         }
         else {
-            auth.attachClickHandler(this.signInButton, signInOptions, user => this.signInSucceeded(user), error => this.signInFailed(error));
-            this.signInButton.click();
+            const fakeBtn = this.getOrCreateFakeBtn();
+            auth.attachClickHandler(fakeBtn, signInOptions, user => this.signInSucceeded(user), error => this.signInFailed(error));
+            fakeBtn.click();
         }
+    }
+    getOrCreateFakeBtn() {
+        // This needs to be done because Google Platform API requires you to attach a 
+        // click handler to an actual element. This fake button will be our actual element.
+        let fakeBtn = this.shadowRoot.querySelector("#pwa-auth-google-sign-in-pseudo-btn");
+        if (!fakeBtn) {
+            fakeBtn = document.createElement("button");
+            fakeBtn.style.display = "none";
+            this.shadowRoot.appendChild(fakeBtn);
+        }
+        ;
+        return fakeBtn;
     }
     signInSucceeded(user) {
         const loginResult = this.getLoginResult(user);

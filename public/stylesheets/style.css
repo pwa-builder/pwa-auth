@@ -6,3 +6,9 @@ body {
 a {
   color: #00B7FF;
 }
+
+pwa-auth::part(signInButton) {
+  background-color: green;
+  color: white;
+  transform: rotate3d(0, 0, 1, 25deg);
+}

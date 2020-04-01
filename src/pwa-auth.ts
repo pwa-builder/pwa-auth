@@ -4,11 +4,10 @@ import { FederatedCredential } from './federated-credential';
 
 type AuthProvider = "Microsoft" | "Google" | "Facebook";
 
-// This decorator defines the element.
 @customElement('pwa-auth')
 export class PwaAuth extends LitElement {
 
-    @property({ type: String }) appearance: "button" | "list" = "button";
+    @property({ type: String }) appearance: "button" | "list" | "none" = "button";
     @property({ type: String }) signInButtonText = "Sign in";
     @property({ type: String }) microsoftButtonText = "Sign in with Microsoft";
     @property({ type: String }) googleButtonText = "Sign in with Google";
@@ -19,8 +18,7 @@ export class PwaAuth extends LitElement {
     @property({ type: String }) credentialMode: "none" | "silent" | "prompt" = "silent";
     @property({ type: String }) menuOpened = false;
     @property({ type: String }) menuPlacement: "start" | "end" = "start";
-
-    disabled = false;
+    @property({ type: Boolean }) disabled = false;
 
     static readonly providerUrls: Record<AuthProvider, string> = {
         "Microsoft": "https://graph.microsoft.com",
@@ -192,28 +190,48 @@ export class PwaAuth extends LitElement {
             return this.renderListButtons();
         } 
 
-        return this.renderLoginButton();
+        if (this.appearance === "button") {
+            return this.renderLoginButton();
+        }
+
+        return super.render();
+    }
+
+    /**
+     * Starts the sign-in process using the specified provider.
+     * @param provider The provider to sign-in with. Must be "Microsoft", "Google", or "Facebook".
+     */
+    public signIn(provider: AuthProvider) {
+        if (provider === "Microsoft") {
+            this.signInMs();
+        } else if (provider === "Google") {
+            this.signInGoogle();
+        } else if (provider === "Facebook") {
+            this.signInFacebook();
+        } else {
+            console.error("Unable to sign-in because of unsupported provider", provider);
+        }
     }
 
     private renderLoginButton(): TemplateResult {
         return html`
             <div class="dropdown" @focusout="${this.dropdownFocusOut}">
-                <button class="signin-btn" @click="${this.signInClicked}">
+                <button class="signin-btn" part="signInButton" @click="${this.signInClicked}">
                     ${this.signInButtonText}
                 </button>
-                <div class="menu ${this.menuOpened ? "open" : ""} ${this.menuPlacement === "end" ? "align-end" : ""}">
-                    <button class="microsoft-menu-btn" ?disabled=${this.disabled} @click="${this.signInMs}">
-                        <svg x="0px" y="0px" width="20px" height="20px" viewBox="0 0 439 439"><rect x="17" y="17" fill="#F35325" width="194" height="194"/><rect x="228" y="17" fill="#81BC06" width="194" height="194"/><rect x="17" y="228" fill="#05A6F0" width="194" height="194"/><rect x="228" y="228" fill="#FFBA08" width="194" height="194"/></svg>
+                <div class="menu ${this.menuOpened ? "open" : ""} ${this.menuPlacement === "end" ? "align-end" : ""}" part="dropdownMenu">
+                    <button class="microsoft-menu-btn" ?disabled=${this.disabled} part="microsoftButton" @click="${this.signInMs}">
+                        <svg part="microsoftIcon" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 439 439"><rect x="17" y="17" fill="#F35325" width="194" height="194"/><rect x="228" y="17" fill="#81BC06" width="194" height="194"/><rect x="17" y="228" fill="#05A6F0" width="194" height="194"/><rect x="228" y="228" fill="#FFBA08" width="194" height="194"/></svg>
                         <span>${this.microsoftButtonText}</span>
                     </button>
 
-                    <button class="google-menu-btn" ?disabled=${this.disabled} @click="${this.signInGoogle}">
-                        <svg x="0px" y="0px" width="20px" height="20px" viewBox="0 0 533.5 544.3"><g><path fill="#4285F4" d="M533.5,278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1,33.8-25.7,63.7-54.4,82.7v68h87.7 C503.9,431.2,533.5,361.2,533.5,278.4z"/><path fill="#34A853" d="M272.1,544.3c73.4,0,135.3-24.1,180.4-65.7l-87.7-68c-24.4,16.6-55.9,26-92.6,26c-71,0-131.2-47.9-152.8-112.3 H28.9v70.1C75.1,486.3,169.2,544.3,272.1,544.3z"/><path fill="#FBBC04" d="M119.3,324.3c-11.4-33.8-11.4-70.4,0-104.2V150H28.9c-38.6,76.9-38.6,167.5,0,244.4L119.3,324.3z"/><path fill="#EA4335" d="M272.1,107.7c38.8-0.6,76.3,14,104.4,40.8l0,0l77.7-77.7C405,24.6,339.7-0.8,272.1,0C169.2,0,75.1,58,28.9,150 l90.4,70.1C140.8,155.6,201.1,107.7,272.1,107.7z"/></g></svg>                        
+                    <button class="google-menu-btn" ?disabled=${this.disabled} part="googleButton" @click="${this.signInGoogle}">
+                        <svg part="googleIcon" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 533.5 544.3"><g><path fill="#4285F4" d="M533.5,278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1,33.8-25.7,63.7-54.4,82.7v68h87.7 C503.9,431.2,533.5,361.2,533.5,278.4z"/><path fill="#34A853" d="M272.1,544.3c73.4,0,135.3-24.1,180.4-65.7l-87.7-68c-24.4,16.6-55.9,26-92.6,26c-71,0-131.2-47.9-152.8-112.3 H28.9v70.1C75.1,486.3,169.2,544.3,272.1,544.3z"/><path fill="#FBBC04" d="M119.3,324.3c-11.4-33.8-11.4-70.4,0-104.2V150H28.9c-38.6,76.9-38.6,167.5,0,244.4L119.3,324.3z"/><path fill="#EA4335" d="M272.1,107.7c38.8-0.6,76.3,14,104.4,40.8l0,0l77.7-77.7C405,24.6,339.7-0.8,272.1,0C169.2,0,75.1,58,28.9,150 l90.4,70.1C140.8,155.6,201.1,107.7,272.1,107.7z"/></g></svg>                        
                         <span>${this.googleButtonText}</span>
                     </button>
 
-                    <button class="facebook-menu-btn" ?disabled=${this.disabled} @click="${this.signInFacebook}">
-                        <svg x="0px" y="0px" width="20px" height="20px" viewBox="0 0 500 500"><path style="fill:#3A559F;" d="M0,0v455.73h242.704V279.691h-59.33v-71.864h59.33v-60.353c0-43.893,35.582-79.475,79.475-79.475 h62.025v64.622h-44.382c-13.947,0-25.254,11.307-25.254,25.254v49.953h68.521l-9.47,71.864h-59.051V455.73H455.73V0H0z"/></svg>
+                    <button class="facebook-menu-btn" ?disabled=${this.disabled} part="facebookButton" @click="${this.signInFacebook}">
+                        <svg part="facebookIcon" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 500 500"><path style="fill:#3A559F;" d="M0,0v455.73h242.704V279.691h-59.33v-71.864h59.33v-60.353c0-43.893,35.582-79.475,79.475-79.475 h62.025v64.622h-44.382c-13.947,0-25.254,11.307-25.254,25.254v49.953h68.521l-9.47,71.864h-59.051V455.73H455.73V0H0z"/></svg>
                         <span>${this.facebookButtonText}</span>
                     </button>
                 </div>
@@ -224,25 +242,25 @@ export class PwaAuth extends LitElement {
     private renderListButtons(): TemplateResult {
         return html`
             <div class="provider">
-                <button class="microsoft-list-btn" ?disabled=${this.disabled} @click="${this.signInMs}">
+                <button class="microsoft-list-btn" ?disabled=${this.disabled} part="microsoftButton" @click="${this.signInMs}">
                     <span>
-                        <svg viewBox="0 0 500 500" style="width: 25px; height: 25px;"><g id="XMLID_1_"><polygon id="XMLID_3_" fill="white" points="67.5,118.8 216.7,98.5 216.7,242.3 67.6,243.2  "/><polygon id="XMLID_4_" fill="white" points="234.7,95.8 432.4,66.9 432.4,240.5 234.7,242.1  "/><polygon id="XMLID_5_" fill="white" points="216.6,258.9 216.7,402.9 67.6,382.4 67.6,258  "/><polygon id="XMLID_6_" fill="white" points="432.5,260.3 432.5,433.1 234.7,405.1 234.4,259.9  "/></g></svg>
+                        <svg part="microsoftIcon" viewBox="0 0 500 500" style="width: 25px; height: 25px;"><g id="XMLID_1_"><polygon id="XMLID_3_" fill="white" points="67.5,118.8 216.7,98.5 216.7,242.3 67.6,243.2  "/><polygon id="XMLID_4_" fill="white" points="234.7,95.8 432.4,66.9 432.4,240.5 234.7,242.1  "/><polygon id="XMLID_5_" fill="white" points="216.6,258.9 216.7,402.9 67.6,382.4 67.6,258  "/><polygon id="XMLID_6_" fill="white" points="432.5,260.3 432.5,433.1 234.7,405.1 234.4,259.9  "/></g></svg>
                         ${this.microsoftButtonText}
                     </span>
                 </button>
             </div>
             <div class="provider">
-                <button class="google-list-btn" ?disabled=${this.disabled} @click="${this.signInGoogle}">
+                <button class="google-list-btn" ?disabled=${this.disabled} part="googleButton" @click="${this.signInGoogle}">
                     <span>
-                        <svg width="25px" height="25px" class="mk ml u"><g fill="none" fill-rule="evenodd"><path d="M20.66 12.7c0-.61-.05-1.19-.15-1.74H12.5v3.28h4.58a3.91 3.91 0 0 1-1.7 2.57v2.13h2.74a8.27 8.27 0 0 0 2.54-6.24z" fill="#4285F4"></path><path d="M12.5 21a8.1 8.1 0 0 0 5.63-2.06l-2.75-2.13a5.1 5.1 0 0 1-2.88.8 5.06 5.06 0 0 1-4.76-3.5H4.9v2.2A8.5 8.5 0 0 0 12.5 21z" fill="#34A853"></path><path d="M7.74 14.12a5.11 5.11 0 0 1 0-3.23v-2.2H4.9A8.49 8.49 0 0 0 4 12.5c0 1.37.33 2.67.9 3.82l2.84-2.2z" fill="#FBBC05"></path><path d="M12.5 7.38a4.6 4.6 0 0 1 3.25 1.27l2.44-2.44A8.17 8.17 0 0 0 12.5 4a8.5 8.5 0 0 0-7.6 4.68l2.84 2.2a5.06 5.06 0 0 1 4.76-3.5z" fill="#EA4335"></path></g></svg>
+                        <svg part="googleIcon" width="25px" height="25px" class="mk ml u"><g fill="none" fill-rule="evenodd"><path d="M20.66 12.7c0-.61-.05-1.19-.15-1.74H12.5v3.28h4.58a3.91 3.91 0 0 1-1.7 2.57v2.13h2.74a8.27 8.27 0 0 0 2.54-6.24z" fill="#4285F4"></path><path d="M12.5 21a8.1 8.1 0 0 0 5.63-2.06l-2.75-2.13a5.1 5.1 0 0 1-2.88.8 5.06 5.06 0 0 1-4.76-3.5H4.9v2.2A8.5 8.5 0 0 0 12.5 21z" fill="#34A853"></path><path d="M7.74 14.12a5.11 5.11 0 0 1 0-3.23v-2.2H4.9A8.49 8.49 0 0 0 4 12.5c0 1.37.33 2.67.9 3.82l2.84-2.2z" fill="#FBBC05"></path><path d="M12.5 7.38a4.6 4.6 0 0 1 3.25 1.27l2.44-2.44A8.17 8.17 0 0 0 12.5 4a8.5 8.5 0 0 0-7.6 4.68l2.84 2.2a5.06 5.06 0 0 1 4.76-3.5z" fill="#EA4335"></path></g></svg>
                         ${this.googleButtonText}
                     </span>
                 </button>
             </div>
             <div class="provider">
-                <button class="facebook-list-btn" ?disabled=${this.disabled} @click="${this.signInFacebook}">
+                <button class="facebook-list-btn" ?disabled=${this.disabled} part="facebookButton" @click="${this.signInFacebook}">
                     <span>
-                        <svg width="25px" height="25px" fill="#3B5998" class="mk ml u"><path fill="white" d="M20.3 4H4.7a.7.7 0 0 0-.7.7v15.6c0 .38.32.7.7.7h8.33v-6.38h-2.12v-2.65h2.12V9.84c0-2.2 1.4-3.27 3.35-3.27.94 0 1.75.07 1.98.1v2.3H17c-1.06 0-1.31.5-1.31 1.24v1.76h2.65l-.53 2.65H15.7l.04 6.38h4.56a.7.7 0 0 0 .71-.7V4.7a.7.7 0 0 0-.7-.7" fill-rule="evenodd"></path></svg>
+                        <svg part="facebookIcon" width="25px" height="25px" fill="#3B5998" class="mk ml u"><path fill="white" d="M20.3 4H4.7a.7.7 0 0 0-.7.7v15.6c0 .38.32.7.7.7h8.33v-6.38h-2.12v-2.65h2.12V9.84c0-2.2 1.4-3.27 3.35-3.27.94 0 1.75.07 1.98.1v2.3H17c-1.06 0-1.31.5-1.31 1.24v1.76h2.65l-.53 2.65H15.7l.04 6.38h4.56a.7.7 0 0 0 .71-.7V4.7a.7.7 0 0 0-.7-.7" fill-rule="evenodd"></path></svg>
                         ${this.facebookButtonText}
                     </span>
                 </button>
@@ -300,12 +318,9 @@ export class PwaAuth extends LitElement {
             .then(result => this.signInCompleted(result));
     }
 
-    private signInGoogle(e: UIEvent) {
-        const googleBtn = e.target as HTMLElement;
-        if (googleBtn) {
-            this.signInWithProvider(this.googleKey, "Google", key => this.startGoogleSignInFlow(key, googleBtn))
-                .then(result => this.signInCompleted(result));
-        }
+    private signInGoogle() {
+        this.signInWithProvider(this.googleKey, "Google", key => this.startGoogleSignInFlow(key))
+            .then(result => this.signInCompleted(result));
     }
 
     private signInFacebook() {
@@ -356,9 +371,9 @@ export class PwaAuth extends LitElement {
             .then(module => new module.MicrosoftAuth(key).signIn());
     }
 
-    private startGoogleSignInFlow(key: string, googleSignInBtn: HTMLElement): Promise<SignInResult> {
+    private startGoogleSignInFlow(key: string): Promise<SignInResult> {
         return import("./google-provider")
-            .then(module => new module.GoogleProvider(key, googleSignInBtn).signIn());
+            .then(module => new module.GoogleProvider(key, this.shadowRoot!).signIn());
     }
 
     private startFacebookSignInFlow(key: string): Promise<SignInResult> {
