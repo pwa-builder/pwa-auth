@@ -1,9 +1,0 @@
-{
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "appService.zipIgnorePattern": [
-        "node_modules{,/**}",
-        ".vscode{,/**}"
-    ],
-    "appService.deploySubpath": "",
-    "appService.defaultWebAppToDeploy": "/subscriptions/326c5cb1-e907-4a5d-bea1-eca6d562ce19/resourceGroups/pwa-auth-tester/providers/Microsoft.Web/sites/pwa-auth-tester"
-}
