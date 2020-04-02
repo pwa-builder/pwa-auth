@@ -13,7 +13,7 @@ Web component that lets your users sign-in/sign-up using their Microsoft, Google
 ```javascript
 <script
   type="module"
-  src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth"
+  src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth/dist/pwa-auth.js"
 ></script>
 ```
 
