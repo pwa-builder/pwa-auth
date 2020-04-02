@@ -114,10 +114,11 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         return html `<div class="provider-error"><strong>❌ No available sign-ins</strong><br><em>To enable sign-in, pass a Microsoft key, Google key, or Facebook key to the &lt;pwa-auth&gt; component.</em><br><pre>&lt;pwa-auth microsoftkey="..."&gt;&lt;/pwa-auth&gt;</pre></div>`;
     }
     dropdownFocusOut(e) {
+        var _a;
         // Close the dropdown if the focus is no longer within it.
         if (this.menuOpened) {
-            const dropdown = this.shadowRoot?.querySelector(".dropdown");
-            const dropdownContainsFocus = dropdown?.matches(":focus-within");
+            const dropdown = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector(".dropdown");
+            const dropdownContainsFocus = dropdown === null || dropdown === void 0 ? void 0 : dropdown.matches(":focus-within");
             if (!dropdownContainsFocus) {
                 this.menuOpened = false;
             }

@@ -28,17 +28,19 @@ export class FacebookProvider {
         }
     }
     scriptLoadSucceded() {
+        var _a;
         const fb = window.FB;
         if (!fb) {
-            this.reject?.("Facebook SDK loaded, but couldn't find window.FB");
+            (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, "Facebook SDK loaded, but couldn't find window.FB");
         }
         else {
             this.init(fb);
         }
     }
     scriptLoadFailed(error) {
+        var _a;
         console.error("Error loading Facebook SDK", error);
-        this.reject?.(error);
+        (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, error);
     }
     init(fb) {
         fb.init({
@@ -59,6 +61,7 @@ export class FacebookProvider {
         }
     }
     signInCompleted(statusResponse) {
+        var _a;
         if (statusResponse.status === "connected") {
             // If we're already connected, signal it.
             const requestArgs = {
@@ -67,7 +70,7 @@ export class FacebookProvider {
             FB.api("/me", requestArgs, res => this.userDetailsFetched(res));
         }
         else {
-            this.reject?.({
+            (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, {
                 message: "Facebook sign in failed and may have been cancelled by the user.",
                 status: statusResponse.status
             });
@@ -82,18 +85,20 @@ export class FacebookProvider {
         }
     }
     signInSucceeded(userDetails) {
+        var _a, _b, _c;
         const loginResult = {
             email: userDetails.email,
             name: userDetails.name,
-            imageUrl: userDetails.picture?.data?.url,
+            imageUrl: (_b = (_a = userDetails.picture) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.url,
             error: null,
             provider: "Facebook",
             providerData: userDetails
         };
-        this.resolve?.(loginResult);
+        (_c = this.resolve) === null || _c === void 0 ? void 0 : _c.call(this, loginResult);
     }
     signInFailed(error) {
-        this.reject?.(error);
+        var _a;
+        (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, error);
     }
 }
 FacebookProvider.apiUrl = "https://connect.facebook.net/en_US/sdk.js";

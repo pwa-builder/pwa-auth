@@ -1,7 +1,17 @@
 {
   "name": "@pwabuilder/pwaauth",
-  "version": "1.0.0",
-  "description": "Web component for signing in with popular providers like Google and Microsoft. Built with ♥ by PWABuilder team.",
+  "version": "0.9.0",
+  "description": "Web component that lets your users sign-in/sign-up using their Microsoft, Google, or Facebook account. Your app receives their email address, name, and profile picture.",
+  "main": "dist/pwa-auth.js",
+  "module": "dist/pwa-auth.js",
+  "author": "PWABuilder Team",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"tsc --watch\" \"npx es-dev-server --node-resolve --compatibility none --open www/\"",
+    "dev": "concurrently \"tsc --watch\" \"npx es-dev-server --node-resolve --compatibility none --open www/\"",
+    "build": "tsc && rollup -c"
+  },
   "dependencies": {
     "lit-element": "^2.2.1",
     "msal": "^1.2.1"
@@ -10,17 +20,13 @@
     "@types/facebook-js-sdk": "^3.3.0",
     "@types/gapi.auth2": "0.0.51",
     "concurrently": "^5.1.0",
-    "es-dev-server": "^1.40.0",
+    "es-dev-server": "^1.45.3",
     "typescript": "^3.8.2",
-    "express": "~4.16.1",
-    "cookie-parser": "~1.4.4"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"tsc --watch\" \"npx es-dev-server --node-resolve --open public/\"",
-    "build": "tsc",
-    "start": "node ./bin/www"
-  },
-  "author": "PWABuilder Team",
-  "license": "ISC"
+    "deepmerge": "^4.2.2",
+    "rollup": "^1.26.0",
+    "@rollup/plugin-strip": "^1.3.1",
+    "rollup-plugin-minify-html-literals": "^1.2.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.3.0"
+  }
 }

@@ -4,11 +4,11 @@
     "experimentalDecorators": true,
     "lib": [
       "dom",
-      "es2020"
+      "ES2018"
     ],
     "module": "es2020",
     "moduleResolution": "node",
-    "target": "es2020",
+    "target": "es2018",
     "outDir": "build",
     "declaration": true,
     "esModuleInterop": true,

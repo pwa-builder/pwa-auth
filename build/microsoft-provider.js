@@ -43,10 +43,11 @@ export class MicrosoftAuth {
             .then(accessToken => this.getUserPhoto(accessToken))
             .then(photoUrl => loginResult.imageUrl = photoUrl)
             .catch(error => console.log("Unable to fetch user profile image. Note that Microsoft Graph cannot fetch profile pictures for personal accounts; only work and education accounts are supported. Error details: ", error))
-            .finally(() => this.resolve?.(loginResult)); // Finally clause: regardless of whether we can get the user's photo, we consider it a successful signin.
+            .finally(() => { var _a; return (_a = this.resolve) === null || _a === void 0 ? void 0 : _a.call(this, loginResult); }); // Finally clause: regardless of whether we can get the user's photo, we consider it a successful signin.
     }
     signInFailed(error) {
-        this.reject?.(error);
+        var _a;
+        (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, error);
     }
     redirectCallback(error, response) {
         if (response) {
@@ -97,9 +98,10 @@ export class MicrosoftAuth {
         });
     }
     getLoginResult(loginResponse) {
+        var _a, _b;
         return {
-            name: loginResponse?.account?.name || "",
-            email: loginResponse?.account?.userName || "",
+            name: ((_a = loginResponse === null || loginResponse === void 0 ? void 0 : loginResponse.account) === null || _a === void 0 ? void 0 : _a.name) || "",
+            email: ((_b = loginResponse === null || loginResponse === void 0 ? void 0 : loginResponse.account) === null || _b === void 0 ? void 0 : _b.userName) || "",
             provider: "Microsoft",
             error: null,
             imageUrl: null,

@@ -15,7 +15,8 @@ export class GoogleProvider {
         });
     }
     appendGoogleScript() {
-        const gapiLoad = window.gapi?.auth2;
+        var _a;
+        const gapiLoad = (_a = window.gapi) === null || _a === void 0 ? void 0 : _a.auth2;
         if (!gapiLoad) {
             const scriptEl = window.document.createElement("script");
             scriptEl.async = true;
@@ -29,16 +30,18 @@ export class GoogleProvider {
         }
     }
     scriptLoadSucceded() {
-        if (!gapi?.load) {
-            this.reject?.("Google Platform library loaded, but couldn't find window.gapi.load");
+        var _a;
+        if (!(gapi === null || gapi === void 0 ? void 0 : gapi.load)) {
+            (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, "Google Platform library loaded, but couldn't find window.gapi.load");
         }
         else {
             this.loadAuth();
         }
     }
     scriptLoadFailed(error) {
+        var _a;
         console.error("Error loading Google Platform library", error);
-        this.reject?.(error);
+        (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, error);
     }
     loadAuth() {
         window.gapi.load("auth2", () => this.initAuth());
@@ -73,11 +76,13 @@ export class GoogleProvider {
         return fakeBtn;
     }
     signInSucceeded(user) {
+        var _a;
         const loginResult = this.getLoginResult(user);
-        this.resolve?.(loginResult);
+        (_a = this.resolve) === null || _a === void 0 ? void 0 : _a.call(this, loginResult);
     }
     signInFailed(error) {
-        this.reject?.(error);
+        var _a;
+        (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, error);
     }
     getLoginResult(user) {
         const profile = user.getBasicProfile();
