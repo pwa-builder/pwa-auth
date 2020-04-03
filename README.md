@@ -48,12 +48,16 @@ pwa-auth can appear as a single dropdown button:
 ```
 <img loading="lazy" src="/assets/install-btn-dropdown.png">
 
+Try it: [live](https://pwa-auth-basic.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-basic)
+
 ### List of sign-in provider buttons
 Or it can be displayed as a list of provider buttons:
 ```html
 <pwa-auth appearance="list"></pwa-auth>
 ```
 <img loading="lazy" src="/assets/list.png">
+
+Try it: [live](https://pwa-auth-list.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-list)
 
 ### Headless
 Finally, pwa-auth can be totally headless -- no UI -- letting you create your own sign-in buttons and drive the functionality using the [signIn(...) method](/#methods).
@@ -66,6 +70,7 @@ Finally, pwa-auth can be totally headless -- no UI -- letting you create your ow
 const pwaAuth = document.querySelector("pwa-auth");
 myOwnSignInBtn.addEventHandler("click", () => pwaAuth.signIn("Microsoft"));
 ```
+Try it: [live](https://pwa-auth-headless.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-headless)
 
 All UI in pwa-auth is stylable using CSS. See [styling](#styling) for details. Additionally, all text in pwa-auth is customizable, see [pwa-auth properties](#properties).
 
@@ -88,6 +93,8 @@ pwaAuth.addEventListener("signin-completed", ev => {
     }
 });
 ```
+
+Try it: [live](https://pwa-auth-basic.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-basic?path=script.js:3:1)
 
 Once the `signin-completed` event fires, you can do whatever you normally do when your users sign in: set an authentication cookie, create a JWT token, etc.
 
@@ -127,6 +134,8 @@ If a user has signed-in previously, future sign-ins will be instantaneous. 😎 
 ```
 <img loading="lazy" src="/assets/first-cred.png" />
 
+Try it: [live](https://pwa-auth-silent.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-silent?path=index.html.js:33:1)
+
 In the above screenshot, the user tapped Sign In, and was automatically signed-in using the first saved credential; no OAuth dialogs, pop-ups, or redirects needed! 😎 The browser typically displays a "Signing in as..." info bar during this process.
 
 As an alternative, you can have the browser <em>prompt</em> the user to confirm his sign-in:
@@ -136,6 +145,8 @@ As an alternative, you can have the browser <em>prompt</em> the user to confirm 
 <pwa-auth credentialmode="prompt"></pwa-auth>
 ```
 <img loading="lazy" src="/assets/signin-prompt.png" />
+
+Try it: [live](https://pwa-auth-silent.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-silent?path=index.html.js:33:1)
 
 In the above image, the user tapped the gray `Sign In` button, and then was prompted by the browser to sign in using his stored credential.
 
@@ -230,3 +241,5 @@ pwa-auth::part(signInButton) {
 }
 ```
 <img loading="lazy" src="/assets/signin-part.png">
+
+Try it: [live](https://pwa-auth-customize.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-customize?path=style.css:18:1)
