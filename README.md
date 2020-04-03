@@ -123,7 +123,7 @@ If a user has signed-in previously, future sign-ins will be instantaneous. 😎 
 
 ```html
 <!-- When tapping sign-in, use the saved credential to sign in silently -->
-<pwa-auth credentialsmode="silent"></pwa-auth>
+<pwa-auth credentialmode="silent"></pwa-auth>
 ```
 <img loading="lazy" src="/assets/first-cred.png" />
 
@@ -143,15 +143,15 @@ If the user had previously signed-in with multiple accounts (e.g. once with Goog
 
 <img loading="lazy" src="/assets/multiple-accounts.png" />
 
-Finally, you can disable credential management entirely:
+Finally, you can disable credential management when clicking the Sign In button:
 ```html
-<!-- When tapping sign in, the user will enter the OAuth flow popup -->
+<!-- When tapping sign in, always show the provider dropdown menu -->
 <pwa-auth credentialmode="none"></pwa-auth>
 ```
 
-When `credentialmode="none"` and the user taps `Sign In`, pwa-auth behaves as if the user is signing in for the first time: launching the OAuth popup window to authorize.
+When `credentialmode="none"` and the user taps `Sign In`, pwa-auth will show the dropdown set of providers. Clicking any of those providers will still attempt to load a stored credential first, falling back to the OAuth flow as necessary. [View sample using credentialmode="none"](https://pwa-auth-basic.glitch.me/).
 
-With regards to browser support, pwa-auth credential management is a <em>progressive</em> enhancement: on browsers that don't support Credential Management, pwa-auth will fallback to `credentialmode="none"` behavior.
+With regards to browser support, pwa-auth credential management is a <em>progressive</em> enhancement: on browsers that don't support Credential Management, pwa-auth will fallback to `credentialmode="none"` behavior and always use the OAuth flow.
 
 ### Creating keys
 
@@ -180,7 +180,7 @@ You can customize the appearance and behavior of pwa-auth component.
 | Property             | Attribute            | Description                                                                     | Type      | Default |
 | - | - | - | - | - |
 | `appearance` | `appearance` | Whether to render a single `Sign In` dropdown button or a list of sign-in provider buttons. See [what does it look like?](#what-does-it-look-like) for details. | `'button'\|'list'\|'none'` | `'button'` |
-| `credentialMode` | `credentialmode` | How to sign-in users who had previously signed-in. See [successive sign-ins](#successive-sign-ins) for details. | `'silent'\|'prompt'\|'none'` | `'silent'` |
+| `credentialMode` | `credentialmode` | What happens when you click the `Sign In` button. If the user has previously signed-in and saved his credential, you can speed the user through sign-in: <ul><li>`silent`: When clicking `Sign In`, silently sign-in using his saved credential if available.</li><li>`prompt`: When clicking `Sign In`, prompt the user to sign-in with his saved crendential if available.</li><li>`none`: When clicking `Sign In`, show the dropdown menu with list of sign-in providers</li></ul> See [successive sign-ins](#successive-sign-ins) for details. | `'silent'\|'prompt'\|'none'` | `'silent'` |
 | `microsoftKey` | `microsoftkey`  | The `Application (client) ID` of the Microsoft App you created. See [creating a Microsoft key](/creating-microsoft-key.md). header | `string \| null` | `null` |
 | `googleKey` | `googlekey`  | The `Client ID` of the Google credential you created. See [creating a Google key](/creating-google-key.md) | `string \| null` | `null` |
 | `facebookKey` | `facebookkey`  | The `App ID` of the Facebook App you created. See [creating a Facebook key](/creating-facebook-key.md) | `string \| null`  | `null` |
