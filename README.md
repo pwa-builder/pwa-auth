@@ -134,7 +134,7 @@ If a user has signed-in previously, future sign-ins will be instantaneous. 😎 
 ```
 <img loading="lazy" src="/assets/first-cred.png" />
 
-Try it: [live](https://pwa-auth-silent.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-silent?path=index.html.js:33:1)
+Try it: [live](https://pwa-auth-silent.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-silent?path=index.html:33:1)
 
 In the above screenshot, the user tapped Sign In, and was automatically signed-in using the first saved credential; no OAuth dialogs, pop-ups, or redirects needed! 😎 The browser typically displays a "Signing in as..." info bar during this process.
 
@@ -146,7 +146,7 @@ As an alternative, you can have the browser <em>prompt</em> the user to confirm 
 ```
 <img loading="lazy" src="/assets/signin-prompt.png" />
 
-Try it: [live](https://pwa-auth-silent.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-silent?path=index.html.js:33:1)
+Try it: [live](https://pwa-auth-prompt.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-prompt?path=index.html:33:1)
 
 In the above image, the user tapped the gray `Sign In` button, and then was prompted by the browser to sign in using his stored credential.
 
