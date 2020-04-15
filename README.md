@@ -5,6 +5,12 @@ Web component that lets your users sign-in/sign-up using their Microsoft, Google
 
 😎😎 Double bonus: It uses the new [Credential Management APIs](https://developers.google.com/web/fundamentals/security/credential-management/retrieve-credentials) to speed through sign-ins without bulky pop-ups or redirects.
 
+### Supported Browsers
+- Edge
+- Chrome
+- Firefox
+- Safari
+
 ## Using this component
 
 ### Install
