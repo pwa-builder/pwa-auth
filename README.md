@@ -16,7 +16,7 @@ Web component that lets your users sign-in/sign-up using their Microsoft, Google
 ### Install
 1. Add this script tag to your `<head>`
 
-```javascript
+```html
 <script
   type="module"
   src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth/dist/pwa-auth.js"
