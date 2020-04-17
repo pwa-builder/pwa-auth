@@ -22,6 +22,10 @@ export declare class PwaAuth extends LitElement {
      * @param provider The provider to sign-in with. Must be "Microsoft", "Google", or "Facebook".
      */
     signIn(provider: AuthProvider): void;
+    private get microsoftButtonIcon();
+    private get googleButtonIcon();
+    private get facebookButtonIcon();
+    private get twitterButtonIcon();
     private renderLoginButton;
     private renderListButtons;
     private renderNoKeysError;
