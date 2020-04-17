@@ -20,9 +20,9 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.disabled = false;
     }
     firstUpdated() {
-        // If we're on iOS, we need to load dependencies up front to avoid Safari
+        // If we're on Safari, we need to load dependencies up front to avoid Safari
         // blocking the first OAuth popup. See https://github.com/pwa-builder/pwa-auth/issues/3
-        if (this.isIOS()) {
+        if (this.isWebKit()) {
             this.disabled = true;
             this.loadAllDependencies()
                 .finally(() => this.disabled = false);
@@ -303,10 +303,12 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         return Object.keys(PwaAuth_1.providerUrls)
             .find(key => PwaAuth_1.providerUrls[key] === url);
     }
-    isIOS() {
-        // As of April 2020, mobile Webkit-based browsers have an issue where it wrongfully
-        // blocks the OAuth popup due to lazy-loading the auth library.
-        return !!navigator.userAgent.match(/ipad|iphone/i);
+    isWebKit() {
+        // As of April 2020, Webkit-based browsers wrongfully blocks
+        // the OAuth popup due to lazy-loading the auth library(s).
+        const isIOS = !!navigator.userAgent.match(/ipad|iphone/i); // everything is WebKit on iOS
+        const isSafari = !!navigator.vendor && navigator.vendor.includes("Apple");
+        return isIOS || isSafari;
     }
     loadAllDependencies() {
         const dependencyLoaders = [
@@ -316,7 +318,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         ];
         const dependencyLoadTasks = dependencyLoaders
             .filter(dep => !!dep.key)
-            .map(dep => dep.importer(dep.key).then((prov) => prov.loadDependencies()));
+            .map(dep => dep.importer(dep.key).then((p) => p.loadDependencies()));
         return Promise.all(dependencyLoadTasks)
             .catch(error => console.error("Error loading dependencies", error));
     }
@@ -398,7 +400,7 @@ PwaAuth.styles = css `
             cursor: pointer;
         }
 
-            .signin-btn:hover {
+            .signin-btn:hover:not(:disabled) {
                 background-color: rgb(220, 224, 228);
                 border-color: rgb(212, 218, 223);
             }
@@ -412,6 +414,10 @@ PwaAuth.styles = css `
             .signin-btn:active {
                 background-color: rgb(210, 214, 218);
                 border-color: rgb(202, 208, 213);
+            }
+
+            .signin-btn:disabled {
+                color: rgba(16, 16, 16, 0.3);
             }
 
         .dropdown {

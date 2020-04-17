@@ -16,7 +16,8 @@ export class FacebookProvider implements SignInProvider {
     }
 
     loadDependencies(): Promise<void> {
-        return this.appendFacebookScript();
+        return this.appendFacebookScript()
+            .then(() => this.initFacebookSdk() as any);
     }
 
     private appendFacebookScript(): Promise<void> {

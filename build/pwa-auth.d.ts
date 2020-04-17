@@ -46,7 +46,7 @@ export declare class PwaAuth extends LitElement {
     private getStoredCredential;
     private credentialToSignInResult;
     private getProviderNameFromUrl;
-    private isIOS;
+    private isWebKit;
     private loadAllDependencies;
 }
 export {};

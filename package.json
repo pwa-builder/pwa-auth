@@ -1,6 +1,6 @@
 {
   "name": "@pwabuilder/pwaauth",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Web component that lets your users sign-in/sign-up using their Microsoft, Google, or Facebook account. Your app receives their email address, name, and profile picture.",
   "main": "dist/pwa-auth.js",
   "module": "dist/pwa-auth.js",

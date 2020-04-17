@@ -9,7 +9,8 @@ export class FacebookProvider {
             .then(response => this.fetchUserDetails(response));
     }
     loadDependencies() {
-        return this.appendFacebookScript();
+        return this.appendFacebookScript()
+            .then(() => this.initFacebookSdk());
     }
     appendFacebookScript() {
         const fb = window.FB;
