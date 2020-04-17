@@ -1,19 +1,13 @@
 import { SignInResult } from "./signin-result";
-export declare class GoogleProvider {
+import { SignInProvider } from "./sign-in-provider";
+export declare class GoogleProvider implements SignInProvider {
     private clientId;
-    private shadowRoot;
-    private resolve;
-    private reject;
     static readonly apiUrl = "https://apis.google.com/js/api:client.js";
-    constructor(clientId: string, shadowRoot: ShadowRoot);
+    constructor(clientId: string);
     signIn(): Promise<SignInResult>;
+    loadDependencies(): Promise<void>;
     private appendGoogleScript;
-    private scriptLoadSucceded;
-    private scriptLoadFailed;
     private loadAuth;
-    private initAuth;
-    private getOrCreateFakeBtn;
-    private signInSucceeded;
-    private signInFailed;
-    private getLoginResult;
+    private signInWithGoogleAuth2;
+    private getSignInResultFromUser;
 }

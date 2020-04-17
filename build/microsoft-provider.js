@@ -1,5 +1,5 @@
 import * as Msal from "msal";
-export class MicrosoftAuth {
+export class MicrosoftProvider {
     constructor(clientId) {
         this.clientId = clientId;
         this.requestObj = { scopes: ["user.read"] };
@@ -16,6 +16,11 @@ export class MicrosoftAuth {
             this.reject = reject;
             this.signInWithMsal();
         });
+    }
+    loadDependencies() {
+        // Our dependencies are already loaded via import statement at the top of the file,
+        // thanks to msal.js being a module.
+        return Promise.resolve();
     }
     signInWithMsal() {
         const msalConfig = {

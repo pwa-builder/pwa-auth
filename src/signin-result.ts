@@ -1,3 +1,6 @@
+/**
+ * The result of a sign in attempt.
+ */
 export interface SignInResult {
     /**
      * The user's email.

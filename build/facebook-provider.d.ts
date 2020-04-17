@@ -1,18 +1,14 @@
 import { SignInResult } from "./signin-result";
-export declare class FacebookProvider {
+import { SignInProvider } from "./sign-in-provider";
+export declare class FacebookProvider implements SignInProvider {
     private appId;
-    private resolve;
-    private reject;
     static readonly apiUrl = "https://connect.facebook.net/en_US/sdk.js";
     constructor(appId: string);
     signIn(): Promise<SignInResult>;
+    loadDependencies(): Promise<void>;
     private appendFacebookScript;
-    private scriptLoadSucceded;
-    private scriptLoadFailed;
-    private init;
-    private loginStatusFetched;
-    private signInCompleted;
-    private userDetailsFetched;
-    private signInSucceeded;
-    private signInFailed;
+    private initFacebookSdk;
+    private signInWithFacebookSdk;
+    private fetchUserDetails;
+    private getSignInResultFromUserDetails;
 }

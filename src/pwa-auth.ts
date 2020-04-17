@@ -1,6 +1,10 @@
 import { LitElement, html, css, customElement, property, TemplateResult, PropertyValues } from 'lit-element';
 import { SignInResult } from './signin-result';
 import { FederatedCredential } from './federated-credential';
+import { SignInProvider } from './sign-in-provider';
+import { MicrosoftProvider } from './microsoft-provider';
+import { GoogleProvider } from './google-provider';
+import { FacebookProvider } from './facebook-provider';
 
 type AuthProvider = "Microsoft" | "Google" | "Facebook";
 
@@ -181,6 +185,17 @@ export class PwaAuth extends LitElement {
         }
     `;
 
+    firstUpdated() {
+        // If we're on iOS, we need to load dependencies up front to avoid Safari
+        // blocking the first OAuth popup. See https://github.com/pwa-builder/pwa-auth/issues/3
+        if (this.isIOS() || true) {
+            this.disabled = true;
+            this.loadAllDependencies()
+                .then(() => console.log('zanz, done loading deps'))
+                .finally(() => this.disabled = false);
+        }
+    }
+
     render() {
         if (!this.hasAnyKey) {
             return this.renderNoKeysError();
@@ -216,7 +231,7 @@ export class PwaAuth extends LitElement {
     private renderLoginButton(): TemplateResult {
         return html`
             <div class="dropdown" @focusout="${this.dropdownFocusOut}">
-                <button class="signin-btn" part="signInButton" @click="${this.signInClicked}">
+                <button class="signin-btn" part="signInButton" ?disabled=${this.disabled} @click="${this.signInClicked}">
                     ${this.signInButtonText}
                 </button>
                 <div class="menu ${this.menuOpened ? "open" : ""} ${this.menuPlacement === "end" ? "align-end" : ""}" part="dropdownMenu">
@@ -366,19 +381,34 @@ export class PwaAuth extends LitElement {
         return signIn;
     }
 
-    private startMicrosoftSignInFlow(key): Promise<SignInResult> {
+    private importMicrosoftProvider(key: string): Promise<MicrosoftProvider> {
         return import("./microsoft-provider")
-            .then(module => new module.MicrosoftAuth(key).signIn());
+            .then(module => new module.MicrosoftProvider(key));
+    }
+
+    private startMicrosoftSignInFlow(key: string): Promise<SignInResult> {
+        return this.importMicrosoftProvider(key)
+            .then(prov => prov.signIn());
+    }
+
+    private importGoogleProvider(key: string): Promise<GoogleProvider> {
+        return import("./google-provider")
+            .then(module => new module.GoogleProvider(key));
     }
 
     private startGoogleSignInFlow(key: string): Promise<SignInResult> {
-        return import("./google-provider")
-            .then(module => new module.GoogleProvider(key, this.shadowRoot!).signIn());
+        return this.importGoogleProvider(key)
+            .then(prov => prov.signIn());
+    }
+
+    private importFacebookProvider(key: string): Promise<FacebookProvider> {
+        return import ("./facebook-provider")
+            .then(module => new module.FacebookProvider(key));
     }
 
     private startFacebookSignInFlow(key: string): Promise<SignInResult> {
-        return import ("./facebook-provider")
-            .then(module => new module.FacebookProvider(key).signIn());
+        return this.importFacebookProvider(key)
+            .then(prov => prov.signIn());
     }
 
     private tryStoreCredential(signIn: SignInResult) {
@@ -469,5 +499,26 @@ export class PwaAuth extends LitElement {
     private getProviderNameFromUrl(url: string): AuthProvider {
         return Object.keys(PwaAuth.providerUrls)
             .find(key => PwaAuth.providerUrls[key] === url) as AuthProvider;
+    }
+
+    private isIOS(): boolean {
+        // As of April 2020, mobile Webkit-based browsers have an issue where it wrongfully
+        // blocks the OAuth popup due to lazy-loading the auth library.
+        return !!navigator.userAgent.match(/ipad|iphone/i);
+    }
+
+    private loadAllDependencies() {
+        const providers: Promise<SignInProvider>[] = [];
+        if (this.microsoftKey) {
+            providers.push(this.importMicrosoftProvider(this.microsoftKey));
+        } 
+        if (this.googleKey) {
+            providers.push(this.importGoogleProvider(this.googleKey));
+        }
+        if (this.facebookKey) {
+            providers.push(this.importFacebookProvider(this.facebookKey));
+        }
+
+        return Promise.all(providers);
     }
 }

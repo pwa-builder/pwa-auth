@@ -19,6 +19,16 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.menuPlacement = "start";
         this.disabled = false;
     }
+    firstUpdated() {
+        // If we're on iOS, we need to load dependencies up front to avoid Safari
+        // blocking the first OAuth popup. See https://github.com/pwa-builder/pwa-auth/issues/3
+        if (this.isIOS() || true) {
+            this.disabled = true;
+            this.loadAllDependencies()
+                .then(() => console.log('zanz, done loading deps'))
+                .finally(() => this.disabled = false);
+        }
+    }
     render() {
         if (!this.hasAnyKey) {
             return this.renderNoKeysError();
@@ -52,7 +62,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     renderLoginButton() {
         return html `
             <div class="dropdown" @focusout="${this.dropdownFocusOut}">
-                <button class="signin-btn" part="signInButton" @click="${this.signInClicked}">
+                <button class="signin-btn" part="signInButton" ?disabled=${this.disabled} @click="${this.signInClicked}">
                     ${this.signInButtonText}
                 </button>
                 <div class="menu ${this.menuOpened ? "open" : ""} ${this.menuPlacement === "end" ? "align-end" : ""}" part="dropdownMenu">
@@ -190,17 +200,29 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.tryStoreCredential(signIn);
         return signIn;
     }
-    startMicrosoftSignInFlow(key) {
+    importMicrosoftProvider(key) {
         return import("./microsoft-provider")
-            .then(module => new module.MicrosoftAuth(key).signIn());
+            .then(module => new module.MicrosoftProvider(key));
+    }
+    startMicrosoftSignInFlow(key) {
+        return this.importMicrosoftProvider(key)
+            .then(prov => prov.signIn());
+    }
+    importGoogleProvider(key) {
+        return import("./google-provider")
+            .then(module => new module.GoogleProvider(key));
     }
     startGoogleSignInFlow(key) {
-        return import("./google-provider")
-            .then(module => new module.GoogleProvider(key, this.shadowRoot).signIn());
+        return this.importGoogleProvider(key)
+            .then(prov => prov.signIn());
+    }
+    importFacebookProvider(key) {
+        return import("./facebook-provider")
+            .then(module => new module.FacebookProvider(key));
     }
     startFacebookSignInFlow(key) {
-        return import("./facebook-provider")
-            .then(module => new module.FacebookProvider(key).signIn());
+        return this.importFacebookProvider(key)
+            .then(prov => prov.signIn());
     }
     tryStoreCredential(signIn) {
         // Use the new Credential Management API to store the credential, allowing for automatic sign-in next time the user visits the page.
@@ -281,6 +303,24 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     getProviderNameFromUrl(url) {
         return Object.keys(PwaAuth_1.providerUrls)
             .find(key => PwaAuth_1.providerUrls[key] === url);
+    }
+    isIOS() {
+        // As of April 2020, mobile Webkit-based browsers have an issue where it wrongfully
+        // blocks the OAuth popup due to lazy-loading the auth library.
+        return !!navigator.userAgent.match(/ipad|iphone/i);
+    }
+    loadAllDependencies() {
+        const providers = [];
+        if (this.microsoftKey) {
+            providers.push(this.importMicrosoftProvider(this.microsoftKey));
+        }
+        if (this.googleKey) {
+            providers.push(this.importGoogleProvider(this.googleKey));
+        }
+        if (this.facebookKey) {
+            providers.push(this.importFacebookProvider(this.facebookKey));
+        }
+        return Promise.all(providers);
     }
 };
 PwaAuth.providerUrls = {
