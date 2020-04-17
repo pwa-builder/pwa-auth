@@ -1,7 +1,8 @@
 import * as Msal from "msal";
 import { SignInResult } from "./signin-result";
+import { SignInProvider } from "./signin-provider";
 
-export class MicrosoftAuth {
+export class MicrosoftProvider implements SignInProvider {
 
     private readonly requestObj = { scopes: ["user.read"] };
     private readonly graphConfig = { graphMeEndpoint: "https://graph.microsoft.com/v1.0/me" };
@@ -23,6 +24,12 @@ export class MicrosoftAuth {
         });
     }
 
+    loadDependencies(): Promise<void> {
+        // Our dependencies are already loaded via import statement at the top of the file,
+        // thanks to msal.js being a module.
+        return Promise.resolve();
+    }
+
     private signInWithMsal() {
         const msalConfig: Msal.Configuration = {
             auth: {
@@ -32,7 +39,7 @@ export class MicrosoftAuth {
             cache: {
                 cacheLocation: "localStorage",
                 storeAuthStateInCookie: true
-            }
+            }            
         };
         
         this.app = new Msal.UserAgentApplication(msalConfig);

@@ -1,5 +1,6 @@
-import { LitElement, html, css, customElement, property, TemplateResult, PropertyValues } from 'lit-element';
+import { LitElement, html, css, customElement, property, TemplateResult } from 'lit-element';
 import { SignInResult } from './signin-result';
+import { SignInProvider } from './signin-provider';
 import { FederatedCredential } from './federated-credential';
 
 type AuthProvider = "Microsoft" | "Google" | "Facebook";
@@ -102,7 +103,7 @@ export class PwaAuth extends LitElement {
             cursor: pointer;
         }
 
-            .signin-btn:hover {
+            .signin-btn:hover:not(:disabled) {
                 background-color: rgb(220, 224, 228);
                 border-color: rgb(212, 218, 223);
             }
@@ -116,6 +117,10 @@ export class PwaAuth extends LitElement {
             .signin-btn:active {
                 background-color: rgb(210, 214, 218);
                 border-color: rgb(202, 208, 213);
+            }
+
+            .signin-btn:disabled {
+                color: rgba(16, 16, 16, 0.3);
             }
 
         .dropdown {
@@ -202,6 +207,16 @@ export class PwaAuth extends LitElement {
         }
     `;
 
+    firstUpdated() {
+        // If we're on Safari, we need to load dependencies up front to avoid Safari
+        // blocking the first OAuth popup. See https://github.com/pwa-builder/pwa-auth/issues/3
+        if (this.isWebKit()) {
+            this.disabled = true;
+            this.loadAllDependencies()
+                .finally(() => this.disabled = false);
+        }
+    }
+
     render() {
         if (!this.hasAnyKey) {
             return this.renderNoKeysError();
@@ -268,7 +283,7 @@ export class PwaAuth extends LitElement {
     private renderLoginButton(): TemplateResult {
         return html`
             <div class="dropdown" @focusout="${this.dropdownFocusOut}">
-                <button class="signin-btn" part="signInButton" @click="${this.signInClicked}">
+                <button class="signin-btn" part="signInButton" ?disabled=${this.disabled} @click="${this.signInClicked}">
                     ${this.signInButtonText}
                 </button>
                 <div class="menu ${this.menuOpened ? "open" : ""} ${this.menuPlacement === "end" ? "align-end" : ""}" part="dropdownMenu">
@@ -397,19 +412,34 @@ export class PwaAuth extends LitElement {
         return signIn;
     }
 
-    private startMicrosoftSignInFlow(key): Promise<SignInResult> {
+    private importMicrosoftProvider(key: string): Promise<any> {
         return import("./microsoft-provider")
-            .then(module => new module.MicrosoftAuth(key).signIn());
+            .then(module => new module.MicrosoftProvider(key));
+    }
+
+    private startMicrosoftSignInFlow(key: string): Promise<any> {
+        return this.importMicrosoftProvider(key)
+            .then(prov => prov.signIn());
+    }
+
+    private importGoogleProvider(key: string): Promise<any> {
+        return import("./google-provider")
+            .then(module => new module.GoogleProvider(key));
     }
 
     private startGoogleSignInFlow(key: string): Promise<SignInResult> {
-        return import("./google-provider")
-            .then(module => new module.GoogleProvider(key, this.shadowRoot!).signIn());
+        return this.importGoogleProvider(key)
+            .then(prov => prov.signIn());
+    }
+
+    private importFacebookProvider(key: string): Promise<any> {
+        return import ("./facebook-provider")
+            .then(module => new module.FacebookProvider(key));
     }
 
     private startFacebookSignInFlow(key: string): Promise<SignInResult> {
-        return import ("./facebook-provider")
-            .then(module => new module.FacebookProvider(key).signIn());
+        return this.importFacebookProvider(key)
+            .then(prov => prov.signIn());
     }
 
     private tryStoreCredential(signIn: SignInResult) {
@@ -500,5 +530,27 @@ export class PwaAuth extends LitElement {
     private getProviderNameFromUrl(url: string): AuthProvider {
         return Object.keys(PwaAuth.providerUrls)
             .find(key => PwaAuth.providerUrls[key] === url) as AuthProvider;
+    }
+
+    private isWebKit(): boolean {
+        // As of April 2020, Webkit-based browsers wrongfully blocks
+        // the OAuth popup due to lazy-loading the auth library(s).
+        const isIOS = !!navigator.userAgent.match(/ipad|iphone/i);  // everything is WebKit on iOS
+        const isSafari = !!navigator.vendor && navigator.vendor.includes("Apple");
+        return isIOS || isSafari;
+    }
+
+    private loadAllDependencies(): Promise<any> {
+        const dependencyLoaders = [
+            { key: this.microsoftKey, importer: (key: string) => this.importMicrosoftProvider(key) },
+            { key: this.googleKey, importer: (key: string) => this.importGoogleProvider(key) },
+            { key: this.facebookKey, importer: (key: string) => this.importFacebookProvider(key) },
+        ];
+        const dependencyLoadTasks = dependencyLoaders
+            .filter(dep => !!dep.key)
+            .map(dep => dep.importer(dep.key!).then((p: SignInProvider) => p.loadDependencies()));
+
+        return Promise.all(dependencyLoadTasks)
+            .catch(error => console.error("Error loading dependencies", error));
     }
 }

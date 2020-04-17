@@ -19,6 +19,15 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.menuPlacement = "start";
         this.disabled = false;
     }
+    firstUpdated() {
+        // If we're on Safari, we need to load dependencies up front to avoid Safari
+        // blocking the first OAuth popup. See https://github.com/pwa-builder/pwa-auth/issues/3
+        if (this.isWebKit()) {
+            this.disabled = true;
+            this.loadAllDependencies()
+                .finally(() => this.disabled = false);
+        }
+    }
     render() {
         if (!this.hasAnyKey) {
             return this.renderNoKeysError();
@@ -80,7 +89,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     renderLoginButton() {
         return html `
             <div class="dropdown" @focusout="${this.dropdownFocusOut}">
-                <button class="signin-btn" part="signInButton" @click="${this.signInClicked}">
+                <button class="signin-btn" part="signInButton" ?disabled=${this.disabled} @click="${this.signInClicked}">
                     ${this.signInButtonText}
                 </button>
                 <div class="menu ${this.menuOpened ? "open" : ""} ${this.menuPlacement === "end" ? "align-end" : ""}" part="dropdownMenu">
@@ -197,17 +206,29 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.tryStoreCredential(signIn);
         return signIn;
     }
-    startMicrosoftSignInFlow(key) {
+    importMicrosoftProvider(key) {
         return import("./microsoft-provider")
-            .then(module => new module.MicrosoftAuth(key).signIn());
+            .then(module => new module.MicrosoftProvider(key));
+    }
+    startMicrosoftSignInFlow(key) {
+        return this.importMicrosoftProvider(key)
+            .then(prov => prov.signIn());
+    }
+    importGoogleProvider(key) {
+        return import("./google-provider")
+            .then(module => new module.GoogleProvider(key));
     }
     startGoogleSignInFlow(key) {
-        return import("./google-provider")
-            .then(module => new module.GoogleProvider(key, this.shadowRoot).signIn());
+        return this.importGoogleProvider(key)
+            .then(prov => prov.signIn());
+    }
+    importFacebookProvider(key) {
+        return import("./facebook-provider")
+            .then(module => new module.FacebookProvider(key));
     }
     startFacebookSignInFlow(key) {
-        return import("./facebook-provider")
-            .then(module => new module.FacebookProvider(key).signIn());
+        return this.importFacebookProvider(key)
+            .then(prov => prov.signIn());
     }
     tryStoreCredential(signIn) {
         // Use the new Credential Management API to store the credential, allowing for automatic sign-in next time the user visits the page.
@@ -288,6 +309,25 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     getProviderNameFromUrl(url) {
         return Object.keys(PwaAuth_1.providerUrls)
             .find(key => PwaAuth_1.providerUrls[key] === url);
+    }
+    isWebKit() {
+        // As of April 2020, Webkit-based browsers wrongfully blocks
+        // the OAuth popup due to lazy-loading the auth library(s).
+        const isIOS = !!navigator.userAgent.match(/ipad|iphone/i); // everything is WebKit on iOS
+        const isSafari = !!navigator.vendor && navigator.vendor.includes("Apple");
+        return isIOS || isSafari;
+    }
+    loadAllDependencies() {
+        const dependencyLoaders = [
+            { key: this.microsoftKey, importer: (key) => this.importMicrosoftProvider(key) },
+            { key: this.googleKey, importer: (key) => this.importGoogleProvider(key) },
+            { key: this.facebookKey, importer: (key) => this.importFacebookProvider(key) },
+        ];
+        const dependencyLoadTasks = dependencyLoaders
+            .filter(dep => !!dep.key)
+            .map(dep => dep.importer(dep.key).then((p) => p.loadDependencies()));
+        return Promise.all(dependencyLoadTasks)
+            .catch(error => console.error("Error loading dependencies", error));
     }
 };
 PwaAuth.providerUrls = {
@@ -371,7 +411,7 @@ PwaAuth.styles = css `
             cursor: pointer;
         }
 
-            .signin-btn:hover {
+            .signin-btn:hover:not(:disabled) {
                 background-color: rgb(220, 224, 228);
                 border-color: rgb(212, 218, 223);
             }
@@ -385,6 +425,10 @@ PwaAuth.styles = css `
             .signin-btn:active {
                 background-color: rgb(210, 214, 218);
                 border-color: rgb(202, 208, 213);
+            }
+
+            .signin-btn:disabled {
+                color: rgba(16, 16, 16, 0.3);
             }
 
         .dropdown {

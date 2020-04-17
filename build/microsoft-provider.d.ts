@@ -1,5 +1,6 @@
 import { SignInResult } from "./signin-result";
-export declare class MicrosoftAuth {
+import { SignInProvider } from "./signin-provider";
+export declare class MicrosoftProvider implements SignInProvider {
     private clientId;
     private readonly requestObj;
     private readonly graphConfig;
@@ -8,6 +9,7 @@ export declare class MicrosoftAuth {
     private app;
     constructor(clientId: string);
     signIn(): Promise<SignInResult>;
+    loadDependencies(): Promise<void>;
     private signInWithMsal;
     private signInSucceeded;
     private signInFailed;

@@ -15,6 +15,7 @@ export declare class PwaAuth extends LitElement {
     disabled: boolean;
     static readonly providerUrls: Record<AuthProvider, string>;
     static styles: import("lit-element").CSSResult;
+    firstUpdated(): void;
     render(): void | TemplateResult;
     /**
      * Starts the sign-in process using the specified provider.
@@ -37,8 +38,11 @@ export declare class PwaAuth extends LitElement {
     private signInFacebook;
     private signInWithProvider;
     private signInCompleted;
+    private importMicrosoftProvider;
     private startMicrosoftSignInFlow;
+    private importGoogleProvider;
     private startGoogleSignInFlow;
+    private importFacebookProvider;
     private startFacebookSignInFlow;
     private tryStoreCredential;
     private tryAutoSignIn;
@@ -46,5 +50,7 @@ export declare class PwaAuth extends LitElement {
     private getStoredCredential;
     private credentialToSignInResult;
     private getProviderNameFromUrl;
+    private isWebKit;
+    private loadAllDependencies;
 }
 export {};
