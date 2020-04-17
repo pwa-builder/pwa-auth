@@ -52,7 +52,7 @@ pwa-auth can appear as a single dropdown button:
 ```html
 <pwa-auth appearance="button"></pwa-auth>
 ```
-<img loading="lazy" src="/assets/install-btn-dropdown.png">
+<img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/install-btn-dropdown.png">
 
 Try it: [live](https://pwa-auth-basic.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-basic)
 
@@ -61,7 +61,7 @@ Or it can be displayed as a list of provider buttons:
 ```html
 <pwa-auth appearance="list"></pwa-auth>
 ```
-<img loading="lazy" src="/assets/list.png">
+<img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/list.png">
 
 Try it: [live](https://pwa-auth-list.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-list)
 
@@ -119,13 +119,13 @@ pwaAuth.addEventListener("signin-completed", ev => {
 
 The <em>first time</eM> a user signs in, he'll see the familiar OAuth flow asking the user to sign-in. For example, signing in with Google looks like this:
 
-<img loading="lazy" src="/assets/oauth.png?v=1">
+<img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/oauth.png?v=1">
 
 Once your user signs-in or cancels, `signin-completed` event will fire.
 
 When the user signs in successfully the first time, the browser asks to save your credentials:
 
-<img loading="lazy" src="/assets/save-cred.png"/>
+<img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/save-cred.png"/>
 
 If the user saves his credentials, it will be stored using the new [Credential Management API](https://developers.google.com/web/fundamentals/security/credential-management/retrieve-credentials), enabling fast successive sign-ins.
 
@@ -138,7 +138,7 @@ If a user has signed-in previously, future sign-ins will be instantaneous. 😎 
 <!-- When tapping sign-in, use the saved credential to sign in silently -->
 <pwa-auth credentialmode="silent"></pwa-auth>
 ```
-<img loading="lazy" src="/assets/first-cred.png" />
+<img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/first-cred.png" />
 
 Try it: [live](https://pwa-auth-silent.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-silent?path=index.html:33:1)
 
@@ -150,7 +150,7 @@ As an alternative, you can have the browser <em>prompt</em> the user to confirm 
 <!-- When tapping sign in, prompt the user to confirm -->
 <pwa-auth credentialmode="prompt"></pwa-auth>
 ```
-<img loading="lazy" src="/assets/signin-prompt.png" />
+<img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/signin-prompt.png" />
 
 Try it: [live](https://pwa-auth-prompt.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-prompt?path=index.html:33:1)
 
@@ -158,7 +158,7 @@ In the above image, the user tapped the gray `Sign In` button, and then was prom
 
 If the user had previously signed-in with multiple accounts (e.g. once with Google, once with Microsoft), he'll be given a choice of which provider to sign-in with:
 
-<img loading="lazy" src="/assets/multiple-accounts.png" />
+<img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/multiple-accounts.png" />
 
 Finally, you can disable credential management when clicking the Sign In button:
 ```html
@@ -206,7 +206,7 @@ You can customize the appearance and behavior of pwa-auth component.
 | `googleButtonText` | `googlebuttontext` | The label for the `Sign in with Google` button | `string`  | 'Sign in with Google' |
 | `facebookButtonText` | `facebookbuttontext` | The label for the `Sign in with Facebook` button | `string`  | 'Sign in with Facebook' |
 | `menuOpened` | `menuopened`   | Whether the dropdown menu of the `Sign In` button is opened | `boolean`  | `false` |
-| `menuPlacement` | `menuplacement` | The placement of the dropdown menu of the `Sign In` button. <br><br>`start`: <img loading="lazy" style="vertical-align: top" src="/assets/menu-start.png"> <br><br>`end`: <img loading="lazy" style="vertical-align: top" src="/assets/menu-end.png"> | `'start' \| 'end'`  | `'start'` |
+| `menuPlacement` | `menuplacement` | The placement of the dropdown menu of the `Sign In` button. <br><br>`start`: <img loading="lazy" style="vertical-align: top" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/menu-start.png"> <br><br>`end`: <img loading="lazy" style="vertical-align: top" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/menu-end.png"> | `'start' \| 'end'`  | `'start'` |
 | `disabled` | `disabled` | Whether the Sign In button(s) are disabled. They will be disabled while a sign-in is in-progress. | `boolean`  | `false` |
 
 ### Events
@@ -246,6 +246,6 @@ pwa-auth::part(signInButton) {
     transform: rotate3d(0, 0, 1, 25deg);
 }
 ```
-<img loading="lazy" src="/assets/signin-part.png">
+<img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/signin-part.png">
 
 Try it: [live](https://pwa-auth-customize.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-customize?path=style.css:18:1)
