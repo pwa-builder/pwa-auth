@@ -147,6 +147,9 @@ export class PwaAuth extends LitElement {
             transform: translate3d(0px, 38px, 0px);
             top: 0;
             left: 0;
+
+            animation-name: dropdown-animation;
+            animation-duration: 300ms;
         }
 
         .dropdown .menu.open.align-end {
@@ -182,6 +185,21 @@ export class PwaAuth extends LitElement {
             background-color: rgb(220, 53, 69);
             color: white;
             padding: 20px;
+        }
+
+        @keyframes dropdown-animation {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @media(prefers-reduced-motion: reduce) {
+            .dropdown .menu.open {
+                animation: none;
+            }
         }
     `;
 
