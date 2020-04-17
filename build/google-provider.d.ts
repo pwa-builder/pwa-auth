@@ -1,5 +1,5 @@
 import { SignInResult } from "./signin-result";
-import { SignInProvider } from "./sign-in-provider";
+import { SignInProvider } from "./signin-provider";
 export declare class GoogleProvider implements SignInProvider {
     private clientId;
     static readonly apiUrl = "https://apis.google.com/js/api:client.js";

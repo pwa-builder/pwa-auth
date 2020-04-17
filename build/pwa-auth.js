@@ -309,17 +309,16 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         return !!navigator.userAgent.match(/ipad|iphone/i);
     }
     loadAllDependencies() {
-        const providers = [];
-        if (this.microsoftKey) {
-            providers.push(this.importMicrosoftProvider(this.microsoftKey));
-        }
-        if (this.googleKey) {
-            providers.push(this.importGoogleProvider(this.googleKey));
-        }
-        if (this.facebookKey) {
-            providers.push(this.importFacebookProvider(this.facebookKey));
-        }
-        return Promise.all(providers);
+        const dependencyLoaders = [
+            { key: this.microsoftKey, importer: (key) => this.importMicrosoftProvider(key) },
+            { key: this.googleKey, importer: (key) => this.importGoogleProvider(key) },
+            { key: this.facebookKey, importer: (key) => this.importFacebookProvider(key) },
+        ];
+        const dependencyLoadTasks = dependencyLoaders
+            .filter(dep => !!dep.key)
+            .map(dep => dep.importer(dep.key).then((prov) => prov.loadDependencies()));
+        return Promise.all(dependencyLoadTasks)
+            .catch(error => console.error("Error loading dependencies", error));
     }
 };
 PwaAuth.providerUrls = {
@@ -328,7 +327,6 @@ PwaAuth.providerUrls = {
     "Facebook": "https://www.facebook.com"
 };
 PwaAuth.styles = css `
-
         button {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         }

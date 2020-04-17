@@ -1,10 +1,7 @@
-import { LitElement, html, css, customElement, property, TemplateResult, PropertyValues } from 'lit-element';
+import { LitElement, html, css, customElement, property, TemplateResult } from 'lit-element';
 import { SignInResult } from './signin-result';
+import { SignInProvider } from './signin-provider';
 import { FederatedCredential } from './federated-credential';
-import { SignInProvider } from './sign-in-provider';
-import { MicrosoftProvider } from './microsoft-provider';
-import { GoogleProvider } from './google-provider';
-import { FacebookProvider } from './facebook-provider';
 
 type AuthProvider = "Microsoft" | "Google" | "Facebook";
 
@@ -31,7 +28,6 @@ export class PwaAuth extends LitElement {
     };
 
     static styles = css`
-
         button {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         }
@@ -398,17 +394,17 @@ export class PwaAuth extends LitElement {
         return signIn;
     }
 
-    private importMicrosoftProvider(key: string): Promise<MicrosoftProvider> {
+    private importMicrosoftProvider(key: string): Promise<any> {
         return import("./microsoft-provider")
             .then(module => new module.MicrosoftProvider(key));
     }
 
-    private startMicrosoftSignInFlow(key: string): Promise<SignInResult> {
+    private startMicrosoftSignInFlow(key: string): Promise<any> {
         return this.importMicrosoftProvider(key)
             .then(prov => prov.signIn());
     }
 
-    private importGoogleProvider(key: string): Promise<GoogleProvider> {
+    private importGoogleProvider(key: string): Promise<any> {
         return import("./google-provider")
             .then(module => new module.GoogleProvider(key));
     }
@@ -418,7 +414,7 @@ export class PwaAuth extends LitElement {
             .then(prov => prov.signIn());
     }
 
-    private importFacebookProvider(key: string): Promise<FacebookProvider> {
+    private importFacebookProvider(key: string): Promise<any> {
         return import ("./facebook-provider")
             .then(module => new module.FacebookProvider(key));
     }
@@ -524,18 +520,17 @@ export class PwaAuth extends LitElement {
         return !!navigator.userAgent.match(/ipad|iphone/i);
     }
 
-    private loadAllDependencies() {
-        const providers: Promise<SignInProvider>[] = [];
-        if (this.microsoftKey) {
-            providers.push(this.importMicrosoftProvider(this.microsoftKey));
-        } 
-        if (this.googleKey) {
-            providers.push(this.importGoogleProvider(this.googleKey));
-        }
-        if (this.facebookKey) {
-            providers.push(this.importFacebookProvider(this.facebookKey));
-        }
+    private loadAllDependencies(): Promise<any> {
+        const dependencyLoaders = [
+            { key: this.microsoftKey, importer: (key: string) => this.importMicrosoftProvider(key) },
+            { key: this.googleKey, importer: (key: string) => this.importGoogleProvider(key) },
+            { key: this.facebookKey, importer: (key: string) => this.importFacebookProvider(key) },
+        ];
+        const dependencyLoadTasks = dependencyLoaders
+            .filter(dep => !!dep.key)
+            .map(dep => dep.importer(dep.key!).then((prov: SignInProvider) => prov.loadDependencies()));
 
-        return Promise.all(providers);
+        return Promise.all(dependencyLoadTasks)
+            .catch(error => console.error("Error loading dependencies", error));
     }
 }

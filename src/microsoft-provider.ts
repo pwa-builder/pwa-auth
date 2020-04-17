@@ -1,6 +1,6 @@
 import * as Msal from "msal";
 import { SignInResult } from "./signin-result";
-import { SignInProvider } from "./sign-in-provider";
+import { SignInProvider } from "./signin-provider";
 
 export class MicrosoftProvider implements SignInProvider {
 

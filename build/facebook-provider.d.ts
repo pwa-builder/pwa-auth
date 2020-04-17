@@ -1,5 +1,5 @@
 import { SignInResult } from "./signin-result";
-import { SignInProvider } from "./sign-in-provider";
+import { SignInProvider } from "./signin-provider";
 export declare class FacebookProvider implements SignInProvider {
     private appId;
     static readonly apiUrl = "https://connect.facebook.net/en_US/sdk.js";
