@@ -22,10 +22,9 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     firstUpdated() {
         // If we're on iOS, we need to load dependencies up front to avoid Safari
         // blocking the first OAuth popup. See https://github.com/pwa-builder/pwa-auth/issues/3
-        if (this.isIOS() || true) {
+        if (this.isIOS()) {
             this.disabled = true;
             this.loadAllDependencies()
-                .then(() => console.log('zanz, done loading deps'))
                 .finally(() => this.disabled = false);
         }
     }

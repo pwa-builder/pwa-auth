@@ -66,7 +66,6 @@ export class GoogleProvider implements SignInProvider {
         }
             
         // Otherwise, kick off the OAuth flow.
-        console.log("zanz!");
         return auth.signIn()
             .then(user => this.getSignInResultFromUser(user));
     }

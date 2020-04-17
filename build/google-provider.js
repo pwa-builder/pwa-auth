@@ -51,7 +51,6 @@ export class GoogleProvider {
             return Promise.resolve(this.getSignInResultFromUser(user));
         }
         // Otherwise, kick off the OAuth flow.
-        console.log("zanz!");
         return auth.signIn()
             .then(user => this.getSignInResultFromUser(user));
     }
