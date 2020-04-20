@@ -34,7 +34,17 @@ Click `Register` to finalize your app registration.
 
 <img loading="lazy" src="/assets/azure-app-config.png" />
 
-## Step 5: Copy your key
+## Step 5: Enable access tokens
+
+To allow your key to request a token directly, you need to enable implicit grant flow:
+
+Click `Authentication` from the nav menu on the left, then check the `Access token` and `ID tokens` checkboxes:
+
+<img src="/assets/azure-tokens.png">
+
+Click `Save` to finish.
+
+## Step 6: Copy your key
 
 Your key is generated, listed as "Application (client) ID":
 
