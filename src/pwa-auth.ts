@@ -8,7 +8,7 @@ type AuthProvider = "Microsoft" | "Google" | "Facebook";
 @customElement('pwa-auth')
 export class PwaAuth extends LitElement {
 
-    @property({ type: String }) appearance: "button" | "list" | "none" = "button";
+    @property({ type: String, reflect: true }) appearance: "button" | "list" | "none" = "button";
     @property({ type: String }) signInButtonText = "Sign in";
     @property({ type: String }) microsoftButtonText = "Sign in with Microsoft";
     @property({ type: String }) googleButtonText = "Sign in with Google";
@@ -18,7 +18,7 @@ export class PwaAuth extends LitElement {
     @property({ type: String }) facebookKey: string | undefined | null;
     @property({ type: String }) credentialMode: "none" | "silent" | "prompt" = "silent";
     @property({ type: Boolean }) menuOpened = false;
-    @property({ type: String }) menuPlacement: "start" | "end" = "start";
+    @property({ type: String, reflect: true }) menuPlacement: "start" | "end" = "start";
     @property({ type: Boolean }) disabled = false;
 
     static readonly providerUrls: Record<AuthProvider, string> = {

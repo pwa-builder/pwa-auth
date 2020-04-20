@@ -515,7 +515,7 @@ PwaAuth.styles = css `
         }
     `;
 __decorate([
-    property({ type: String })
+    property({ type: String, reflect: true })
 ], PwaAuth.prototype, "appearance", void 0);
 __decorate([
     property({ type: String })
@@ -545,7 +545,7 @@ __decorate([
     property({ type: Boolean })
 ], PwaAuth.prototype, "menuOpened", void 0);
 __decorate([
-    property({ type: String })
+    property({ type: String, reflect: true })
 ], PwaAuth.prototype, "menuPlacement", void 0);
 __decorate([
     property({ type: Boolean })
