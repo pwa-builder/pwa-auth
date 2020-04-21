@@ -185,9 +185,9 @@ When you add a `<pwa-auth>` component to your page, you'll need to specify one o
 Each key lets your users sign-in with the corresponding service (e.g. a Microsoft key lets your users sign-in with their Microsoft account).
 
 To create a key, see:
-- [Creating a Microsoft key](/creating-microsoft-key.md)
-- [Creating a Google key](/creating-google-key.md)
-- [Creating a Facebook key](/creating-facebook-key.md)
+- [Creating a Microsoft key](https://aka.ms/pwaauthmskey)
+- [Creating a Google key](https://aka.ms/pwaauthgooglekey)
+- [Creating a Facebook key](https://aka.ms/pwaauthfbkey)
 
 ## API
 
@@ -198,9 +198,9 @@ You can customize the appearance and behavior of pwa-auth component.
 | - | - | - | - | - |
 | `appearance` | `appearance` | Whether to render a single `Sign In` dropdown button or a list of sign-in provider buttons. See [what does it look like?](#what-does-it-look-like) for details. | `'button'\|'list'\|'none'` | `'button'` |
 | `credentialMode` | `credentialmode` | What happens when you click the `Sign In` button. If the user has previously signed-in and saved his credential, you can speed the user through sign-in: <ul><li>`silent`: When clicking `Sign In`, silently sign-in using his saved credential if available.</li><li>`prompt`: When clicking `Sign In`, prompt the user to sign-in with his saved crendential if available.</li><li>`none`: When clicking `Sign In`, show the dropdown menu with list of sign-in providers</li></ul> See [successive sign-ins](#successive-sign-ins) for details. | `'silent'\|'prompt'\|'none'` | `'silent'` |
-| `microsoftKey` | `microsoftkey`  | The `Application (client) ID` of the Microsoft App you created. See [creating a Microsoft key](/creating-microsoft-key.md). header | `string \| null` | `null` |
-| `googleKey` | `googlekey`  | The `Client ID` of the Google credential you created. See [creating a Google key](/creating-google-key.md) | `string \| null` | `null` |
-| `facebookKey` | `facebookkey`  | The `App ID` of the Facebook App you created. See [creating a Facebook key](/creating-facebook-key.md) | `string \| null`  | `null` |
+| `microsoftKey` | `microsoftkey`  | The `Application (client) ID` of the Microsoft App you created. See [creating a Microsoft key](https://aka.ms/pwaauthmskey). header | `string \| null` | `null` |
+| `googleKey` | `googlekey`  | The `Client ID` of the Google credential you created. See [creating a Google key](https://aka.ms/pwaauthgooglekey) | `string \| null` | `null` |
+| `facebookKey` | `facebookkey`  | The `App ID` of the Facebook App you created. See [creating a Facebook key](https://aka.ms/pwaauthfbkey) | `string \| null`  | `null` |
 | `signInButtonText` | `signinbuttontext` | The text of the `Sign In` button, displayed when `appearance="button"` | `string` | 'Sign in' |
 | `microsoftButtonText` | `microsoftbuttontext` | The label for the `Sign in with Microsoft` button | `string`  | 'Sign in with Microsoft' |
 | `googleButtonText` | `googlebuttontext` | The label for the `Sign in with Google` button | `string`  | 'Sign in with Google' |
