@@ -4,9 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var PwaAuth_1;
 import { LitElement, html, css, customElement, property } from 'lit-element';
-let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
+let PwaAuth = class PwaAuth extends LitElement {
     constructor() {
         super(...arguments);
         this.appearance = "button";
@@ -19,6 +18,57 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.menuOpened = false;
         this.menuPlacement = "start";
         this.disabled = false;
+        this.iconLoading = "lazy";
+        this.providers = [
+            {
+                name: "Microsoft",
+                url: "https://graph.microsoft.com",
+                getKey: () => this.microsoftKey,
+                getButtonText: () => this.microsoftButtonText,
+                getIconUrl: () => this.getMicrosoftIconUrl(),
+                import: (key) => this.importMicrosoftProvider(key),
+                btnClass: "microsoft-btn",
+                buttonPartName: "microsoftButton",
+                iconPartName: "microsoftIcon",
+                signIn: () => this.signIn("Microsoft")
+            },
+            {
+                name: "Google",
+                url: "https://account.google.com",
+                getKey: () => this.googleKey,
+                getButtonText: () => this.googleButtonText,
+                getIconUrl: () => this.getGoogleIconUrl(),
+                import: (key) => this.importGoogleProvider(key),
+                btnClass: "google-btn",
+                buttonPartName: "googleButton",
+                iconPartName: "googleIcon",
+                signIn: () => this.signIn("Google")
+            },
+            {
+                name: "Facebook",
+                url: "https://www.facebook.com",
+                getKey: () => this.facebookKey,
+                getButtonText: () => this.facebookButtonText,
+                getIconUrl: () => this.getFacebookIconUrl(),
+                import: (key) => this.importFacebookProvider(key),
+                btnClass: "facebook-btn",
+                buttonPartName: "facebookButton",
+                iconPartName: "facebookIcon",
+                signIn: () => this.signIn("Facebook")
+            },
+            {
+                name: "Apple",
+                url: "https://appleid.apple.com",
+                getKey: () => this.appleKey,
+                getButtonText: () => this.appleButtonText,
+                getIconUrl: () => this.getAppleIconUrl(),
+                import: (key) => this.importAppleProvider(key),
+                btnClass: "apple-btn",
+                buttonPartName: "appleButton",
+                iconPartName: "appleIcon",
+                signIn: () => this.signIn("Apple")
+            },
+        ];
     }
     firstUpdated() {
         // If we're on Safari, we need to load dependencies up front to avoid Safari
@@ -43,48 +93,38 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     }
     /**
      * Starts the sign-in process using the specified provider.
-     * @param provider The provider to sign-in with. Must be "Microsoft", "Google", "Facebook", or "Apple"
+     * @param providerName The name provider to sign-in with. Must be "Microsoft", "Google", "Facebook", or "Apple"
      */
-    signIn(provider) {
-        if (provider === "Microsoft") {
-            this.signInMs();
+    signIn(providerName) {
+        const provider = this.providers.find(p => p.name === providerName);
+        if (!provider) {
+            const errorMessage = "Unable to sign-in because of unsupported provider";
+            console.error(errorMessage, providerName);
+            return Promise.reject(errorMessage + " " + providerName);
         }
-        else if (provider === "Google") {
-            this.signInGoogle();
-        }
-        else if (provider === "Facebook") {
-            this.signInFacebook();
-        }
-        else if (provider === "Apple") {
-            this.signInApple();
-        }
-        else {
-            console.error("Unable to sign-in because of unsupported provider", provider);
-        }
+        return this.signInWithProvider(provider)
+            .then(result => this.signInCompleted(result));
     }
-    get microsoftButtonIcon() {
-        switch (this.appearance) {
-            case 'list': return html `<img part="microsoftIcon" loading="lazy" width="25px" height="25px" src="https://github.com/pwa-builder/pwa-auth/blob/master/assets/microsoft-icon-list.svg?raw=true" />`;
-            case 'button': return html `<img part="microsoftIcon" loading="lazy" width="25px" height="25px" src="https://github.com/pwa-builder/pwa-auth/blob/master/assets/microsoft-icon-button.svg?raw=true" />`;
-            default: return html ``;
+    getMicrosoftIconUrl() {
+        if (this.appearance === "button") {
+            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/microsoft-icon-button.svg?raw=true";
         }
+        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/microsoft-icon-list.svg?raw=true";
     }
-    get googleButtonIcon() {
-        return html `<img part="googleIcon" loading="lazy" width="25px" height="25px" src="https://github.com/pwa-builder/pwa-auth/blob/master/assets/google-icon.svg?raw=true" />`;
+    getGoogleIconUrl() {
+        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/google-icon.svg?raw=true";
     }
-    get facebookButtonIcon() {
-        switch (this.appearance) {
-            case 'list': return html `<img part="facebookIcon" loading="lazy" width="25px" height="25px" src="https://github.com/pwa-builder/pwa-auth/blob/master/assets/facebook-icon-list.svg?raw=true"`;
-            case 'button': return html `<img part="facebookIcon" loading="lazy" width="25px" height="25px" src="https://github.com/pwa-builder/pwa-auth/blob/master/assets/facebook-icon-button.svg?raw=true"`;
-            default: return '';
+    getFacebookIconUrl() {
+        if (this.appearance === "button") {
+            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/facebook-icon-button.svg?raw=true";
         }
+        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/facebook-icon-list.svg?raw=true";
     }
-    get appleButtonIcon() {
-        switch (this.appearance) {
-            case 'list': return html `<img part="appleIcon" loading="lazy" width="20px" height="20px" src="https://github.com/pwa-builder/pwa-auth/blob/master/assets/apple-icon-list.png?raw=true" />`;
-            case 'button': return html `<img part="appleIcon" loading="lazy" width="20px" height="20px" src="https://github.com/pwa-builder/pwa-auth/blob/master/assets/apple-icon-button.png?raw=true" />`;
-            default: return html ``;
+    getAppleIconUrl() {
+        if (this.appearance === "button") {
+            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/apple-icon-button.svg?raw=true";
         }
+        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/apple-icon-list.svg?raw=true";
     }
     renderLoginButton() {
         return html `
@@ -100,30 +140,16 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     }
     renderListButtons() {
         return html `
-            <div class="provider">
-                <button class="microsoft-btn" ?disabled=${this.disabled} part="microsoftButton" @click="${this.signInMs}">
-                    ${this.microsoftButtonIcon}
-                	${this.microsoftButtonText}
-                </button>
-            </div>
-            <div class="provider">
-                <button class="google-btn" ?disabled=${this.disabled} part="googleButton" @click="${this.signInGoogle}">
-					${this.googleButtonIcon}
-					${this.googleButtonText}
-                </button>
-            </div>
-            <div class="provider">
-                <button class="facebook-btn" ?disabled=${this.disabled} part="facebookButton" @click="${this.signInFacebook}">
-					${this.facebookButtonIcon}
-					${this.facebookButtonText}
-                </button>
-            </div>
-            <div class="provider">
-                <button class="apple-btn" ?disabled=${this.disabled} part="appleButton" @click="${this.signInApple}">
-					${this.appleButtonIcon}
-					${this.appleButtonText}
-                </button>
-            </div>
+            ${this.providers
+            .filter(provider => !!provider.getKey())
+            .map(provider => html `
+                <div class="provider">
+                    <button class="${provider.btnClass}" ?disabled=${this.disabled} part="${provider.buttonPartName}" @click="${provider.signIn}">
+                        <img part="${provider.iconPartName}" loading="${this.iconLoading}" width="20px" height="20px" src="${provider.getIconUrl()}" />
+                        ${provider.getButtonText()}
+                    </button>
+                </div>
+            `)}
         `;
     }
     renderNoKeysError() {
@@ -160,23 +186,8 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     toggleMenu() {
         this.menuOpened = !this.menuOpened;
     }
-    signInMs() {
-        this.signInWithProvider(this.microsoftKey, "Microsoft", key => this.startMicrosoftSignInFlow(key))
-            .then(result => this.signInCompleted(result));
-    }
-    signInGoogle() {
-        this.signInWithProvider(this.googleKey, "Google", key => this.startGoogleSignInFlow(key))
-            .then(result => this.signInCompleted(result));
-    }
-    signInFacebook() {
-        this.signInWithProvider(this.facebookKey, "Facebook", key => this.startFacebookSignInFlow(key))
-            .then(result => this.signInCompleted(result));
-    }
-    signInApple() {
-        this.signInWithProvider(this.appleKey, "Apple", key => this.startAppleSignInFlow(key))
-            .then(result => this.signInCompleted(result));
-    }
-    signInWithProvider(key, provider, providerSignIn) {
+    signInWithProvider(provider) {
+        const key = provider.getKey();
         if (!key) {
             return Promise.reject("No key specified");
         }
@@ -185,7 +196,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         }
         this.disabled = true;
         this.menuOpened = false;
-        return this.tryLoginWithStoredCredential(PwaAuth_1.providerUrls[provider])
+        return this.tryLoginWithStoredCredential(provider.url)
             .then(storedCredSignInResult => {
             // Did we sign in with a stored credential? Good, we're done.
             if (storedCredSignInResult) {
@@ -193,12 +204,13 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             }
             // Couldn't sign in with stored credential.
             // Kick off the provider-specified OAuth flow.
-            return providerSignIn(key)
+            return provider.import(key)
+                .then(p => p.signIn())
                 .catch(error => {
                 // If the provider sends back an error, consider that a SignInResult
                 const providerError = {
                     error: error,
-                    provider: provider
+                    provider: provider.name
                 };
                 return providerError;
             });
@@ -214,35 +226,20 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         return import("./microsoft-provider")
             .then(module => new module.MicrosoftProvider(key));
     }
-    startMicrosoftSignInFlow(key) {
-        return this.importMicrosoftProvider(key)
-            .then(prov => prov.signIn());
-    }
     importGoogleProvider(key) {
         return import("./google-provider")
             .then(module => new module.GoogleProvider(key));
-    }
-    startGoogleSignInFlow(key) {
-        return this.importGoogleProvider(key)
-            .then(prov => prov.signIn());
     }
     importFacebookProvider(key) {
         return import("./facebook-provider")
             .then(module => new module.FacebookProvider(key));
     }
-    startFacebookSignInFlow(key) {
-        return this.importFacebookProvider(key)
-            .then(prov => prov.signIn());
-    }
     importAppleProvider(key) {
         return import("./apple-provider")
             .then(module => new module.AppleProvider(key, this.appleRedirectUri));
     }
-    startAppleSignInFlow(key) {
-        return this.importAppleProvider(key)
-            .then(prov => prov.signIn());
-    }
     tryStoreCredential(signIn) {
+        var _a;
         // Use the new Credential Management API to store the credential, allowing for automatic sign-in next time the user visits the page.
         // https://developers.google.com/web/fundamentals/security/credential-management/
         const federatedCredentialCtor = window["FederatedCredential"];
@@ -250,7 +247,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             try {
                 const cred = new federatedCredentialCtor({
                     id: signIn.email,
-                    provider: PwaAuth_1.providerUrls[signIn.provider],
+                    provider: ((_a = this.providers.find(p => p.name === signIn.provider)) === null || _a === void 0 ? void 0 : _a.url) || signIn.provider,
                     name: signIn.name || "",
                     iconURL: signIn.imageUrl || ""
                 });
@@ -272,13 +269,13 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         if (this.credentialMode === "prompt") {
             // Let the user choose.
             // The browser brings up the native "choose your sign in" dialog.
-            credential = await this.getStoredCredential("required", Object.values(PwaAuth_1.providerUrls));
+            credential = await this.getStoredCredential("required", this.providers.map(p => p.url));
         }
         else if (this.credentialMode === "silent") {
             // Go through the available providers and find one that the user has logged in with.
-            for (let providerName in PwaAuth_1.providerUrls) {
-                const providerUrl = PwaAuth_1.providerUrls[providerName];
-                credential = await this.getStoredCredential("silent", [providerUrl]);
+            for (let i = 0; i < this.providers.length; i++) {
+                const provider = this.providers[i];
+                credential = await this.getStoredCredential("silent", [provider.url]);
                 if (credential) {
                     break;
                 }
@@ -319,8 +316,12 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         };
     }
     getProviderNameFromUrl(url) {
-        return Object.keys(PwaAuth_1.providerUrls)
-            .find(key => PwaAuth_1.providerUrls[key] === url);
+        const provider = this.providers.find(p => p.url === url);
+        if (!provider) {
+            console.warn("Unable to find provider matching URL", url);
+            return "Microsoft";
+        }
+        return provider.name;
     }
     isWebKit() {
         // As of April 2020, Webkit-based browsers wrongfully blocks
@@ -330,24 +331,12 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         return isIOS || isSafari;
     }
     loadAllDependencies() {
-        const dependencyLoaders = [
-            { key: this.microsoftKey, importer: (key) => this.importMicrosoftProvider(key) },
-            { key: this.googleKey, importer: (key) => this.importGoogleProvider(key) },
-            { key: this.facebookKey, importer: (key) => this.importFacebookProvider(key) },
-            { key: this.appleKey, importer: (key) => this.importAppleProvider(key) }
-        ];
-        const dependencyLoadTasks = dependencyLoaders
-            .filter(dep => !!dep.key)
-            .map(dep => dep.importer(dep.key).then((p) => p.loadDependencies()));
+        const dependencyLoadTasks = this.providers
+            .filter(p => !!p.getKey())
+            .map(p => p.import(p.getKey()).then(p => p.loadDependencies()));
         return Promise.all(dependencyLoadTasks)
             .catch(error => console.error("Error loading dependencies", error));
     }
-};
-PwaAuth.providerUrls = {
-    "Microsoft": "https://graph.microsoft.com",
-    "Google": "https://account.google.com",
-    "Facebook": "https://www.facebook.com",
-    "Apple": "https://appleid.apple.com"
 };
 PwaAuth.styles = css `
 
@@ -376,7 +365,7 @@ PwaAuth.styles = css `
             text-align: left;
         }
 
-        :host([appearance="list"]) .provider button svg {
+        :host([appearance="list"]) .provider button img {
             vertical-align: middle;
             margin-right: 10px;
             margin-left: 5px;
@@ -502,7 +491,7 @@ PwaAuth.styles = css `
                 background-color: rgb(240, 241, 242);
             }
 
-        .dropdown .menu button svg {
+        .dropdown .menu button img {
             vertical-align: middle;
             margin-right: 10px;
         }
@@ -573,7 +562,10 @@ __decorate([
 __decorate([
     property({ type: Boolean })
 ], PwaAuth.prototype, "disabled", void 0);
-PwaAuth = PwaAuth_1 = __decorate([
+__decorate([
+    property({ type: String })
+], PwaAuth.prototype, "iconLoading", void 0);
+PwaAuth = __decorate([
     customElement('pwa-auth')
 ], PwaAuth);
 export { PwaAuth };
