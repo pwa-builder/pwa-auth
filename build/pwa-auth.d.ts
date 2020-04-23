@@ -20,6 +20,7 @@ export declare class PwaAuth extends LitElement {
     disabled: boolean;
     iconLoading: "lazy" | "eager";
     readonly providers: ProviderInfo[];
+    static readonly assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@0.9.6/assets";
     static styles: import("lit-element").CSSResult;
     firstUpdated(): void;
     render(): void | TemplateResult;

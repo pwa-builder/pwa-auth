@@ -4,8 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var PwaAuth_1;
 import { LitElement, html, css, customElement, property } from 'lit-element';
-let PwaAuth = class PwaAuth extends LitElement {
+let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     constructor() {
         super(...arguments);
         this.appearance = "button";
@@ -107,24 +108,24 @@ let PwaAuth = class PwaAuth extends LitElement {
     }
     getMicrosoftIconUrl() {
         if (this.appearance === "button") {
-            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/microsoft-icon-button.svg?raw=true";
+            return `${PwaAuth_1.assetBaseUrl}/microsoft-icon-button.svg`;
         }
-        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/microsoft-icon-list.svg?raw=true";
+        return `${PwaAuth_1.assetBaseUrl}/microsoft-icon-list.svg`;
     }
     getGoogleIconUrl() {
-        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/google-icon.svg?raw=true";
+        return `${PwaAuth_1.assetBaseUrl}/google-icon.svg`;
     }
     getFacebookIconUrl() {
         if (this.appearance === "button") {
-            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/facebook-icon-button.svg?raw=true";
+            return `${PwaAuth_1.assetBaseUrl}/facebook-icon-button.svg`;
         }
-        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/facebook-icon-list.svg?raw=true";
+        return `${PwaAuth_1.assetBaseUrl}/facebook-icon-list.svg`;
     }
     getAppleIconUrl() {
         if (this.appearance === "button") {
-            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/apple-icon-button.svg?raw=true";
+            return `${PwaAuth_1.assetBaseUrl}/apple-icon-button.svg`;
         }
-        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/apple-icon-list.svg?raw=true";
+        return `${PwaAuth_1.assetBaseUrl}/apple-icon-list.svg`;
     }
     renderLoginButton() {
         return html `
@@ -338,6 +339,7 @@ let PwaAuth = class PwaAuth extends LitElement {
             .catch(error => console.error("Error loading dependencies", error));
     }
 };
+PwaAuth.assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@0.9.6/assets";
 PwaAuth.styles = css `
 
 		:host {
@@ -565,7 +567,7 @@ __decorate([
 __decorate([
     property({ type: String })
 ], PwaAuth.prototype, "iconLoading", void 0);
-PwaAuth = __decorate([
+PwaAuth = PwaAuth_1 = __decorate([
     customElement('pwa-auth')
 ], PwaAuth);
 export { PwaAuth };

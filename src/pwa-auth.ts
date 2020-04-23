@@ -77,6 +77,7 @@ export class PwaAuth extends LitElement {
         },
     ];
 
+    static readonly assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@0.9.6/assets";
 	static styles = css`
 
 		:host {
@@ -296,35 +297,35 @@ export class PwaAuth extends LitElement {
         } 
         
         return this.signInWithProvider(provider)
-                .then(result => this.signInCompleted(result));
+            .then(result => this.signInCompleted(result));
     }
 
     private getMicrosoftIconUrl(): string {
         if (this.appearance === "button") {
-            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/microsoft-icon-button.svg?raw=true";
+            return `${PwaAuth.assetBaseUrl}/microsoft-icon-button.svg`;
         }
 
-        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/microsoft-icon-list.svg?raw=true";
+        return `${PwaAuth.assetBaseUrl}/microsoft-icon-list.svg`;
     }
 
 	private getGoogleIconUrl(): string {
-        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/google-icon.svg?raw=true";
+        return `${PwaAuth.assetBaseUrl}/google-icon.svg`;
     }
     
     private getFacebookIconUrl(): string {
         if (this.appearance === "button") {
-            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/facebook-icon-button.svg?raw=true";
+            return `${PwaAuth.assetBaseUrl}/facebook-icon-button.svg`;
         }
 
-        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/facebook-icon-list.svg?raw=true";
+        return `${PwaAuth.assetBaseUrl}/facebook-icon-list.svg`;
     }
 
 	private getAppleIconUrl(): string {
         if (this.appearance === "button") {
-            return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/apple-icon-button.svg?raw=true";
+            return `${PwaAuth.assetBaseUrl}/apple-icon-button.svg`;
         }
 
-        return "https://github.com/pwa-builder/pwa-auth/blob/master/assets/apple-icon-list.svg?raw=true";
+        return `${PwaAuth.assetBaseUrl}/apple-icon-list.svg`;
     }
 
     private renderLoginButton(): TemplateResult {
