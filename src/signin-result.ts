@@ -30,5 +30,5 @@ export interface SignInResult {
     /**
      * The name of the login provider.
      */
-    provider: "Microsoft" | "Google" | "Facebook";
+    provider: "Microsoft" | "Google" | "Facebook" | "Apple";
 }

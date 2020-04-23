@@ -51,7 +51,7 @@ export class GoogleProvider implements SignInProvider {
 
     private signInWithGoogleAuth2(): Promise<SignInResult> {
         if (!gapi?.auth2) {
-            throw new Error("gapi.auth2 wasn't loaded");
+            return Promise.reject("gapi.auth2 wasn't loaded");
         }
 
         const auth = gapi.auth2.init({

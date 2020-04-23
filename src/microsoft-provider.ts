@@ -4,7 +4,7 @@ import { SignInProvider } from "./signin-provider";
 
 export class MicrosoftProvider implements SignInProvider {
 
-    private readonly requestObj = { scopes: ["user.read"] };
+    private readonly requestObj: Msal.AuthenticationParameters = { scopes: ["user.read"] };
     private readonly graphConfig = { graphMeEndpoint: "https://graph.microsoft.com/v1.0/me" };
     private resolve: ((result: SignInResult) => void) | null = null;
     private reject: ((error: any) => void) | null = null;

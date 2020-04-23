@@ -39,7 +39,7 @@ export class GoogleProvider {
     }
     signInWithGoogleAuth2() {
         if (!(gapi === null || gapi === void 0 ? void 0 : gapi.auth2)) {
-            throw new Error("gapi.auth2 wasn't loaded");
+            return Promise.reject("gapi.auth2 wasn't loaded");
         }
         const auth = gapi.auth2.init({
             client_id: this.clientId,
