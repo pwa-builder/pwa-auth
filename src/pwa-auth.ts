@@ -97,7 +97,7 @@ export class PwaAuth extends LitElement {
         :host([appearance="list"]) .provider button {
 			display: block;
             width: 100%;
-            padding: 5px;
+            padding: 10px;
             cursor: pointer;
             border-radius: 2px;
             border-width: 0;
@@ -371,7 +371,7 @@ export class PwaAuth extends LitElement {
     }
 
     private get hasAnyKey(): boolean {
-        return !!this.microsoftKey || !!this.googleKey || !!this.facebookKey || !!this.appleKey;
+        return this.providers.some(p => !!p.getKey());
     }
 
     private async signInClicked() {

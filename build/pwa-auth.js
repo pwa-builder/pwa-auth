@@ -167,7 +167,7 @@ let PwaAuth = class PwaAuth extends LitElement {
         }
     }
     get hasAnyKey() {
-        return !!this.microsoftKey || !!this.googleKey || !!this.facebookKey || !!this.appleKey;
+        return this.providers.some(p => !!p.getKey());
     }
     async signInClicked() {
         // Are we configured to use browser credentials (the new CredentialStore API)?
@@ -358,7 +358,7 @@ PwaAuth.styles = css `
         :host([appearance="list"]) .provider button {
 			display: block;
             width: 100%;
-            padding: 5px;
+            padding: 10px;
             cursor: pointer;
             border-radius: 2px;
             border-width: 0;
