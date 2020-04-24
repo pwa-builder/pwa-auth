@@ -19,7 +19,7 @@ Web component that lets your users sign-in/sign-up using their Microsoft, Google
 ```html
 <script
   type="module"
-  src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth/dist/pwa-auth.js"
+  src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/dist/pwa-auth.min.js"
 ></script>
 ```
 
@@ -29,11 +29,12 @@ Web component that lets your users sign-in/sign-up using their Microsoft, Google
 <pwa-auth 
     microsoftkey="..."
     googlekey="..."
-    facebookkey="...">
+    facebookkey="..."
+    applekey="...">
 </pwa-auth>
 ```
 
-3. Create one or more keys to let your users sign-in with Microsoft, Google, or Facebook. You'll need to provide at least one key. To create a key for each service, see [creating keys](#creating-keys).
+3. Create one or more keys to let your users sign-in with Microsoft, Google, Facebook, or Apple. You'll need to provide at least one key. To create a key for each service, see [creating keys](#creating-keys).
 
 ### NPM
 
@@ -178,7 +179,8 @@ When you add a `<pwa-auth>` component to your page, you'll need to specify one o
 <pwa-auth 
     microsoftkey="..."
     googlekey="..."
-    facebookkey="...">
+    facebookkey="..."
+    applekey="...">
 </pwa-auth>
 ```
 
@@ -188,6 +190,7 @@ To create a key, see:
 - [Creating a Microsoft key](https://aka.ms/pwaauthmskey)
 - [Creating a Google key](https://aka.ms/pwaauthgooglekey)
 - [Creating a Facebook key](https://aka.ms/pwaauthfbkey)
+- [Creating an Apple key](https://aka.ms/applekey)
 
 ## API
 

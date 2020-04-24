@@ -28,7 +28,7 @@ export class PwaAuth extends LitElement {
 
     readonly providers: ProviderInfo[] = [
         {
-            name: "Microsoft" as ProviderName,
+            name: "Microsoft",
             url: "https://graph.microsoft.com",
             getKey: () => this.microsoftKey,
             getButtonText: () => this.microsoftButtonText,
@@ -40,7 +40,7 @@ export class PwaAuth extends LitElement {
             signIn: () => this.signIn("Microsoft")
         },
         {
-            name: "Google" as ProviderName,
+            name: "Google",
             url: "https://account.google.com",
             getKey: () => this.googleKey,
             getButtonText: () => this.googleButtonText,
@@ -52,7 +52,7 @@ export class PwaAuth extends LitElement {
             signIn: () => this.signIn("Google")
         },
         {
-            name: "Facebook" as ProviderName,
+            name: "Facebook",
             url: "https://www.facebook.com",
             getKey: () => this.facebookKey,
             getButtonText: () => this.facebookButtonText,
@@ -64,7 +64,7 @@ export class PwaAuth extends LitElement {
             signIn: () => this.signIn("Facebook")
         },
         {
-            name: "Apple" as ProviderName,
+            name: "Apple",
             url: "https://appleid.apple.com",
             getKey: () => this.appleKey,
             getButtonText: () => this.appleButtonText,
@@ -77,7 +77,7 @@ export class PwaAuth extends LitElement {
         },
     ];
 
-    static readonly assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@0.9.6/assets";
+    static readonly assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/assets";
 	static styles = css`
 
 		:host {

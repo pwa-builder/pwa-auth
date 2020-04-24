@@ -339,7 +339,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             .catch(error => console.error("Error loading dependencies", error));
     }
 };
-PwaAuth.assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@0.9.6/assets";
+PwaAuth.assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/assets";
 PwaAuth.styles = css `
 
 		:host {
