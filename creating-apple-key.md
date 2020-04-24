@@ -9,7 +9,7 @@ Before we get started, a few disclosures:
 - **It's not free**. Creating an Apple key requires a membership in Apple's Developer Program, which costs $99/year for individuals and businesses; free for non-profits.
 - **You won't get a profile pic**. An Apple key doesn't let you get the user's profile picture; when `signin-completed` event fires, `imageUrl` will be null.
 - **Subsequent sign-ins won't include the user's full name** - Apple's flow is such that you'll receive the user's full name only the first time they sign-in. It's your responsibility to save the user's full name the first time he or she signs-in.
-- **You may or may not receive the user's real email address** When a user tries to sign in with their Apple account, the user is presented with a prompt, *"Do you want to share your email address with XYZ App?"* If the user declines, your app will instead receive an Apple-proxied email address which users can disable later. More details below.
+- **You may or may not receive the user's real email address** When a user tries to sign in with their Apple account, the user is presented with a prompt, *"Do you want to share your email address with XYZ App?"* If the user declines, your app will instead receive an Apple-proxied email address which users can disable later. See [Apple email relay](#apples-email-relay-service) for more details.
 
 If none of that scares you off, read on.
 
