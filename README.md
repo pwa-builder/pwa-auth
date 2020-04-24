@@ -1,5 +1,5 @@
 # pwa-auth
-Web component that lets your users sign-in/sign-up using their Microsoft, Google, or Facebook account. Your app receives their email address, name, and profile picture. Built with ❤ by the <a href="https://pwabuilder.com">PWABuilder</a> team.
+Web component that lets your users sign-in/sign-up using their Microsoft, Google, Facebook, or Apple account. Your app receives their email address, name, and profile picture. Built with ❤ by the <a href="https://pwabuilder.com">PWABuilder</a> team.
 
 😎 Bonus:  It's super lightweight, pulling in the authentication libraries <em>only</em> when the user tries to sign-in with one.
 
