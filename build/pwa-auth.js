@@ -219,7 +219,8 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             .finally(() => this.disabled = false);
     }
     signInCompleted(signIn) {
-        this.dispatchEvent(new CustomEvent("signin-completed", { detail: signIn }));
+        if (signIn.)
+            this.dispatchEvent(new CustomEvent("signin-completed", { detail: signIn }));
         this.tryStoreCredential(signIn);
         return signIn;
     }
@@ -340,6 +341,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     }
 };
 PwaAuth.assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/assets";
+PwaAuth.authTokenLocalStoragePrefix = "pwa-auth-auth-token-";
 PwaAuth.styles = css `
 
 		:host {

@@ -79,6 +79,7 @@ export class AppleProvider implements SignInProvider {
         return {
             email: userDetails.email,
             name: userDetails.name,
+            authToken: rawResult?.authorization?.code,
             imageUrl: null,
             providerData: rawResult,
             provider: "Apple",

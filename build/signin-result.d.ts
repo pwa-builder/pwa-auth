@@ -15,6 +15,10 @@ export interface SignInResult {
      */
     imageUrl?: string | null;
     /**
+     * The authorization token from the provider. This may be stale if the authentication was done via a stored credential.
+     */
+    authToken?: string | null;
+    /**
      * Additional details about the sign-in. Provider-specific.
      */
     providerData?: Object | null;

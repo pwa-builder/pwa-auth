@@ -78,6 +78,8 @@ export class PwaAuth extends LitElement {
     ];
 
     static readonly assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/assets";
+    static readonly authTokenLocalStoragePrefix = "pwa-auth-token";
+
 	static styles = css`
 
 		:host {
@@ -428,6 +430,15 @@ export class PwaAuth extends LitElement {
     }
 
     private signInCompleted(signIn: SignInResult): SignInResult {
+        // Send back an auth token. 
+        // If we did the OAuth flow just now, it'll include the auth token. (Store it for later)
+        // IF we signed in with an stored credential, it'll be null, so we'll fetch it from local storage.
+        if (signIn.authToken) {
+            this.tryUpdateAuthToken(signIn.provider, signIn.authToken);
+        } else {
+            signIn.authToken = this.tryReadAuthToken(signIn.provider);
+        }
+
         this.dispatchEvent(new CustomEvent("signin-completed", { detail: signIn }));
         this.tryStoreCredential(signIn);
         return signIn;
@@ -563,5 +574,28 @@ export class PwaAuth extends LitElement {
 
         return Promise.all(dependencyLoadTasks)
             .catch(error => console.error("Error loading dependencies", error));
+    }
+
+    private tryUpdateAuthToken(providerName: ProviderName, authToken: string) {
+        const localStorageKey = this.getAuthTokenLocalStorageKeyName(providerName);
+        try {
+            localStorage.setItem(localStorageKey, authToken);
+        } catch (error) {
+            console.warn("Unable to store auth token in local storage", localStorageKey, authToken, error);
+        }
+    }
+
+    private tryReadAuthToken(providerName: ProviderName): string | null {
+        const localStorageKey = this.getAuthTokenLocalStorageKeyName(providerName);
+        try {
+            return localStorage.getItem(localStorageKey);
+        } catch (error) {
+            console.warn("Unable to read auth token from local storage", localStorageKey, error);
+            return null;
+        }
+    }
+
+    private getAuthTokenLocalStorageKeyName(providerName: string): string {
+        return `${PwaAuth.authTokenLocalStoragePrefix}-${providerName}`;
     }
 }

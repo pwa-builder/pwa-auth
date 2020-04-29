@@ -52,6 +52,7 @@ export class AppleProvider {
         return window["AppleID"];
     }
     getSignInResult(rawResult) {
+        var _a;
         if (this.isErrorResult(rawResult)) {
             return {
                 error: new Error(rawResult.error),
@@ -62,6 +63,7 @@ export class AppleProvider {
         return {
             email: userDetails.email,
             name: userDetails.name,
+            authToken: (_a = rawResult === null || rawResult === void 0 ? void 0 : rawResult.authorization) === null || _a === void 0 ? void 0 : _a.code,
             imageUrl: null,
             providerData: rawResult,
             provider: "Apple",
