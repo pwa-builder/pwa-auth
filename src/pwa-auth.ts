@@ -527,6 +527,11 @@ export class PwaAuth extends LitElement {
             return Promise.resolve(null);
         }
 
+        // Bail if we're not allowed to use stored credential.
+        if (this.requireNewAccessToken) {
+            return Promise.resolve(null);
+        }
+
         const credOptions: any = {
             mediation: mediation,
             federated: {

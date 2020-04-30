@@ -304,6 +304,10 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         if (!window["FederatedCredential"]) {
             return Promise.resolve(null);
         }
+        // Bail if we're not allowed to use stored credential.
+        if (this.requireNewAccessToken) {
+            return Promise.resolve(null);
+        }
         const credOptions = {
             mediation: mediation,
             federated: {
