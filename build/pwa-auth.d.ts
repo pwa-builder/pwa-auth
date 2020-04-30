@@ -19,9 +19,10 @@ export declare class PwaAuth extends LitElement {
     menuPlacement: "start" | "end";
     disabled: boolean;
     iconLoading: "lazy" | "eager";
+    requireNewAccessToken: boolean;
     readonly providers: ProviderInfo[];
     static readonly assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/assets";
-    static readonly authTokenLocalStoragePrefix = "pwa-auth-auth-token-";
+    static readonly authTokenLocalStoragePrefix = "pwa-auth-token";
     static styles: import("lit-element").CSSResult;
     firstUpdated(): void;
     render(): void | TemplateResult;
@@ -49,11 +50,15 @@ export declare class PwaAuth extends LitElement {
     private importAppleProvider;
     private tryStoreCredential;
     private tryAutoSignIn;
-    private tryLoginWithStoredCredential;
+    private trySignInWithStoredCredential;
     private getStoredCredential;
     private credentialToSignInResult;
     private getProviderNameFromUrl;
     private isWebKit;
     private loadAllDependencies;
+    private tryUpdateStoredTokenInfo;
+    private tryReadStoredTokenInfo;
+    private getAuthTokenLocalStorageKeyName;
+    private rehydrateAccessToken;
 }
 export {};

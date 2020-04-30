@@ -51,27 +51,37 @@ export class FacebookProvider {
                 status: statusResponse.status
             });
         }
+        const authResponse = statusResponse.authResponse;
         return new Promise((resolve, reject) => {
             const requestArgs = {
                 fields: "name, email, picture.width(1440).height(1440)"
             };
             FB.api("/me", requestArgs, (userDetails) => {
-                resolve(this.getSignInResultFromUserDetails(userDetails));
+                resolve(this.getSignInResultFromUserDetails(userDetails, authResponse));
             });
         });
     }
-    getSignInResultFromUserDetails(userDetails) {
+    getSignInResultFromUserDetails(userDetails, authResponse) {
         var _a, _b;
         if (!(userDetails === null || userDetails === void 0 ? void 0 : userDetails.email)) {
             throw new Error("Facebook sign-in succeeded, but the resulting user details didn't contain an email. User details: " + JSON.stringify(userDetails));
         }
+        // authResponse.expiresIn is specified in seconds from now.
+        const expiresInSeconds = authResponse.expiresIn;
+        const expiration = new Date();
+        expiration.setSeconds(expiresInSeconds || 10000);
         return {
             email: userDetails.email,
             name: userDetails.name,
             imageUrl: (_b = (_a = userDetails.picture) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.url,
             error: null,
+            accessToken: authResponse === null || authResponse === void 0 ? void 0 : authResponse.accessToken,
+            accessTokenExpiration: expiration,
             provider: "Facebook",
-            providerData: userDetails
+            providerData: {
+                user: userDetails,
+                auth: authResponse
+            }
         };
     }
 }

@@ -66,28 +66,39 @@ export class FacebookProvider implements SignInProvider {
             });
         }
 
+        const authResponse = statusResponse.authResponse;
         return new Promise((resolve, reject) => {
             const requestArgs = {
                 fields: "name, email, picture.width(1440).height(1440)"
             };
             FB.api("/me", requestArgs, (userDetails: any) => {
-                resolve(this.getSignInResultFromUserDetails(userDetails));
+                resolve(this.getSignInResultFromUserDetails(userDetails, authResponse));
             });
         });
     }
 
-    private getSignInResultFromUserDetails(userDetails: any): SignInResult {
+    private getSignInResultFromUserDetails(userDetails: any, authResponse: fb.AuthResponse): SignInResult {
         if (!userDetails?.email) {
             throw new Error("Facebook sign-in succeeded, but the resulting user details didn't contain an email. User details: " + JSON.stringify(userDetails));
         }
+
+        // authResponse.expiresIn is specified in seconds from now.
+        const expiresInSeconds = authResponse.expiresIn;
+        const expiration = new Date();
+        expiration.setSeconds(expiresInSeconds || 10000);
 
         return {
             email: userDetails.email,
             name: userDetails.name,
             imageUrl: userDetails.picture?.data?.url,
             error: null,
+            accessToken: authResponse?.accessToken,
+            accessTokenExpiration: expiration,
             provider: "Facebook",
-            providerData: userDetails
+            providerData: {
+                user: userDetails,
+                auth: authResponse
+            }
         };
     }
 }

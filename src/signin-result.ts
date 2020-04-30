@@ -18,9 +18,14 @@ export interface SignInResult {
     imageUrl?: string | null;
 
     /**
-     * The authorization token from the provider. This may be stale if the sign-in was done via a stored credential.
+     * The access token from the provider. This may be stale if the sign-in was done via a stored credential.
      */
-    authToken?: string | null;
+    accessToken?: string | null;
+
+    /**
+     * The expiration date of the access token.
+     */
+    accessTokenExpiration?: Date | null;
 
     /**
      * Additional details about the sign-in. Provider-specific.

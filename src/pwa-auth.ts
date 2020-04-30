@@ -5,6 +5,7 @@ import { FederatedCredential } from './federated-credential';
 import { ProviderInfo } from './provider-info';
 
 type ProviderName = "Microsoft" | "Google" | "Facebook" | "Apple";
+type StoredAccessToken = { token: string | null; expiration: Date | null, providerData: Object | null | undefined };
 
 @customElement('pwa-auth')
 export class PwaAuth extends LitElement {
@@ -25,6 +26,7 @@ export class PwaAuth extends LitElement {
     @property({ type: String, reflect: true }) menuPlacement: "start" | "end" = "start";
     @property({ type: Boolean }) disabled = false;
     @property({ type: String }) iconLoading: "lazy" | "eager" = "lazy";
+    @property({ type: Boolean }) requireNewAccessToken = false; // If true, user always goes through OAuth flow to acquire a new access token. If false, user can sign-in using a stored credential with possibly stale access token.
 
     readonly providers: ProviderInfo[] = [
         {
@@ -406,7 +408,7 @@ export class PwaAuth extends LitElement {
 
         this.disabled = true;
         this.menuOpened = false;
-        return this.tryLoginWithStoredCredential(provider.url)
+        return this.trySignInWithStoredCredential(provider.url)
             .then(storedCredSignInResult => {
                 // Did we sign in with a stored credential? Good, we're done.
                 if (storedCredSignInResult) {
@@ -430,15 +432,7 @@ export class PwaAuth extends LitElement {
     }
 
     private signInCompleted(signIn: SignInResult): SignInResult {
-        // Send back an auth token. 
-        // If we did the OAuth flow just now, it'll include the auth token. (Store it for later)
-        // IF we signed in with an stored credential, it'll be null, so we'll fetch it from local storage.
-        if (signIn.authToken) {
-            this.tryUpdateAuthToken(signIn.provider, signIn.authToken);
-        } else {
-            signIn.authToken = this.tryReadAuthToken(signIn.provider);
-        }
-
+        this.rehydrateAccessToken(signIn);
         this.dispatchEvent(new CustomEvent("signin-completed", { detail: signIn }));
         this.tryStoreCredential(signIn);
         return signIn;
@@ -492,6 +486,11 @@ export class PwaAuth extends LitElement {
             return null;
         }
 
+        // Bail if we're forcing OAuth flow.
+        if (this.requireNewAccessToken) {
+            return null;
+        }
+
         let credential: FederatedCredential | null = null;
         if (this.credentialMode === "prompt") {
             // Let the user choose.
@@ -516,7 +515,7 @@ export class PwaAuth extends LitElement {
         return credential;
     }
 
-    private tryLoginWithStoredCredential(providerUrl: string): Promise<SignInResult | null> {
+    private trySignInWithStoredCredential(providerUrl: string): Promise<SignInResult | null> {
         return this.getStoredCredential("silent", [providerUrl])
             .catch(error => console.warn("Error attempting to sign-in with stored credential", error))
             .then(credential => credential ? this.credentialToSignInResult(credential) : null);
@@ -576,19 +575,25 @@ export class PwaAuth extends LitElement {
             .catch(error => console.error("Error loading dependencies", error));
     }
 
-    private tryUpdateAuthToken(providerName: ProviderName, authToken: string) {
-        const localStorageKey = this.getAuthTokenLocalStorageKeyName(providerName);
+    private tryUpdateStoredTokenInfo(signIn: SignInResult) {
+        const localStorageKey = this.getAuthTokenLocalStorageKeyName(signIn.provider);
+        const storedToken: StoredAccessToken = {
+            token: signIn.accessToken || null,
+            expiration: signIn.accessTokenExpiration || null,
+            providerData: signIn.providerData
+        };
         try {
-            localStorage.setItem(localStorageKey, authToken);
+            localStorage.setItem(localStorageKey, JSON.stringify(storedToken));
         } catch (error) {
-            console.warn("Unable to store auth token in local storage", localStorageKey, authToken, error);
+            console.warn("Unable to store auth token in local storage", localStorageKey, signIn, error);
         }
     }
 
-    private tryReadAuthToken(providerName: ProviderName): string | null {
+    private tryReadStoredTokenInfo(providerName: ProviderName): StoredAccessToken | null {
         const localStorageKey = this.getAuthTokenLocalStorageKeyName(providerName);
         try {
-            return localStorage.getItem(localStorageKey);
+            const tokenJson = localStorage.getItem(localStorageKey);
+            return tokenJson ? JSON.parse(tokenJson) : null;
         } catch (error) {
             console.warn("Unable to read auth token from local storage", localStorageKey, error);
             return null;
@@ -597,5 +602,22 @@ export class PwaAuth extends LitElement {
 
     private getAuthTokenLocalStorageKeyName(providerName: string): string {
         return `${PwaAuth.authTokenLocalStoragePrefix}-${providerName}`;
+    }
+
+    private rehydrateAccessToken(signIn: SignInResult) {
+        if (signIn.accessToken) {
+            // If the user signed in with OAuth flow just now, we already have the auth token.
+            // Store it for later.
+            this.tryUpdateStoredTokenInfo(signIn);
+        } else {
+            // We don't have an access token, meaning we signed-in with a stored credential.
+            // Thus, we'll fetch it from local storage.
+            const tokenInfo = this.tryReadStoredTokenInfo(signIn.provider);
+            if (tokenInfo) {
+                signIn.accessToken = tokenInfo.token;
+                signIn.accessTokenExpiration = tokenInfo.expiration;
+                signIn.providerData = tokenInfo.providerData;
+            }
+        }
     }
 }

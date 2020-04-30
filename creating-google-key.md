@@ -64,7 +64,7 @@ pwa-auth uses the Google Platform library (GApi) with `auth2` to sign-in with Go
 
 ### Raw `providerData` with Google Sign-In
 
-When a user signs-in with their Google account, pwa-auth will dispatch the `signin-completed` event. This event will contain the standard information -- `email`, `name`, `imageUrl` -- as well as additional Google-specific information contained in `providerData`:
+When a user signs-in with their Google account, pwa-auth will dispatch the `signin-completed` event. This event will contain the standard information -- `email`, `name`, `imageUrl`, `accessToken`, `accessTokenExpiration` -- as well as additional Google-specific information contained in `providerData`:
 
 ```javascript
 const pwaAuth = document.querySelector("pwa-auth");
@@ -84,7 +84,7 @@ pwaAuth.addEventListener("signin-completed", ev => {
 ```JSON
 {
     "Ca": "123456",
-    "uc": {
+    "tc": {
         "token_type": "Bearer",
         "access_token": "ya29.abc123",
         "scope": "email profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid",
@@ -100,7 +100,7 @@ pwaAuth.addEventListener("signin-completed", ev => {
         "expires_at": 1585680965698,
         "idpId": "google"
     },
-    "Qt": {
+    "Pt": {
         "SU": "12345",
         "Ad": "John Edward Doe",
         "vW": "JohnEDoe",

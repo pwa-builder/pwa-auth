@@ -123,11 +123,13 @@ export class MicrosoftProvider implements SignInProvider {
         });
     }
 
-    private getLoginResult(loginResponse: any | null): SignInResult {
+    private getLoginResult(loginResponse: Msal.AuthResponse): SignInResult {
         return {
-            name: loginResponse?.account?.name || "",
-            email: loginResponse?.account?.userName || "",
+            name: loginResponse.account?.name || "",
+            email: loginResponse.account?.userName || "",
             provider: "Microsoft", 
+            accessToken: loginResponse.accessToken,
+            accessTokenExpiration: loginResponse.expiresOn,
             error: null,
             imageUrl: null,
             providerData: loginResponse,

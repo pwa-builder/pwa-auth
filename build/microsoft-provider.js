@@ -105,9 +105,11 @@ export class MicrosoftProvider {
     getLoginResult(loginResponse) {
         var _a, _b;
         return {
-            name: ((_a = loginResponse === null || loginResponse === void 0 ? void 0 : loginResponse.account) === null || _a === void 0 ? void 0 : _a.name) || "",
-            email: ((_b = loginResponse === null || loginResponse === void 0 ? void 0 : loginResponse.account) === null || _b === void 0 ? void 0 : _b.userName) || "",
+            name: ((_a = loginResponse.account) === null || _a === void 0 ? void 0 : _a.name) || "",
+            email: ((_b = loginResponse.account) === null || _b === void 0 ? void 0 : _b.userName) || "",
             provider: "Microsoft",
+            accessToken: loginResponse.accessToken,
+            accessTokenExpiration: loginResponse.expiresOn,
             error: null,
             imageUrl: null,
             providerData: loginResponse,

@@ -34,7 +34,7 @@ Web component that lets your users sign-in/sign-up using their Microsoft, Google
 </pwa-auth>
 ```
 
-3. Create one or more keys to let your users sign-in with Microsoft, Google, Facebook, or Apple. You'll need to provide at least one key. To create a key for each service, see [creating keys](#creating-keys).
+3. Create one or more keys to let your users sign-in with Microsoft, Google, Facebook, or Apple. You'll need to provide at least one key. See [creating keys](#creating-keys) to get started.
 
 ### NPM
 
@@ -83,7 +83,7 @@ All UI in pwa-auth is stylable using CSS. See [styling](#styling) for details. A
 
 ## What happens when a user signs in?
 
-You'll get a `signin-completed` event containing the user's `email`, `name`, and `imageUrl`, as well as additional raw data from the provider (e.g. authentication token):
+You'll get a `signin-completed` event containing the user's `email`, `name`, `imageUrl`, `accessToken` and `accessTokenExpiration`, as well as additional raw data from the provider (e.g. authentication token):
 
 ```javascript
 const pwaAuth = document.querySelector("pwa-auth");
@@ -95,6 +95,8 @@ pwaAuth.addEventListener("signin-completed", ev => {
         console.log("Email: ", signIn.email);
         console.log("Name: ", signIn.name);
         console.log("Picture: ", signIn.imageUrl);
+        console.log("Access token", signIn.accessToken);
+        console.log("Access token expiration date", signIn.accessTokenExpiration);
         console.log("Provider (MS, Google, FB): ", signIn.provider);
         console.log("Raw data from provider: ", signIn.providerData);
     }
@@ -103,7 +105,7 @@ pwaAuth.addEventListener("signin-completed", ev => {
 
 Try it: [live](https://pwa-auth-basic.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-basic?path=script.js:3:1)
 
-Once the `signin-completed` event fires, you can do whatever you normally do when your users sign in: set an authentication cookie, create a JWT token, etc.
+Once the `signin-completed` event fires, you can do whatever you normally do when your users sign in: set an authentication cookie, create a JWT token, etc. You may wish to verify the sign-in in your back-end code: see [backend auth](/#TODO) for details.
 
 If there's an error, or the user backs out of the authentication process, `signin-completed` will contain an `error`:
 

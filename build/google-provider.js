@@ -56,10 +56,13 @@ export class GoogleProvider {
     }
     getSignInResultFromUser(user) {
         const profile = user.getBasicProfile();
+        const authResponse = user.getAuthResponse(true);
         return {
             email: profile.getEmail(),
             name: profile.getName(),
             imageUrl: profile.getImageUrl(),
+            accessToken: authResponse === null || authResponse === void 0 ? void 0 : authResponse.access_token,
+            accessTokenExpiration: new Date(authResponse.expires_at),
             provider: "Google",
             error: null,
             providerData: user

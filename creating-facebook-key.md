@@ -66,7 +66,7 @@ pwa-auth uses the Facebook SDK v6.0 to do sign-ins.
 
 ### Raw `providerData` with Facebook Sign-In
 
-When a user signs-in with their Facebook account, pwa-auth will dispatch the `signin-completed` event. This event will contain the standard information -- `email`, `name`, `imageUrl` -- as well as additional Facebook-specific information contained in `providerData`:
+When a user signs-in with their Facebook account, pwa-auth will dispatch the `signin-completed` event. This event will contain the standard information -- `email`, `name`, `imageUrl`, `accessToken`, and `accessTokenExpiration` -- as well as additional Facebook-specific information contained in `providerData`:
 
 ```javascript
 const pwaAuth = document.querySelector("pwa-auth");
@@ -85,17 +85,27 @@ pwaAuth.addEventListener("signin-completed", ev => {
 
 ```JSON
 {
-    "name": "John Doe",
-    "email": "johndoe@sample.com",
-    "picture": {
-        "data": {
-        "height": 960,
-        "is_silhouette": false,
-        "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=abc123&height=1440&width=1440&ext=abc123&hash=abc123",
-        "width": 958
+    "user": {
+        "id": "123",
+        "name": "John Doe",
+        "email": "johndoe@sample.com",
+        "picture": {
+            "data": {
+                "height": 960,
+                "is_silhouette": false,
+                "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=abc123&height=1440&width=1440&ext=abc123&hash=abc123",
+                "width": 958
+            }
         }
     },
-    "id": "123"
+    "auth": {
+        "accessToken": "abc123",
+        "userID": "123456",
+        "expiresIn": 1234,
+        "signedRequest": "abc123-xyz456",
+        "graphDomain": "facebook",
+        "data_access_expiration_time": 1234
+    }
 }
 ```
 

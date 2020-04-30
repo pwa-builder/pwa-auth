@@ -4,7 +4,7 @@ export declare class AppleProvider implements SignInProvider {
     private clientId;
     private redirectUri?;
     static readonly scriptUrl = "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
-    static readonly nameLocalStorageKeyPrefix = "pwa-auth-apple-email-";
+    static readonly nameLocalStorageKeyPrefix = "pwa-auth-apple-email";
     constructor(clientId: string, redirectUri?: string | null | undefined);
     signIn(): Promise<SignInResult>;
     loadDependencies(): Promise<void>;
@@ -18,5 +18,6 @@ export declare class AppleProvider implements SignInProvider {
     private decodeJwt;
     private tryGetStoredNameFromEmail;
     private tryStoreNameWithEmail;
+    private getUserNameLocalStorageKey;
     private trimSlash;
 }

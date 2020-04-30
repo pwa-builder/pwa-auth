@@ -20,6 +20,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         this.menuPlacement = "start";
         this.disabled = false;
         this.iconLoading = "lazy";
+        this.requireNewAccessToken = false; // If true, user always goes through OAuth flow to acquire a new access token. If false, user can sign-in using a stored credential with possibly stale access token.
         this.providers = [
             {
                 name: "Microsoft",
@@ -197,7 +198,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         }
         this.disabled = true;
         this.menuOpened = false;
-        return this.tryLoginWithStoredCredential(provider.url)
+        return this.trySignInWithStoredCredential(provider.url)
             .then(storedCredSignInResult => {
             // Did we sign in with a stored credential? Good, we're done.
             if (storedCredSignInResult) {
@@ -219,8 +220,8 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
             .finally(() => this.disabled = false);
     }
     signInCompleted(signIn) {
-        if (signIn.)
-            this.dispatchEvent(new CustomEvent("signin-completed", { detail: signIn }));
+        this.rehydrateAccessToken(signIn);
+        this.dispatchEvent(new CustomEvent("signin-completed", { detail: signIn }));
         this.tryStoreCredential(signIn);
         return signIn;
     }
@@ -267,6 +268,10 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         if (!window["FederatedCredential"]) {
             return null;
         }
+        // Bail if we're forcing OAuth flow.
+        if (this.requireNewAccessToken) {
+            return null;
+        }
         let credential = null;
         if (this.credentialMode === "prompt") {
             // Let the user choose.
@@ -289,7 +294,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         }
         return credential;
     }
-    tryLoginWithStoredCredential(providerUrl) {
+    trySignInWithStoredCredential(providerUrl) {
         return this.getStoredCredential("silent", [providerUrl])
             .catch(error => console.warn("Error attempting to sign-in with stored credential", error))
             .then(credential => credential ? this.credentialToSignInResult(credential) : null);
@@ -339,9 +344,54 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         return Promise.all(dependencyLoadTasks)
             .catch(error => console.error("Error loading dependencies", error));
     }
+    tryUpdateStoredTokenInfo(signIn) {
+        const localStorageKey = this.getAuthTokenLocalStorageKeyName(signIn.provider);
+        const storedToken = {
+            token: signIn.accessToken || null,
+            expiration: signIn.accessTokenExpiration || null,
+            providerData: signIn.providerData
+        };
+        try {
+            localStorage.setItem(localStorageKey, JSON.stringify(storedToken));
+        }
+        catch (error) {
+            console.warn("Unable to store auth token in local storage", localStorageKey, signIn, error);
+        }
+    }
+    tryReadStoredTokenInfo(providerName) {
+        const localStorageKey = this.getAuthTokenLocalStorageKeyName(providerName);
+        try {
+            const tokenJson = localStorage.getItem(localStorageKey);
+            return tokenJson ? JSON.parse(tokenJson) : null;
+        }
+        catch (error) {
+            console.warn("Unable to read auth token from local storage", localStorageKey, error);
+            return null;
+        }
+    }
+    getAuthTokenLocalStorageKeyName(providerName) {
+        return `${PwaAuth_1.authTokenLocalStoragePrefix}-${providerName}`;
+    }
+    rehydrateAccessToken(signIn) {
+        if (signIn.accessToken) {
+            // If the user signed in with OAuth flow just now, we already have the auth token.
+            // Store it for later.
+            this.tryUpdateStoredTokenInfo(signIn);
+        }
+        else {
+            // We don't have an access token, meaning we signed-in with a stored credential.
+            // Thus, we'll fetch it from local storage.
+            const tokenInfo = this.tryReadStoredTokenInfo(signIn.provider);
+            if (tokenInfo) {
+                signIn.accessToken = tokenInfo.token;
+                signIn.accessTokenExpiration = tokenInfo.expiration;
+                signIn.providerData = tokenInfo.providerData;
+            }
+        }
+    }
 };
 PwaAuth.assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/assets";
-PwaAuth.authTokenLocalStoragePrefix = "pwa-auth-auth-token-";
+PwaAuth.authTokenLocalStoragePrefix = "pwa-auth-token";
 PwaAuth.styles = css `
 
 		:host {
@@ -569,6 +619,9 @@ __decorate([
 __decorate([
     property({ type: String })
 ], PwaAuth.prototype, "iconLoading", void 0);
+__decorate([
+    property({ type: Boolean })
+], PwaAuth.prototype, "requireNewAccessToken", void 0);
 PwaAuth = PwaAuth_1 = __decorate([
     customElement('pwa-auth')
 ], PwaAuth);

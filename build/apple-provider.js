@@ -63,7 +63,8 @@ export class AppleProvider {
         return {
             email: userDetails.email,
             name: userDetails.name,
-            authToken: (_a = rawResult === null || rawResult === void 0 ? void 0 : rawResult.authorization) === null || _a === void 0 ? void 0 : _a.code,
+            accessToken: (_a = rawResult === null || rawResult === void 0 ? void 0 : rawResult.authorization) === null || _a === void 0 ? void 0 : _a.code,
+            accessTokenExpiration: userDetails.appleToken ? new Date(userDetails.appleToken.exp * 1000) : null,
             imageUrl: null,
             providerData: rawResult,
             provider: "Apple",
@@ -99,7 +100,8 @@ export class AppleProvider {
         }
         return {
             name,
-            email
+            email,
+            appleToken: webToken
         };
     }
     decodeJwt(token) {
@@ -112,7 +114,7 @@ export class AppleProvider {
         return JSON.parse(jsonPayload);
     }
     tryGetStoredNameFromEmail(email) {
-        const key = AppleProvider.nameLocalStorageKeyPrefix + email;
+        const key = this.getUserNameLocalStorageKey(email);
         try {
             return localStorage.getItem(key);
         }
@@ -122,13 +124,16 @@ export class AppleProvider {
         }
     }
     tryStoreNameWithEmail(name, email) {
-        const key = AppleProvider.nameLocalStorageKeyPrefix + email;
+        const key = this.getUserNameLocalStorageKey(email);
         try {
             localStorage.setItem(key, name);
         }
         catch (error) {
             console.warn("Error storing user name in local storage. Subsequent sign-ins may not have a user name.", key, name, error);
         }
+    }
+    getUserNameLocalStorageKey(email) {
+        return `${AppleProvider.nameLocalStorageKeyPrefix}-${email}`;
     }
     trimSlash(input) {
         let length = 0;
@@ -142,5 +147,5 @@ export class AppleProvider {
     }
 }
 AppleProvider.scriptUrl = "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
-AppleProvider.nameLocalStorageKeyPrefix = "pwa-auth-apple-email-";
+AppleProvider.nameLocalStorageKeyPrefix = "pwa-auth-apple-email";
 //# sourceMappingURL=apple-provider.js.map

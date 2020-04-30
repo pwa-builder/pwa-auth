@@ -72,10 +72,13 @@ export class GoogleProvider implements SignInProvider {
 
     private getSignInResultFromUser(user: gapi.auth2.GoogleUser): SignInResult {
         const profile = user.getBasicProfile();
+        const authResponse = user.getAuthResponse(true);
         return {
             email: profile.getEmail(),
             name: profile.getName(),
             imageUrl: profile.getImageUrl(),
+            accessToken: authResponse?.access_token,
+            accessTokenExpiration: new Date(authResponse.expires_at),
             provider: "Google",
             error: null,
             providerData: user

@@ -4,7 +4,7 @@ import { SignInProvider } from "./signin-provider";
 export class AppleProvider implements SignInProvider {
 
     static readonly scriptUrl = "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
-    static readonly nameLocalStorageKeyPrefix = "pwa-auth-apple-email-";
+    static readonly nameLocalStorageKeyPrefix = "pwa-auth-apple-email";
 
     constructor(private clientId: string, private redirectUri?: string | null) {
     }
@@ -79,7 +79,8 @@ export class AppleProvider implements SignInProvider {
         return {
             email: userDetails.email,
             name: userDetails.name,
-            authToken: rawResult?.authorization?.code,
+            accessToken: rawResult?.authorization?.code,
+            accessTokenExpiration: userDetails.appleToken ? new Date(userDetails.appleToken.exp * 1000) : null,
             imageUrl: null,
             providerData: rawResult,
             provider: "Apple",
@@ -91,7 +92,7 @@ export class AppleProvider implements SignInProvider {
         return !!(result as AppleSignInAPI.SignInErrorI).error;
     }
 
-    private decodeUserDetails(result: AppleSignInAPI.SignInResponseI): { name: string; email: string; } {
+    private decodeUserDetails(result: AppleSignInAPI.SignInResponseI): { name: string; email: string; appleToken: AppleJwtToken } {
         // Decode the user's email from the JWT token.
         const webToken = this.decodeJwt(result.authorization.id_token) as AppleJwtToken;
         const email = webToken?.email;
@@ -119,7 +120,8 @@ export class AppleProvider implements SignInProvider {
 
         return {
             name,
-            email
+            email,
+            appleToken: webToken
         };
     }
 
@@ -135,7 +137,7 @@ export class AppleProvider implements SignInProvider {
     }
 
     private tryGetStoredNameFromEmail(email: string): string | null {
-        const key = AppleProvider.nameLocalStorageKeyPrefix + email;
+        const key = this.getUserNameLocalStorageKey(email);
         try {
             return localStorage.getItem(key);
         } catch (error) {
@@ -145,12 +147,16 @@ export class AppleProvider implements SignInProvider {
     }
 
     private tryStoreNameWithEmail(name: string, email: string) {
-        const key = AppleProvider.nameLocalStorageKeyPrefix + email;
+        const key = this.getUserNameLocalStorageKey(email);
         try {
             localStorage.setItem(key, name);
         } catch (error) {
             console.warn("Error storing user name in local storage. Subsequent sign-ins may not have a user name.", key, name, error);
         }
+    }
+
+    private getUserNameLocalStorageKey(email: string) {
+        return `${AppleProvider.nameLocalStorageKeyPrefix}-${email}`;
     }
 
     private trimSlash(input: string) {
