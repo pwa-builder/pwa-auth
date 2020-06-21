@@ -4,11 +4,34 @@ import { SignInProvider } from './signin-provider';
 import { FederatedCredential } from './federated-credential';
 import { ProviderInfo } from './provider-info';
 
-type ProviderName = "Microsoft" | "Google" | "Facebook" | "Apple";
+//Exported public api.
+export { SignInResult }  from './signin-result';
+export interface PwaAuth {
+    appearance?: "button" | "list" | "none";
+    signInButtonText?: string;
+    microsoftButtonText?: string;
+    googleButtonText?: string;
+    facebookButtonText?: string;
+    appleButtonText?: string;
+    appleRedirectUri?: string | undefined | null;
+    microsoftKey?: string | undefined | null;
+    googleKey?: string | undefined | null;
+    facebookKey?: string | undefined | null;
+    appleKey?: string | undefined | null;
+    credentialMode?: "none" | "silent" | "prompt";
+    menuOpened?: boolean;
+    menuPlacement?: "start" | "end";
+    disabled?: boolean;
+    iconLoading?: string;
+    requireNewAccessToken?: boolean;
+    signIn?: (providerName: ProviderName) => Promise<SignInResult>
+}
+
+export type ProviderName = "Microsoft" | "Google" | "Facebook" | "Apple";
 type StoredAccessToken = { token: string | null; expiration: Date | null, providerData: Object | null | undefined };
 
 @customElement('pwa-auth')
-export class PwaAuth extends LitElement {
+export class PwaAuthImpl extends LitElement implements PwaAuth {
 
     @property({ type: String, reflect: true }) appearance: "button" | "list" | "none" = "button";
     @property({ type: String }) signInButtonText = "Sign in";
@@ -306,30 +329,30 @@ export class PwaAuth extends LitElement {
 
     private getMicrosoftIconUrl(): string {
         if (this.appearance === "button") {
-            return `${PwaAuth.assetBaseUrl}/microsoft-icon-button.svg`;
+            return `${PwaAuthImpl.assetBaseUrl}/microsoft-icon-button.svg`;
         }
 
-        return `${PwaAuth.assetBaseUrl}/microsoft-icon-list.svg`;
+        return `${PwaAuthImpl.assetBaseUrl}/microsoft-icon-list.svg`;
     }
 
 	private getGoogleIconUrl(): string {
-        return `${PwaAuth.assetBaseUrl}/google-icon.svg`;
+        return `${PwaAuthImpl.assetBaseUrl}/google-icon.svg`;
     }
     
     private getFacebookIconUrl(): string {
         if (this.appearance === "button") {
-            return `${PwaAuth.assetBaseUrl}/facebook-icon-button.svg`;
+            return `${PwaAuthImpl.assetBaseUrl}/facebook-icon-button.svg`;
         }
 
-        return `${PwaAuth.assetBaseUrl}/facebook-icon-list.svg`;
+        return `${PwaAuthImpl.assetBaseUrl}/facebook-icon-list.svg`;
     }
 
 	private getAppleIconUrl(): string {
         if (this.appearance === "button") {
-            return `${PwaAuth.assetBaseUrl}/apple-icon-button.svg`;
+            return `${PwaAuthImpl.assetBaseUrl}/apple-icon-button.svg`;
         }
 
-        return `${PwaAuth.assetBaseUrl}/apple-icon-list.svg`;
+        return `${PwaAuthImpl.assetBaseUrl}/apple-icon-list.svg`;
     }
 
     private renderLoginButton(): TemplateResult {
@@ -606,7 +629,7 @@ export class PwaAuth extends LitElement {
     }
 
     private getAuthTokenLocalStorageKeyName(providerName: string): string {
-        return `${PwaAuth.authTokenLocalStoragePrefix}-${providerName}`;
+        return `${PwaAuthImpl.authTokenLocalStoragePrefix}-${providerName}`;
     }
 
     private rehydrateAccessToken(signIn: SignInResult) {

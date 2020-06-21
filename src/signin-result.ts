@@ -30,7 +30,7 @@ export interface SignInResult {
     /**
      * Additional details about the sign-in. Provider-specific.
      */
-    providerData?: Object | null;
+    providerData?: {[key: string]: any} | null;
 
     /**
      * The error that occurred during sign in process.

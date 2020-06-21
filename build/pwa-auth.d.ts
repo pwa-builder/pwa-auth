@@ -1,8 +1,29 @@
 import { LitElement, TemplateResult } from 'lit-element';
 import { SignInResult } from './signin-result';
 import { ProviderInfo } from './provider-info';
-declare type ProviderName = "Microsoft" | "Google" | "Facebook" | "Apple";
-export declare class PwaAuth extends LitElement {
+export { SignInResult } from './signin-result';
+export interface PwaAuth {
+    appearance?: "button" | "list" | "none";
+    signInButtonText?: string;
+    microsoftButtonText?: string;
+    googleButtonText?: string;
+    facebookButtonText?: string;
+    appleButtonText?: string;
+    appleRedirectUri?: string | undefined | null;
+    microsoftKey?: string | undefined | null;
+    googleKey?: string | undefined | null;
+    facebookKey?: string | undefined | null;
+    appleKey?: string | undefined | null;
+    credentialMode?: "none" | "silent" | "prompt";
+    menuOpened?: boolean;
+    menuPlacement?: "start" | "end";
+    disabled?: boolean;
+    iconLoading?: string;
+    requireNewAccessToken?: boolean;
+    signIn?: (providerName: ProviderName) => Promise<SignInResult>;
+}
+export declare type ProviderName = "Microsoft" | "Google" | "Facebook" | "Apple";
+export declare class PwaAuthImpl extends LitElement implements PwaAuth {
     appearance: "button" | "list" | "none";
     signInButtonText: string;
     microsoftButtonText: string;
@@ -61,4 +82,3 @@ export declare class PwaAuth extends LitElement {
     private getAuthTokenLocalStorageKeyName;
     private rehydrateAccessToken;
 }
-export {};
