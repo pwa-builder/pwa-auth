@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var PwaAuth_1;
+var PwaAuthImpl_1;
 import { LitElement, html, css, customElement, property } from 'lit-element';
-let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
+let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
     constructor() {
         super(...arguments);
         this.appearance = "button";
@@ -109,24 +109,24 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
     }
     getMicrosoftIconUrl() {
         if (this.appearance === "button") {
-            return `${PwaAuth_1.assetBaseUrl}/microsoft-icon-button.svg`;
+            return `${PwaAuthImpl_1.assetBaseUrl}/microsoft-icon-button.svg`;
         }
-        return `${PwaAuth_1.assetBaseUrl}/microsoft-icon-list.svg`;
+        return `${PwaAuthImpl_1.assetBaseUrl}/microsoft-icon-list.svg`;
     }
     getGoogleIconUrl() {
-        return `${PwaAuth_1.assetBaseUrl}/google-icon.svg`;
+        return `${PwaAuthImpl_1.assetBaseUrl}/google-icon.svg`;
     }
     getFacebookIconUrl() {
         if (this.appearance === "button") {
-            return `${PwaAuth_1.assetBaseUrl}/facebook-icon-button.svg`;
+            return `${PwaAuthImpl_1.assetBaseUrl}/facebook-icon-button.svg`;
         }
-        return `${PwaAuth_1.assetBaseUrl}/facebook-icon-list.svg`;
+        return `${PwaAuthImpl_1.assetBaseUrl}/facebook-icon-list.svg`;
     }
     getAppleIconUrl() {
         if (this.appearance === "button") {
-            return `${PwaAuth_1.assetBaseUrl}/apple-icon-button.svg`;
+            return `${PwaAuthImpl_1.assetBaseUrl}/apple-icon-button.svg`;
         }
-        return `${PwaAuth_1.assetBaseUrl}/apple-icon-list.svg`;
+        return `${PwaAuthImpl_1.assetBaseUrl}/apple-icon-list.svg`;
     }
     renderLoginButton() {
         return html `
@@ -374,7 +374,7 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         }
     }
     getAuthTokenLocalStorageKeyName(providerName) {
-        return `${PwaAuth_1.authTokenLocalStoragePrefix}-${providerName}`;
+        return `${PwaAuthImpl_1.authTokenLocalStoragePrefix}-${providerName}`;
     }
     rehydrateAccessToken(signIn) {
         if (signIn.accessToken) {
@@ -394,9 +394,9 @@ let PwaAuth = PwaAuth_1 = class PwaAuth extends LitElement {
         }
     }
 };
-PwaAuth.assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/assets";
-PwaAuth.authTokenLocalStoragePrefix = "pwa-auth-token";
-PwaAuth.styles = css `
+PwaAuthImpl.assetBaseUrl = "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/assets";
+PwaAuthImpl.authTokenLocalStoragePrefix = "pwa-auth-token";
+PwaAuthImpl.styles = css `
 
 		:host {
 			display: inline-block;
@@ -577,57 +577,57 @@ PwaAuth.styles = css `
     `;
 __decorate([
     property({ type: String, reflect: true })
-], PwaAuth.prototype, "appearance", void 0);
+], PwaAuthImpl.prototype, "appearance", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "signInButtonText", void 0);
+], PwaAuthImpl.prototype, "signInButtonText", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "microsoftButtonText", void 0);
+], PwaAuthImpl.prototype, "microsoftButtonText", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "googleButtonText", void 0);
+], PwaAuthImpl.prototype, "googleButtonText", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "facebookButtonText", void 0);
+], PwaAuthImpl.prototype, "facebookButtonText", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "appleButtonText", void 0);
+], PwaAuthImpl.prototype, "appleButtonText", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "appleRedirectUri", void 0);
+], PwaAuthImpl.prototype, "appleRedirectUri", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "microsoftKey", void 0);
+], PwaAuthImpl.prototype, "microsoftKey", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "googleKey", void 0);
+], PwaAuthImpl.prototype, "googleKey", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "facebookKey", void 0);
+], PwaAuthImpl.prototype, "facebookKey", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "appleKey", void 0);
+], PwaAuthImpl.prototype, "appleKey", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "credentialMode", void 0);
+], PwaAuthImpl.prototype, "credentialMode", void 0);
 __decorate([
     property({ type: Boolean })
-], PwaAuth.prototype, "menuOpened", void 0);
+], PwaAuthImpl.prototype, "menuOpened", void 0);
 __decorate([
     property({ type: String, reflect: true })
-], PwaAuth.prototype, "menuPlacement", void 0);
+], PwaAuthImpl.prototype, "menuPlacement", void 0);
 __decorate([
     property({ type: Boolean })
-], PwaAuth.prototype, "disabled", void 0);
+], PwaAuthImpl.prototype, "disabled", void 0);
 __decorate([
     property({ type: String })
-], PwaAuth.prototype, "iconLoading", void 0);
+], PwaAuthImpl.prototype, "iconLoading", void 0);
 __decorate([
     property({ type: Boolean })
-], PwaAuth.prototype, "requireNewAccessToken", void 0);
-PwaAuth = PwaAuth_1 = __decorate([
+], PwaAuthImpl.prototype, "requireNewAccessToken", void 0);
+PwaAuthImpl = PwaAuthImpl_1 = __decorate([
     customElement('pwa-auth')
-], PwaAuth);
-export { PwaAuth };
+], PwaAuthImpl);
+export { PwaAuthImpl };
 //# sourceMappingURL=pwa-auth.js.map

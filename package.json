@@ -4,6 +4,7 @@
   "description": "Web component that lets your users sign-in/sign-up using their Microsoft, Google, Facebook, or Apple account. Your app receives their email address, name, and profile picture.",
   "main": "dist/pwa-auth.js",
   "module": "dist/pwa-auth.js",
+  "types": "build/pwa-auth.d.ts",
   "author": "PWABuilder Team",
   "license": "MIT",
   "scripts": {
