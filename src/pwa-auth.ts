@@ -61,6 +61,7 @@ export class PwaAuthImpl extends LitElement implements PwaAuth {
             import: (key: string) => this.importMicrosoftProvider(key),
             btnClass: "microsoft-btn",
             buttonPartName: "microsoftButton",
+            containerPartName: "microsoftContainer",
             iconPartName: "microsoftIcon",
             signIn: () => this.signIn("Microsoft")
         },
@@ -73,6 +74,7 @@ export class PwaAuthImpl extends LitElement implements PwaAuth {
             import: (key: string) => this.importGoogleProvider(key),
             btnClass: "google-btn",
             buttonPartName: "googleButton",
+            containerPartName: "googleContainer",
             iconPartName: "googleIcon",
             signIn: () => this.signIn("Google")
         },
@@ -85,6 +87,7 @@ export class PwaAuthImpl extends LitElement implements PwaAuth {
             import: (key: string) => this.importFacebookProvider(key),
             btnClass: "facebook-btn",
             buttonPartName: "facebookButton",
+            containerPartName: "facebookContainer",
             iconPartName: "facebookIcon",
             signIn: () => this.signIn("Facebook")
         },
@@ -97,6 +100,7 @@ export class PwaAuthImpl extends LitElement implements PwaAuth {
             import: (key: string) => this.importAppleProvider(key),
             btnClass: "apple-btn",
             buttonPartName: "appleButton",
+            containerPartName: "appleContainer",
             iconPartName: "appleIcon",
             signIn: () => this.signIn("Apple")
         },
@@ -373,7 +377,7 @@ export class PwaAuthImpl extends LitElement implements PwaAuth {
             ${this.providers
                 .filter(provider => !!provider.getKey())
                 .map(provider => html`
-                <div class="provider">
+                <div class="provider" part="${provider.containerPartName}">
                     <button class="${provider.btnClass}" ?disabled=${this.disabled} part="${provider.buttonPartName}" @click="${provider.signIn}">
                         <img part="${provider.iconPartName}" loading="${this.iconLoading}" width="20px" height="20px" src="${provider.getIconUrl()}" />
                         ${provider.getButtonText()}
