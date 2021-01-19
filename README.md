@@ -105,7 +105,7 @@ pwaAuth.addEventListener("signin-completed", ev => {
 
 Try it: [live](https://pwa-auth-basic.glitch.me/) | [code](https://glitch.com/edit/#!/pwa-auth-basic?path=script.js:3:1)
 
-Once the `signin-completed` event fires, you can do whatever you normally do when your users sign in: set an authentication cookie, create a JWT token, etc. You may wish to verify the sign-in in your back-end code: see [backend auth](/#TODO) for details.
+Once the `signin-completed` event fires, you can do whatever you normally do when your users sign in: set an authentication cookie, create a JWT token, etc. You may wish to verify the sign-in in your back-end code: see [backend auth](/backend-auth.md) for details.
 
 If there's an error, or the user backs out of the authentication process, `signin-completed` will contain an `error`:
 
@@ -120,7 +120,7 @@ pwaAuth.addEventListener("signin-completed", ev => {
 
 ## What does the user see?
 
-The <em>first time</eM> a user signs in, he'll see the familiar OAuth flow asking the user to sign-in. For example, signing in with Google looks like this:
+The <em>first time</em> a user signs in, he'll see the familiar OAuth flow asking the user to sign-in. For example, signing in with Google looks like this:
 
 <img loading="lazy" src="https://github.com/pwa-builder/pwa-auth/raw/master/assets/oauth.png?v=1">
 
