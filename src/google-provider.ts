@@ -29,7 +29,7 @@ export class GoogleProvider implements SignInProvider {
                 scriptEl.onerror = (error) => reject({ message: "Error loading Google Platform library", error: error });
                 window.document.head.appendChild(scriptEl);
             });
-        } 
+        }
 
         // GApi is already loaded.
         return Promise.resolve();
@@ -64,7 +64,7 @@ export class GoogleProvider implements SignInProvider {
             const user = auth.currentUser.get();
             return Promise.resolve(this.getSignInResultFromUser(user));
         }
-            
+
         // Otherwise, kick off the OAuth flow.
         return auth.signIn()
             .then(user => this.getSignInResultFromUser(user));
@@ -77,7 +77,7 @@ export class GoogleProvider implements SignInProvider {
             email: profile.getEmail(),
             name: profile.getName(),
             imageUrl: profile.getImageUrl(),
-            accessToken: authResponse?.access_token,
+            accessToken: authResponse?.id_token,
             accessTokenExpiration: new Date(authResponse.expires_at),
             provider: "Google",
             error: null,

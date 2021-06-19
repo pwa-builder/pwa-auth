@@ -81,20 +81,15 @@ let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
         }
     }
     render() {
-        console.log("render");
         if (!this.hasAnyKey) {
-            console.log('no keys');
             return this.renderNoKeysError();
         }
         if (this.appearance === "list") {
-            console.log('render list buttons');
             return this.renderListButtons();
         }
         if (this.appearance === "button") {
-            console.log('render login button');
             return this.renderLoginButton();
         }
-        console.log('plain render');
         return super.render();
     }
     /**

@@ -61,7 +61,7 @@ export class GoogleProvider {
             email: profile.getEmail(),
             name: profile.getName(),
             imageUrl: profile.getImageUrl(),
-            accessToken: authResponse === null || authResponse === void 0 ? void 0 : authResponse.access_token,
+            accessToken: authResponse === null || authResponse === void 0 ? void 0 : authResponse.id_token,
             accessTokenExpiration: new Date(authResponse.expires_at),
             provider: "Google",
             error: null,
