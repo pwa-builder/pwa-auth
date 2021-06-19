@@ -325,8 +325,8 @@ export class PwaAuthImpl extends LitElement implements PwaAuth {
             const errorMessage = "Unable to sign-in because of unsupported provider";
             console.error(errorMessage, providerName);
             return Promise.reject(errorMessage + " " + providerName);
-        } 
-        
+        }
+
         return this.signInWithProvider(provider)
             .then(result => this.signInCompleted(result));
     }
@@ -342,7 +342,7 @@ export class PwaAuthImpl extends LitElement implements PwaAuth {
 	private getGoogleIconUrl(): string {
         return `${PwaAuthImpl.assetBaseUrl}/google-icon.svg`;
     }
-    
+
     private getFacebookIconUrl(): string {
         if (this.appearance === "button") {
             return `${PwaAuthImpl.assetBaseUrl}/facebook-icon-button.svg`;
@@ -586,7 +586,7 @@ export class PwaAuthImpl extends LitElement implements PwaAuth {
             console.warn("Unable to find provider matching URL", url);
             return "Microsoft";
         }
-        
+
         return provider.name;
     }
 

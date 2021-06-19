@@ -14,7 +14,8 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "rootDir": "src",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "importHelpers": true
   },
 
   "exclude": [

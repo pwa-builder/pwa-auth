@@ -1,10 +1,5 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 var PwaAuthImpl_1;
+import { __decorate } from "tslib";
 import { LitElement, html, css, customElement, property } from 'lit-element';
 let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
     constructor() {
@@ -31,6 +26,7 @@ let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
                 import: (key) => this.importMicrosoftProvider(key),
                 btnClass: "microsoft-btn",
                 buttonPartName: "microsoftButton",
+                containerPartName: "microsoftContainer",
                 iconPartName: "microsoftIcon",
                 signIn: () => this.signIn("Microsoft")
             },
@@ -43,6 +39,7 @@ let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
                 import: (key) => this.importGoogleProvider(key),
                 btnClass: "google-btn",
                 buttonPartName: "googleButton",
+                containerPartName: "googleContainer",
                 iconPartName: "googleIcon",
                 signIn: () => this.signIn("Google")
             },
@@ -55,6 +52,7 @@ let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
                 import: (key) => this.importFacebookProvider(key),
                 btnClass: "facebook-btn",
                 buttonPartName: "facebookButton",
+                containerPartName: "facebookContainer",
                 iconPartName: "facebookIcon",
                 signIn: () => this.signIn("Facebook")
             },
@@ -67,6 +65,7 @@ let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
                 import: (key) => this.importAppleProvider(key),
                 btnClass: "apple-btn",
                 buttonPartName: "appleButton",
+                containerPartName: "appleContainer",
                 iconPartName: "appleIcon",
                 signIn: () => this.signIn("Apple")
             },
@@ -82,15 +81,20 @@ let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
         }
     }
     render() {
+        console.log("render");
         if (!this.hasAnyKey) {
+            console.log('no keys');
             return this.renderNoKeysError();
         }
         if (this.appearance === "list") {
+            console.log('render list buttons');
             return this.renderListButtons();
         }
         if (this.appearance === "button") {
+            console.log('render login button');
             return this.renderLoginButton();
         }
+        console.log('plain render');
         return super.render();
     }
     /**
@@ -145,7 +149,7 @@ let PwaAuthImpl = PwaAuthImpl_1 = class PwaAuthImpl extends LitElement {
             ${this.providers
             .filter(provider => !!provider.getKey())
             .map(provider => html `
-                <div class="provider">
+                <div class="provider" part="${provider.containerPartName}">
                     <button class="${provider.btnClass}" ?disabled=${this.disabled} part="${provider.buttonPartName}" @click="${provider.signIn}">
                         <img part="${provider.iconPartName}" loading="${this.iconLoading}" width="20px" height="20px" src="${provider.getIconUrl()}" />
                         ${provider.getButtonText()}
