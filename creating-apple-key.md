@@ -172,7 +172,7 @@ pwa-auth uses [Apple JS](https://developer.apple.com/documentation/sign_in_with_
 
 ### Raw `providerData` with Apple Sign-In
 
-When a user signs-in with their Facebook account, pwa-auth will dispatch the `signin-completed` event. This event will contain the standard information -- `email`, `name` (on first login only), `imageUrl` (which will be null) -- as well as additional Apple-specific information contained in `providerData`:
+When a user signs-in with their Apple account, pwa-auth will dispatch the `signin-completed` event. This event will contain the standard information -- `email`, `name` (on first login only), `imageUrl` (which will be null) -- as well as additional Apple-specific information contained in `providerData`:
 
 ```javascript
 const pwaAuth = document.querySelector("pwa-auth");
