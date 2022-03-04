@@ -9,5 +9,6 @@ export interface ProviderInfo {
     btnClass: string;
     buttonPartName: string;
     iconPartName: string;
+    containerPartName: string;
     signIn: () => void;
 }
