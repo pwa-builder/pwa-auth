@@ -1,73 +1,98 @@
-import * as Msal from "msal";
+import { PublicClientApplication } from "@azure/msal-browser";
 export class MicrosoftProvider {
     constructor(clientId) {
         this.clientId = clientId;
-        this.requestObj = { scopes: ["user.read"] };
+        this.scopes = ["user.read"];
         this.graphConfig = { graphMeEndpoint: "https://graph.microsoft.com/v1.0/me" };
         this.resolve = null;
         this.reject = null;
         this.app = null;
+        this.account = null;
     }
-    signIn() {
-        this.resolve = null;
-        this.reject = null;
-        return new Promise((resolve, reject) => {
-            this.resolve = resolve;
-            this.reject = reject;
-            this.signInWithMsal();
-        });
+    async signIn() {
+        return this.signInWithMsal();
     }
     loadDependencies() {
         // Our dependencies are already loaded via import statement at the top of the file,
         // thanks to msal.js being a module.
         return Promise.resolve();
     }
-    signInWithMsal() {
+    async signInWithMsal() {
         const msalConfig = {
             auth: {
                 clientId: this.clientId,
-                authority: "https://login.microsoftonline.com/common/"
+                authority: "https://login.microsoftonline.com/consumers/"
             },
             cache: {
                 cacheLocation: "localStorage",
                 storeAuthStateInCookie: true
             }
         };
-        this.app = new Msal.UserAgentApplication(msalConfig);
-        this.app.handleRedirectCallback((error, response) => this.redirectCallback(error, response));
-        this.app.loginPopup(this.requestObj)
-            .then(loginResponse => this.signInSucceeded(loginResponse))
-            .catch(error => this.signInFailed(error));
+        this.app = new PublicClientApplication(msalConfig);
+        try {
+            debugger;
+            //try to get accessToken to attempt silent signin
+            let loginResponse = await this.getAccessToken();
+            if (loginResponse) {
+                const loginResult = await this.getLoginResult(loginResponse);
+                if (loginResult) {
+                    return loginResult;
+                }
+            }
+            //if we get here, we need to call loginPopup
+            loginResponse = await this.signInWithPopup();
+            if (loginResponse) {
+                const loginResult = await this.getLoginResult(loginResponse);
+                if (loginResult) {
+                    return loginResult;
+                }
+            }
+            throw new Error("No login result");
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
-    signInSucceeded(loginResponse) {
-        const loginResult = this.getLoginResult(loginResponse);
-        // Fetch the user's photo. 
-        // MS provider supports this for work and edu accounts, but not for personal accounts.
-        this.getAccessToken(loginResponse)
-            .then(accessToken => loginResult.providerData ? (loginResult.providerData["accessToken"] = accessToken) : accessToken)
-            .then(accessToken => this.getUserPhoto(accessToken))
-            .then(photoUrl => loginResult.imageUrl = photoUrl)
-            .catch(error => console.log("Unable to fetch user profile image. Note that Microsoft Graph cannot fetch profile pictures for personal accounts; only work and education accounts are supported. Error details: ", error))
-            .finally(() => { var _a; return (_a = this.resolve) === null || _a === void 0 ? void 0 : _a.call(this, loginResult); }); // Finally clause: regardless of whether we can get the user's photo, we consider it a successful signin.
+    async signInWithPopup() {
+        if (!this.app) {
+            return Promise.reject("No app context");
+        }
+        const loginRequest = {
+            scopes: this.scopes
+        };
+        const response = await this.app.loginPopup(loginRequest);
+        return response;
     }
+    // private signInSucceeded(loginResponse: AuthenticationResult) {
+    //     const loginResult = this.getLoginResult(loginResponse);
+    //     // Fetch the user's photo. 
+    //     // MS provider supports this for work and edu accounts, but not for personal accounts.
+    //     this.getAccessToken()
+    //         .then(accessToken => loginResult.providerData ? (loginResult.providerData["accessToken"] = accessToken) : accessToken)
+    //         .then(accessToken => this.getUserPhoto(accessToken))
+    //         .then(photoUrl => loginResult.imageUrl = photoUrl)
+    //         .catch(error => console.log("Error details: ", error))
+    //         .finally(() => this.resolve?.(loginResult)); // Finally clause: regardless of whether we can get the user's photo, we consider it a successful signin.
+    // }
     signInFailed(error) {
         var _a;
         (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, error);
     }
-    redirectCallback(error, response) {
-        if (response) {
-            this.signInSucceeded(response);
-        }
-        else {
-            this.signInFailed(error || "Unexpected redirect: no error and no login response");
-        }
-    }
-    getAccessToken(loginResponse) {
+    async getAccessToken() {
         if (!this.app) {
             return Promise.reject("No app context");
         }
-        return this.app.acquireTokenSilent(this.requestObj)
-            .then(tokenResponse => tokenResponse.accessToken);
+        const accessTokenRequest = {
+            scopes: this.scopes,
+            account: this.app.getAllAccounts()[0]
+        };
+        try {
+            return await this.app.acquireTokenSilent(accessTokenRequest);
+        }
+        catch (error) {
+            // we are probably not signed in or we need to get a token interactively
+            return null;
+        }
     }
     getUserPhoto(accessToken) {
         return this.callGraphApi("/photo/$value", accessToken)
@@ -102,18 +127,24 @@ export class MicrosoftProvider {
             fileReader.readAsDataURL(blob);
         });
     }
-    getLoginResult(loginResponse) {
+    async getLoginResult(tokenResponse) {
         var _a, _b;
-        return {
-            name: ((_a = loginResponse.account) === null || _a === void 0 ? void 0 : _a.name) || "",
-            email: ((_b = loginResponse.account) === null || _b === void 0 ? void 0 : _b.userName) || "",
-            provider: "Microsoft",
-            accessToken: loginResponse.accessToken,
-            accessTokenExpiration: loginResponse.expiresOn,
-            error: null,
-            imageUrl: null,
-            providerData: loginResponse,
-        };
+        try {
+            debugger;
+            return {
+                name: ((_a = tokenResponse.account) === null || _a === void 0 ? void 0 : _a.name) || "",
+                email: ((_b = tokenResponse.account) === null || _b === void 0 ? void 0 : _b.username) || "",
+                provider: "Microsoft",
+                accessToken: tokenResponse.accessToken,
+                accessTokenExpiration: tokenResponse.expiresOn,
+                error: null,
+                imageUrl: await this.getUserPhoto(tokenResponse.accessToken),
+                providerData: { tokenResponse },
+            };
+        }
+        catch (error) {
+            return null;
+        }
     }
 }
 //# sourceMappingURL=microsoft-provider.js.map
