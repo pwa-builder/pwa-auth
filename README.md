@@ -1,3 +1,6 @@
+
+# The code for this component has moved to the main PWABuilder monorepo and this repository has been archived. Please visit our [monorepo for issues, discussions, or controbutions](https://github.com/pwa-builder/pwabuilder).
+
 Please use our [main repository for any issues/bugs/features suggestion](https://github.com/pwa-builder/PWABuilder/issues/new/choose).
 
 # pwa-auth
